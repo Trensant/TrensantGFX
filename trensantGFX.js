@@ -297,9 +297,9 @@ trensantGFX.html = function(tag,body,sty,cls) {
 
 
 //=====================================================================================================
-// drawRowWordCloud draws a word cloud with words in rows 
+// drawRowWordCloudBase draws a word cloud with words in rows.  It is the base renderer.  see drawRowWordCloud for direct calls
 // words must be of form : [["word", value, optional-color, optional-id], [] ]
-trensantGFX.drawRowWordCloud = function(words,domID,opts) {
+trensantGFX.drawRowWordCloudBase = function(words,domID,opts) {
 	var i, dopts = { 							// default options
 		"maxSize" 	: 55,  						// any valid number for max font size 
 		"minSize" 	: 9, 	  					// any valid number for min font size
@@ -357,6 +357,36 @@ trensantGFX.drawRowWordCloud = function(words,domID,opts) {
 	
 	return h; // return HTML string if domID is not valid 
 }
+
+//=====================================================================================================
+// drawRowWordCloudBase draws a word cloud with words in rows.  
+// words must be of form : [["word", value, optional-color, optional-id], [] ]
+trensantGFX.drawRowWordCloud = function (words, domID, opts) {
+
+	trensantGFX.drawRowWordCloudBase( words,domID,opts);  // working version with bounds issues
+
+    var n=9,m=20;
+    var rs = $("#" +domID+ " > span")[0].getClientRects()[0];
+    var re = $("#" +domID+ " > span")[$("#" +domID+ " > span").length-1].getClientRects()[0];
+    var box = $("#"+domID)[0].getClientRects()[0];
+
+    while (re.bottom <=  (box["bottom"]-(box["height"]*0.085))) { 
+      rs = $("#" +domID+ " > span")[0].getClientRects()[0];
+      re = $("#" +domID+ " > span")[$("#" +domID+ " > span").length-1].getClientRects()[0];
+      gTemp = {"rs":rs, "re" :re};
+      m+= 0.33;
+      trensantGFX.drawRowWordCloudBase( words,domID,opts);  // working version with bounds issues
+
+      
+      if (m > 100)
+        break;
+    }
+
+    m-=0.67;
+    trensantGFX.drawRowWordCloudBase( words,domID,opts);  // working version with bounds issues
+
+}
+
 //=================================================
 // USAGE:
 // abbrState('ny', 'name');

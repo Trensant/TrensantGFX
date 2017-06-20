@@ -48,7 +48,10 @@ Being a client side rendering library trensantGFX only runs in a browser environ
 
 Charts take data either as a table (matrix) or as a structured tree.   See specific charts for required data types.  For charts which take a tree type structure the library provides some data packing functions which can be used to take a flat structure and convert it to the tree structure.
 
-trensantGFX|lib|chartName (data, options);
+trensantGFX|lib|chartName (data, domID options);
+
+for example:
+trensantGFX.drawRowWordCloud(data,"myDiv",)
 
 
 ### Libaries Wrapped:
@@ -72,6 +75,7 @@ The following charts are included trensantGFX:
 | chart type 			| input-form  | source-libraries | notes                                |
 |-----------------------|-------------|------------------|--------------------------------------|  
 | prettyPrint           | json        | trensantGFX      | prints any object as pretty printed  |
+| rowWordCloud          | dict        | trensantGFX      | creates a row-word cloud             |
 | bar		 			| matrix	  | 				 |   |                                  
 | line 		 			| matrix	  | google-charts    |   |
 | pie  		  			| matrix      | google-charts    |   |

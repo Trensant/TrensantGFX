@@ -107,9 +107,9 @@ drawBanner=false    				// supress or show the top Trensant Logo
 		// individual sections.  these can be overriden by passing in a block like this as opts["sections"]= [ [] [] []]
 		dopts["sections"] = [
 			 //tag  , id_suffix ,  default content, css
-			 ["h3"	,'_heading'		,  dopts["name"]				 ],
+			 ["h2"	,'_heading'		,  dopts["name"]				 ],
 			 ["p" 	,'_desc'   		,  'Overview text goes here'	 ],
-			 ["h4"	,'_dataHeading' ,  'Example Data'				 ],
+			 ["h4"	,'_dataHeading' ,  'Example Data (click to show/hide)'				 ],
 			 ["pre"	,'_data' 		,  'Formatted data example area for this chart'],
 			 ["div" ,'_chart' 		,  'rendered chart goes here'    ]
 			];
@@ -133,9 +133,9 @@ drawBanner=false    				// supress or show the top Trensant Logo
 			node.appendChild(x);
 		}
 		document.getElementById("graphicsDiv").appendChild(node); // add this section to the document
-
+		$('#'+domID+"_dataHeading").click(function(){ $('#'+domID+"_data").toggle(200);});
 		//update table of contents
-		gCharts["toc"].push( {"name" : dopts["name"], "base_id" : domID}); // building a directory of all charts rendered on the page
+		addTOCEntry(dopts["name"],domID);
 		updatePageTOC();
 		return document.getElementById(domID); // return node ref
 	}
@@ -150,9 +150,14 @@ drawBanner=false    				// supress or show the top Trensant Logo
 		}
 		document.getElementById("tocDIV").innerHTML = h;
 	}
+
+	function addTOCEntry(name,domID) {
+		gCharts["toc"].push( {"name" : name, "base_id" : domID});
+	}
 	//===================================================================================================
 	// now begins the chart gallery
 	
+	//===================================================================================================
 	// trensantGFX.tgPrettyPrint
 	drawNewSectionDiv('tgPrettyPrintDiv',{"name":"tgPrettyPrint"});
 	var prettyPrintSampleData = {
@@ -162,9 +167,55 @@ drawBanner=false    				// supress or show the top Trensant Logo
 		"num" : 2343.32
 	};
 
-	$("#tgPrettyPrintDiv_desc").html("tgPrettyPrint is a function for taking any JSON object and pretty printing to an HTML container div.");
+	//emit description info
+	$("#tgPrettyPrintDiv_desc").html("tgPrettyPrint is a function for taking any JSON object and pretty printing to an HTML container div.<br><pre>//Example<br>var x= ... my data of any valid javascript type ...;<br>trensantGFX.tgPrettyPrint(myData,myDiv);<br></pre>");
+
+	//show the raw data
 	trensantGFX.tgPrettyPrint(prettyPrintSampleData,"tgPrettyPrintDiv_data");
-	trensantGFX.tgPrettyPrint(prettyPrintSampleData,"tgPrettyPrintDiv_chart"); // in this case the chart and the data are the same!
+
+	//render the chart
+	$("#tgPrettyPrintDiv_chart").html(""); // in this case the chart and the data are the same so we don't render a chart
+
+
+	//===================================================================================================
+	// trensantGFX.rowWordCloud
+	var div = "tgRowWordCloudDiv";
+	drawNewSectionDiv(div,{"name":"tgRowWordCloud"});
+	
+
+	//emit description info
+	$("#"+div+"_desc").html("tgRowWordCloud takes an array of word frequencies of the form [[word, freq, optional_color],[word2, freq2, optional_color], [word3,freq3],.. ] and renders a word cloud as a series of rows in a div. <br>Options include minSize, maxSize, and sort.  Sorting can be alpha, ralpha (reverse alpha), and numeric.  See docs.  <br><pre>var x = [['word1', 12], ['word2', 52], ['word3', 45]];<br>trensantGFX.drawRowWordCloud(x,myDiv);<br></pre>");
+
+	var rowWordCloudSampleData = [   // note colors are optional, and can be HTML colors e.g. "#f44", data does not need to be sorted
+		["deal", 1998, "red"],
+  		["shoe", 1925, "red"],
+  		["nfl",  1895, "orange" ],
+  		["nike", 1698,   "red"  ], 
+  		["lucrative", 1673, "green" ],
+  		["@nfl",    1649,   "red"  ],
+  		["obj",    1469,    "orange"],
+  		["5-year",  1405,    "purple" ],  
+  		["25m",    1402,    "orange"],
+  		["safety",  690,    "purple"],
+  		["player",   566,    "purple"],
+  		["@browns",  545,   "green" ],
+  		["league",    531,    "purple" ],
+  		[ "much",    525,    "red"  ],  
+  		[ "speed",    490,    "green"],
+  		[ "receiving",  486,   "green"],
+		["fastest",  4484,    "orange"],
+  		[  "game",   458,    "red"  ],
+  		[ "midseason",   456,  "green"]
+  		];	
+  	var rowWordOpts = {"minSize":10,"maxSize":30,"sort":"alpha"};
+
+	//show the raw data
+	trensantGFX.tgPrettyPrint(rowWordCloudSampleData,div+"_data");
+
+	//render the chart
+	trensantGFX.drawRowWordCloud( rowWordCloudSampleData,div+"_chart",rowWordOpts);
+	//===================================================================================================
+		
 
 
 
