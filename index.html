@@ -1,0 +1,172 @@
+<!-- HTML header code for trensant-gfx demo. M A Chatterjee 20170525 -->
+<link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- jquery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>     <!-- jquery is used for DOM stuff  -->
+
+<!-- bootstrap is used for div management -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>  <!-- not part of graphics library just here for div and layour mgmt -->
+
+<script type="text/javascript" src="./libs/helper-fns.js"></script>  <!-- helper-fns is a library for doing generec web work like URL param managment -->
+
+
+<!-- core graphics library includes.  -->
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>  <!-- google charts loader -->
+<script src="https://d3js.org/d3.v4.min.js"></script>  <!-- not compatible with d3.v3 or earlier  -->
+<script type="text/javascript" src="./libs/wordcloud2.js"></script>  <!-- wordcloud2.js is a wordcloud library -->
+
+
+<!-- see more about jqcloud here: https://github.com/mistic100/jQCloud -->
+<script type="text/javascript" src="./libs/jqcloud.min.js"></script> <!-- jQCloud is a word cloud library -->
+<link rel="stylesheet" href="./libs/jqcloud.min.css">
+
+
+<!--  maps -->
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBwB-0FhqcR0eYbf4utsUNN02i8olM6ork" ></script>  <!-- google maps -->
+
+
+<!-- trensantGFX wrapper!  -->
+<script type="text/javascript" src="./trensantGFX.js"></script>      <!-- TrensantGFX is the main lib for all wrappers!                               -->
+
+
+<title>Trensant Graphics Wrapper Library</title>
+<!-- index.html ... trensantGFX tester 
+
+M A Chatterjee 2017-06-05 :: note requires trensant-text-header.html 
+
+URL params
+
+drawBanner=false    				// supress or show the top Trensant Logo
+-->
+
+<div class='container' >     <!-- boostrap container               -->
+	<div class='col-md-12'>  <!-- boostrap basic column management -->
+	<div class="row">
+		<div class='top-banner' id="topBanner">	</div> <!-- top banner is dynamically drawn -->
+		<h2>Trensant Graphics</h2>
+		<p>This is the Trensant Graphics Library Demo page.  The Trensant Graphics Library is a wrapper of several 3rd party graphics and charting libraries which are useful for visualizing data using different techniques.  See the README.md file in the distribution for more on which libraries and charts are wrapped.
+		<br>
+		<div id='test'></div>  <!-- spare test div, to be deleted -->
+		<h2>Charts</h2>
+		<div id='tocDIV'></div>  <!-- table of contents goes here, dynamically populated -->
+		<br>
+		<div id="graphicsDiv"></div> <!-- chart sections go here, dynmaically populated -->
+		
+	</div>
+	</div>
+</div>
+
+<!-- Begin code ************************************************************************************************ -->
+<script>
+	var gCharts = {"toc":[]};
+	var gDrawBanner = true; 
+	if ((hf.getURLParam("drawBanner") != "false") && (gDrawBanner==true))
+		document.getElementById("topBanner").innerHTML= "<a href='http://trensant.com'><img src='./img/Trensant_apricot_flat_sm.png'></img></a><br><br>";
+	var gAvail ={};
+	//global vars
+	google.charts.load('current', {'packages':['table','corechart','geochart','line']});
+	google.charts.setOnLoadCallback(function(){gAvail["table"]=true; gAvail["pie"]=true; gAvail["geochart"]=true;});
+	// end static inits ......
+	
+	//============================================================================
+	/*
+	drawNewSectionDiv()
+
+	dynmacally generate all the dom elements for a section for this page in this form:
+
+	<div id=domID>
+		<h3  id='domID_heading' 	>Chart Name</h3>  			// name of this chart           
+		<p   id='domID_desc'   		>description</p>  			// description string of this chart.  can be HTML 
+		<h4  id='domID_dataHeading' >Chart Data Heading</h4>  	// data heading
+		<pre id='domID_data'        >data area </pre>			// raw data shown here 
+		<div id='domID_chart' 		>chart renders here</div>   // rendering area this chart
+	</div>
+
+	it also adds to the table of contents at the top and generates in-page links e.g. #mySpecialChart
+
+	required fields:
+		domID 		 // DOM for base div.  all interall components will be give sub ids based on this.  
+		opts["name"] // used for internal ref
+		
+	
+	*/
+	function drawNewSectionDiv (domID,opts) { 
+		if (typeof domID == "undefined") {
+			console.log ("must have id"); return null;
+		}
+		var i,x,dopts = {
+			"name"   : "Chart Name",
+			"line_break" : true
+		};
+		if (trensantGFX.typeOf(opts) == "object")
+			for (i in opts) 
+				dopts[i] = opts[i]; 
+
+		// individual sections.  these can be overriden by passing in a block like this as opts["sections"]= [ [] [] []]
+		dopts["sections"] = [
+			 //tag  , id_suffix ,  default content, css
+			 ["h3"	,'_heading'		,  dopts["name"]				 ],
+			 ["p" 	,'_desc'   		,  'Overview text goes here'	 ],
+			 ["h4"	,'_dataHeading' ,  'Example Data'				 ],
+			 ["pre"	,'_data' 		,  'Formatted data example area for this chart'],
+			 ["div" ,'_chart' 		,  'rendered chart goes here'    ]
+			];
+
+		if (trensantGFX.typeOf(opts) == "object")
+			for (i in opts) 
+				dopts[i] = opts[i]; 
+		
+
+		var node = document.createElement("div");
+		node["id"] = domID; // the id for container div
+
+		for (i=0; i < dopts["sections"].length; i++) {
+			x = document.createElement(dopts["sections"][i][0]);
+			x["id"] = domID+dopts["sections"][i][1];
+			x["innerHTML"] = dopts["sections"][i][2];		
+			node.appendChild(x);
+		}
+		if (dopts["line_break"] == true) {
+			x = document.createElement('hr');
+			node.appendChild(x);
+		}
+		document.getElementById("graphicsDiv").appendChild(node); // add this section to the document
+
+		//update table of contents
+		gCharts["toc"].push( {"name" : dopts["name"], "base_id" : domID}); // building a directory of all charts rendered on the page
+		updatePageTOC();
+		return document.getElementById(domID); // return node ref
+	}
+	
+	//===================================================================================================
+	// update the Table of Contents.
+	// TOC links are drawn with HTML in page links so that we can easily bookmark them
+	function updatePageTOC() {
+		var i,h="";
+		for (i in gCharts["toc"]) {
+			h+= "<a href='#"+gCharts["toc"][i]["base_id"]+"'' >"+gCharts["toc"][i]["name"]+"</a><br>";
+		}
+		document.getElementById("tocDIV").innerHTML = h;
+	}
+	//===================================================================================================
+	// now begins the chart gallery
+	
+	// trensantGFX.tgPrettyPrint
+	drawNewSectionDiv('tgPrettyPrintDiv',{"name":"tgPrettyPrint"});
+	var prettyPrintSampleData = {
+		"sample-array" : [1,2,3,4,5,"another piece"],
+		"key" : "value",
+		"sample-dict" : {1:2, 3:4, 5:6},
+		"num" : 2343.32
+	};
+
+	$("#tgPrettyPrintDiv_desc").html("tgPrettyPrint is a function for taking any JSON object and pretty printing to an HTML container div.");
+	trensantGFX.tgPrettyPrint(prettyPrintSampleData,"tgPrettyPrintDiv_data");
+	trensantGFX.tgPrettyPrint(prettyPrintSampleData,"tgPrettyPrintDiv_chart"); // in this case the chart and the data are the same!
+
+
+
+</script>
+	
