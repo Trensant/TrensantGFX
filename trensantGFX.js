@@ -593,7 +593,7 @@ trensantGFX.d3wordcloud = function (wwords,w,h,dom_id)
       svgBehavior: null,
       svgBehaviorOptions: null
     }
-    configuration = setDefaultOptions(treemapDefaultConfiguration, options);
+    configuration = setOptions(treemapDefaultConfiguration, options);
 
     var fader = function (color) {
         return d3.interpolateRgb(color, "#fff")(configuration.fader);
@@ -835,7 +835,7 @@ trensantGFX.d3wordcloud = function (wwords,w,h,dom_id)
       return root;
     }
 
-    function setDefaultOptions(default_configuration, options) {
+    function setOptions(default_configuration, options) {
       /*Options.tree_attribute_names: Gets keys from the tree. If not present sets default values.*/
 
       if (options) {
