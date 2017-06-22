@@ -53,7 +53,6 @@ drawBanner=false    				// supress or show the top Trensant Logo
 		<div id='tocDIV'></div>  <!-- table of contents goes here, dynamically populated -->
 		<br>
 		<div id="graphicsDiv"></div> <!-- chart sections go here, dynmaically populated -->
-		
 	</div>
 	</div>
 </div>
@@ -215,9 +214,17 @@ drawBanner=false    				// supress or show the top Trensant Logo
 	//render the chart
 	trensantGFX.drawRowWordCloud( rowWordCloudSampleData,div+"_chart",rowWordOpts);
 	//===================================================================================================
-		
+//trensant.d3treeMap
+    var treediv = "d3treeMapDiv";
+    drawNewSectionDiv(treediv,{"name":"d3treeMapDiv"});
 
+    var treeMapSampleData =  { node: { childName: "childString",   childID: "childID",   children:   [ { childName: "childstring",   parentID: "parentstring",   value: 8,   childID: "childString"   } ]   } }
 
+    //display sample data
+	trensantGFX.tgPrettyPrint(treeMapSampleData, treediv+"_data")
+
+	//render the chart
+    trensantGFX.d3TreeMap(treeMapSampleData, treediv+"_chart");
 
 </script>
 	

@@ -578,8 +578,22 @@ trensantGFX.d3wordcloud = function (wwords,w,h,dom_id)
          * svgBehaviorOptions: type: any, default: null
      *
   */
-  trensantGFX.d3drawTreeMap = function (tree, id, options) {
-    configuration = setDefaultOptions(treemapConfiguration, options);
+  trensantGFX.d3TreeMap = function (tree, id, options) {
+    var treemapDefaultConfiguration = {
+      parentID: 'parentID',
+      childID: "childID",
+      childName: "childName",
+      children: "children",
+      value: "value",
+      svgWidth: 600,
+      svgHeight: 600,
+      fader: 0.5,
+      rectangleBehavior: null,
+      rectangleBehaviorOptions: null,
+      svgBehavior: null,
+      svgBehaviorOptions: null
+    }
+    configuration = setDefaultOptions(treemapDefaultConfiguration, options);
 
     var fader = function (color) {
         return d3.interpolateRgb(color, "#fff")(configuration.fader);
@@ -590,15 +604,14 @@ trensantGFX.d3wordcloud = function (wwords,w,h,dom_id)
     var width = typeof configuration.svgWidth === "function" ? configuration.svgWidth() : configuration.svgWidth,
       height = typeof configuration.svgHeight === "function" ? configuration.svgHeight() : configuration.svgHeight;
 
-    d3.select(id).append("p").classed("parent", true)
-    d3.select(id)
+    d3.select('#'+id).append("p").classed("parent", true)
+    d3.select('#'+id)
       .append("svg")
-    var svg = d3.select(id)
+    var svg = d3.select('#'+id)
       .select("svg")
       .attr("width", width)
       .attr("height", height)
       .style("font", "10px sans-serif")
-
     if ("svgBehavior" in configuration) {
       for (var key in configuration.svgBehavior) {
         svg.on(key, function () {
