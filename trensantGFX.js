@@ -542,70 +542,42 @@ trensantGFX.d3wordcloud = function (wwords,w,h,dom_id)
 
 //======================================================================================================
   /*
-   * param: tree (dict) The tree must in at least the following structure. So you must wrap into a dict
-   * { node: { child_name: "string",
-   child_id: "string",
-   children:
-   [ { child_name: "string",
-   parent_id: "string",
-   value: int, float, or double,
-   child_id: "string"
-   } ]
-   } }
-   * param: id (string)
-   * param: options (dict) A dictionary that allows you customize renderings and behaviors.
-   * Tree data options: parentID, childID, childName, children, value
-   * Frequently trees contain different key values. So for
-   * example if your tree uses the key childs instead of children you would normally have
-   * to either change the all the keys in you data prior to passing or specify a custom
-   * function in d3.hierarchy call.
-   * Instead you can specify tree keys. Default values are parentID, childID, childName,
-   * children, value. Example options dict with one options specified: {children: childs}.
-   *
-   * Rendering Options:
-   * svgWidth: type: int or function, default: 600
-   * svgHeight:: type: int or function, default: 600
-   * fader:: description: rectangle color, type: float, default 0.5
-   *
-   * Behavior Options:
-   * rectangleBehavior:: type: dict of functions, default: null
-   * rectangleBehaviorOptions: type: any, default: null
-   * svgBehavior: type: dict of functions, default: null
-   * svgBehaviorOptions: type: any, default: null
-   *  */
+   * Generates a Treemap.
+    *  param: tree (dict)
+      *  The tree must in at least the following structure:
+        * { node: { child_name: "string",   child_id: "string",   children:   [ { child_name: "string",   parent_id: "string",   value: int, float, or double,   child_id: "string"   } ]   } }
+    * param: id (string)
+    * param: options (dict) A dictionary that allows you customize renderings and behaviors.
+     *
+       * Tree data options:
+         * parentID:: type: string, default:
+         * childID:: type: string, default:
+         * childName:: type: string, default:
+         * children:: type: string, default:
+         * value:: type: string, default:
+       * FURTHER DESCRIPTION for Tree data options:
+         * Frequently trees contain different keys labels. For
+         * example your tree label for children may be childs instead of children.
+         * Normally in that case you would either change the all the keys in
+         * you data prior to passing or specify a custom function in d3.hierarchy call.
+         * Instead you can specify key lables in options.
+         * Default values are parentID, childID, childName,
+         * children, value.
+         * Example: {children: childs}.
+     *
+       * Rendering Options:
+         * svgWidth: type: int or function, default: 600
+         * svgHeight:: type: int or function, default: 600
+         * fader:: description: rectangle color, type: float, default 0.5
+     *
+       * Behavior Options:
+         * rectangleBehavior:: type: dict of functions, default: null
+         * rectangleBehaviorOptions: type: any, default: null
+         * svgBehavior: type: dict of functions, default: null
+         * svgBehaviorOptions: type: any, default: null
+     *
+  */
   trensantGFX.d3drawTreeMap = function (tree, id, options) {
-    /*
-     * param: tree (dict) The tree must in at least the following structure. So you must wrap into a dict
-     * { node: { child_name: "string",
-     child_id: "string",
-     children:
-     [ { child_name: "string",
-     parent_id: "string",
-     value: int, float, or double,
-     child_id: "string"
-     } ]
-     } }
-     * param: id (string)
-     * param: options (dict) A dictionary that allows you customize renderings and behaviors.
-     * Tree data options: parentID, childID, childName, children, value
-     * Frequently trees contain different key values. So for
-     * example if your tree uses the key childs instead of children you would normally have
-     * to either change the all the keys in you data prior to passing or specify a custom
-     * function in d3.hierarchy call.
-     * Instead you can specify tree keys. Default values are parentID, childID, childName,
-     * children, value. Example options dict with one options specified: {children: childs}.
-     *
-     * Rendering Options:
-     * svgWidth: type: int or function, default: 600
-     * svgHeight:: type: int or function, default: 600
-     * fader:: description: rectangle color, type: float, default 0.5
-     *
-     * Behavior Options:
-     * rectangleBehavior:: type: dict of functions, default: null
-     * rectangleBehaviorOptions: type: any, default: null
-     * svgBehavior: type: dict of functions, default: null
-     * svgBehaviorOptions: type: any, default: null
-     *  */
     configuration = setDefaultOptions(treemapConfiguration, options);
 
     var fader = function (color) {
