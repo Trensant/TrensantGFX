@@ -543,6 +543,7 @@ trensantGFX.d3wordcloud = function (wwords,w,h,dom_id)
 //======================================================================================================
   /*
    * Generates a Treemap.
+   * REQUIRED: Declare an element with an id in your html document. The id is passed to parameter id.
     *  param: tree (dict)
       *  The tree must in at least the following structure:
         * { node: { child_name: "string",   child_id: "string",   children:   [ { child_name: "string",   parent_id: "string",   value: int, float, or double,   child_id: "string"   } ]   } }
