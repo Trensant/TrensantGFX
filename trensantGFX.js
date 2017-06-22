@@ -540,5 +540,329 @@ trensantGFX.d3wordcloud = function (wwords,w,h,dom_id)
 //code with entity fuzzy text search
 //gettrensantGFXData("entity-lookup",{"prefix":"flip","type":"true","offset":9175040},console.log)
 
+//======================================================================================================
+  /*
+   * param: tree (dict) The tree must in at least the following structure. So you must wrap into a dict
+   * { node: { child_name: "string",
+   child_id: "string",
+   children:
+   [ { child_name: "string",
+   parent_id: "string",
+   value: int, float, or double,
+   child_id: "string"
+   } ]
+   } }
+   * param: id (string)
+   * param: options (dict) A dictionary that allows you customize renderings and behaviors.
+   * Tree data options: parentID, childID, childName, children, value
+   * Frequently trees contain different key values. So for
+   * example if your tree uses the key childs instead of children you would normally have
+   * to either change the all the keys in you data prior to passing or specify a custom
+   * function in d3.hierarchy call.
+   * Instead you can specify tree keys. Default values are parentID, childID, childName,
+   * children, value. Example options dict with one options specified: {children: childs}.
+   *
+   * Rendering Options:
+   * svgWidth: type: int or function, default: 600
+   * svgHeight:: type: int or function, default: 600
+   * fader:: description: rectangle color, type: float, default 0.5
+   *
+   * Behavior Options:
+   * rectangleBehavior:: type: dict of functions, default: null
+   * rectangleBehaviorOptions: type: any, default: null
+   * svgBehavior: type: dict of functions, default: null
+   * svgBehaviorOptions: type: any, default: null
+   *  */
+  trensantGFX.d3drawTreeMap = function (tree, id, options) {
+    /*
+     * param: tree (dict) The tree must in at least the following structure. So you must wrap into a dict
+     * { node: { child_name: "string",
+     child_id: "string",
+     children:
+     [ { child_name: "string",
+     parent_id: "string",
+     value: int, float, or double,
+     child_id: "string"
+     } ]
+     } }
+     * param: id (string)
+     * param: options (dict) A dictionary that allows you customize renderings and behaviors.
+     * Tree data options: parentID, childID, childName, children, value
+     * Frequently trees contain different key values. So for
+     * example if your tree uses the key childs instead of children you would normally have
+     * to either change the all the keys in you data prior to passing or specify a custom
+     * function in d3.hierarchy call.
+     * Instead you can specify tree keys. Default values are parentID, childID, childName,
+     * children, value. Example options dict with one options specified: {children: childs}.
+     *
+     * Rendering Options:
+     * svgWidth: type: int or function, default: 600
+     * svgHeight:: type: int or function, default: 600
+     * fader:: description: rectangle color, type: float, default 0.5
+     *
+     * Behavior Options:
+     * rectangleBehavior:: type: dict of functions, default: null
+     * rectangleBehaviorOptions: type: any, default: null
+     * svgBehavior: type: dict of functions, default: null
+     * svgBehaviorOptions: type: any, default: null
+     *  */
+    configuration = setDefaultOptions(treemapConfiguration, options);
+
+    var fader = function (color) {
+        return d3.interpolateRgb(color, "#fff")(configuration.fader);
+      },
+      color = d3.scaleOrdinal(d3.schemeCategory20.map(fader)),
+      format = d3.format(",d");
+
+    var width = typeof configuration.svgWidth === "function" ? configuration.svgWidth() : configuration.svgWidth,
+      height = typeof configuration.svgHeight === "function" ? configuration.svgHeight() : configuration.svgHeight;
+
+    d3.select(id).append("p").classed("parent", true)
+    d3.select(id)
+      .append("svg")
+    var svg = d3.select(id)
+      .select("svg")
+      .attr("width", width)
+      .attr("height", height)
+      .style("font", "10px sans-serif")
+
+    if ("svgBehavior" in configuration) {
+      for (var key in configuration.svgBehavior) {
+        svg.on(key, function () {
+          configuration.svgBehavior[key](configuration.svgBehaviorOptions);
+        });
+      }
+    }
+
+
+    var treemap = d3.treemap()
+      .size([width, height])
+      .round(true)
+      .paddingInner(1);
+
+    var nodeTree = tree;
+    var root = d3.hierarchy(tree.node);
+    root.eachBefore(function (d) {
+      d.data.id = d.data[configuration.childID]
+    })
+      .sum(function (d) {
+        return d[configuration.value]
+      })
+      .sort(function (a, b) {
+        return b.value - a.value || b.value - a.value;
+      });
+    treemap(root);
+    var parent_element = d3.select(".parent");
+    parent_element.html(function () {
+      return root.data[configuration.childName]
+    });
+    function drawit() {
+      cell = svg.selectAll("g").data(root[configuration.children]).enter().append("g")
+        .attr("transform", function (d) {
+          return "translate(" + d.x0 + "," + d.y0 + ")";
+        });
+
+      cell.append("rect")
+        .attr("id", function (d) {
+          return d.data.id;
+        })
+        .attr("width", function (d) {
+          return d.x1 - d.x0;
+        })
+        .attr("height", function (d) {
+          return d.y1 - d.y0;
+        })
+        .attr("fill", function (d) {
+          return color(d.data[configuration.value]);
+        })
+        .on('click', function (d) {
+          redraw(d);
+          parent_element.append("a")
+            .attr("href", "javascript:void(0)")
+            .html("  :  " + root.data.child_name)
+            .on("click", function () {
+              redraw_parent(root.data[configuration.parentID]);
+            });
+        });
+
+      if (configuration && "rectangleBehavior" in configuration) {
+        for (var key in configuration.rectangleBehavior) {
+          cell.on(key, function (d) {
+            configuration.rectangleBehavior[key](d, configuration.rectangleBehaviorOptions);
+          });
+        }
+      }
+
+      cell.append("clipPath")
+        .attr("id", function (d) {
+          return "clip-" + d.data.id;
+        })
+        .append("use")
+        .attr("xlink:href", function (d) {
+          return "#" + d.data.id;
+        });
+
+      cell.append("text")
+        .attr("clip-path", function (d) {
+          return "url(#clip-" + d.data.id + ")";
+        })
+        .selectAll("tspan")
+        .data(function (d) {
+          return d.data[configuration.childName].split(/(?=[A-Z][^A-Z])/g);
+        })
+        .enter().append("tspan")
+        .attr("x", 4)
+        .attr("y", function (d, i) {
+          return 13 + i * 10;
+        })
+        .text(function (d) {
+          return d;
+        });
+
+      cell.append("title")
+        .text(function (d) {
+          return d.data.id + "\n" + format(d.value);
+        });
+    }
+
+    drawit();
+    d3.selectAll("input")
+      .data([sumBySize, sumByCount], function (d) {
+        return d ? d.name : this.value;
+      })
+      .on("change", changed);
+
+    var redraw = function (node) {
+
+      if (node.children) {
+        root = d3.hierarchy(node.data);
+        root.eachBefore(function (d) {
+          d.data.id = d.data[configuration.childID]
+        })
+          .sum(function (d) {
+            return d[configuration.value]
+          })
+          .sort(function (a, b) {
+            return b.value - a.value || b.value - a.value;
+          });
+        treemap(root);
+        d3.selectAll('g').remove()
+        drawit();
+        addChildNode(nodeTree, node);
+      }
+    }
+    var redraw_parent = function (id) {
+      var mylen = d3.selectAll("a")._groups[0].length;
+      var tickLabels = d3.selectAll("a").filter(function (d, i) {
+        if (mylen == 1) {
+          return 1;
+        }
+        else {
+          for (i < mylen; i++;) {
+            if (i == mylen) {
+              return i
+            }
+          }
+        }
+      }).remove();
+//      tickLabels.last().attr("color", "red");
+
+      if (typeof(id) != 'undefined') {
+        root = get_node(nodeTree, id);
+        root = d3.hierarchy(root);
+        root.eachBefore(function (d) {
+          d.data.id = d.data[configuration.childID]
+        })
+          .sum(function (d) {
+            return d[configuration.value]
+          })
+          .sort(function (a, b) {
+            return b.value - a.value || b.value - a.value;
+          });
+        treemap(root);
+        d3.selectAll('g').remove()
+        drawit();
+      }
+    }
+
+    function changed(sum, index, group) {
+      //treemap(root.sum(sum)) passes the sum function to root.sum
+      treemap(root.sum(sum));
+      cell.transition()
+        .duration(150)
+        .attr("transform", function (d) {
+          return "translate(" + d.x0 + "," + d.y0 + ")";
+        })
+        .select("rect")
+        .attr("width", function (d) {
+          return d.x1 - d.x0;
+        })
+        .attr("height", function (d) {
+          return d.y1 - d.y0;
+        });
+    }
+
+    function sumByCount(d) {
+      return d.children ? 0 : 1;
+    }
+
+    function sumBySize(d) {
+      return d.child_buzz;
+    }
+
+    function addChildNode(nodeTree, d3node) {
+      child_id = d3node.data.child_id;
+      parent_id = d3node.data.parent_id;
+      if (nodeTree.node.child_id == parent_id) {
+        if ('children' in nodeTree) {
+          for (var node in nodeTree.children) {
+            if (nodeTree.children[node].node == d3node.data) {
+              continue;
+            }
+            else {
+              nodeTree.children.push({node: d3node.data})
+            }
+          }
+        }
+        else {
+          nodeTree.children = [];
+          nodeTree.children.push({node: d3node.data});
+        }
+      }
+      else {
+        for (var node in nodeTree.children) {
+          addChildNode(nodeTree.children[node], d3node);
+        }
+      }
+    }
+
+    function get_node(nodeTree, id) {
+      if (nodeTree.node.child_id == id) {
+        return nodeTree.node;
+      }
+      else {
+        for (var node in nodeTree.children) {
+          root = get_node(nodeTree.children[node], id);
+
+        }
+      }
+      return root;
+    }
+
+    function setDefaultOptions(default_configuration, options) {
+      /*Options.tree_attribute_names: Gets keys from the tree. If not present sets default values.*/
+
+      if (options) {
+        for (var setting in options) {
+          if (!(Object.keys(default_configuration).indexOf(setting) > -1)) {
+            console.warn(setting + ' is not a default setting.')
+          }
+          default_configuration[setting] = options[setting];
+        }
+      }
+      return default_configuration
+    }
+  }
+
 })(typeof trensantGFX === 'undefined'? this['trensantGFX']={}: hf);//(window.hf = window.hf || {});
 
