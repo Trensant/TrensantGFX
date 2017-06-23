@@ -1,0 +1,20 @@
+.link {
+	fill: none;
+	stroke: #ccc;
+	opacity: 0.9;
+	stroke-width: 1.5px;
+}
+.node circle {
+	stroke: #fff;
+	opacity: 0.9;
+	stroke-width: 1.5px;
+}
+.node:not(:hover) .nodetext {
+	display: none;
+}
+
+text {
+	font: 9px;  /* was 8x serif */
+	opacity: 0.9;
+	cursor: pointer;
+}

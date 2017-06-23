@@ -140,14 +140,14 @@ trensantGFX.setIntervalX = function(callback, delay, repetitions) {
 //=====================================================================================================
 /*
 	trensantGFX.repeatUntil()
-	repeatUntil runs the supplied testFn every delay milliseconds up until a max number of times.
+	repeatUntil runs the supplied testFn every delay milliseconds up until a maxReps number of times.
 	if the test function returns true it runs the successFn and stops the iterations.
 
 	After the last rep has been completed the lastFn is called with (with the last testFn result and
 	with the current iteration).  lastFn is optional.  failFn is optional
 	
 	Example:
-	trensantGFX.repeatUntil(myLibsLoaded(), callMyChart(), null, 250, 10, null); // attempts to wait until my lib is loaded 10 times before giving up
+	trensantGFX.repeatUntil(myLibsLoaded(), callMyChart(), null, 250, 10, null); // attempts to wait until mylib is loaded 10 times before giving up
 	
 */ 
 trensantGFX.repeatUntil = function(testFn, successFn, failFn, delay, maxReps, lastFn) {
@@ -628,5 +628,576 @@ trensantGFX.abbrState = function (input, to){
 
 
 
+//======================================================================================================
+  /*
+   * Generates a Treemap.
+   * REQUIRED: Declare an element with an id. The id is passed to parameter id.
+    *  param: tree (dict)
+      *  The tree must in at least the following structure:
+        * { node: { child_name: "string",   child_id: "string",   children:   [ { child_name: "string",   parent_id: "string",   value: int, float, or double,   child_id: "string"   } ]   } }
+    * param: id (string)
+    * param: options (dict) A dictionary that allows you customize renderings and behaviors.
+     *
+       * Tree data options:
+         * parentID:: type: string, default:
+         * childID:: type: string, default:
+         * childName:: type: string, default:
+         * children:: type: string, default:
+         * value:: type: string, default:
+       * FURTHER DESCRIPTION for Tree data options:
+         * Frequently trees contain different keys labels. For
+         * example your tree label for children may be childs instead of children.
+         * Normally in that case you would either change the all the keys in
+         * you data prior to passing or specify a custom function in d3.hierarchy call.
+         * Instead you can specify key lables in options.
+         * Default values are parentID, childID, childName,
+         * children, value.
+         * Example: {children: childs}.
+     *
+       * Rendering Options:
+         * svgWidth: type: int or function, default: 600
+         * svgHeight:: type: int or function, default: 600
+         * fader:: description: rectangle color, type: float, default 0.5
+     *
+       * Behavior Options:
+         * rectangleBehavior:: type: dict of functions, default: null
+         * rectangleBehaviorOptions: type: any, default: null
+         * svgBehavior: type: dict of functions, default: null
+         * svgBehaviorOptions: type: any, default: null
+     *
+  */
+  trensantGFX.d3TreeMap = function (tree, id, options) {
+    var treemapDefaultConfiguration = {
+      parentID: 'parentID',
+      childID: "childID",
+      childName: "childName",
+      children: "children",
+      value: "value",
+      svgWidth: 600,
+      svgHeight: 600,
+      fader: 0.5,
+      rectangleBehavior: null,
+      rectangleBehaviorOptions: null,
+      svgBehavior: null,
+      svgBehaviorOptions: null
+    }
+    configuration = setOptions(treemapDefaultConfiguration, options);
+
+    var fader = function (color) {
+        return d3.interpolateRgb(color, "#fff")(configuration.fader);
+      },
+      color = d3.scaleOrdinal(d3.schemeCategory20.map(fader)),
+      format = d3.format(",d");
+
+    var width = typeof configuration.svgWidth === "function" ? configuration.svgWidth() : configuration.svgWidth,
+      height = typeof configuration.svgHeight === "function" ? configuration.svgHeight() : configuration.svgHeight;
+
+    d3.select('#'+id).append("p").classed("parent", true)
+    d3.select('#'+id)
+      .append("svg")
+    var svg = d3.select('#'+id)
+      .select("svg")
+      .attr("width", width)
+      .attr("height", height)
+      .style("font", "10px sans-serif")
+    if ("svgBehavior" in configuration) {
+      for (var key in configuration.svgBehavior) {
+        svg.on(key, function () {
+          configuration.svgBehavior[key](configuration.svgBehaviorOptions);
+        });
+      }
+    }
+
+
+    var treemap = d3.treemap()
+      .size([width, height])
+      .round(true)
+      .paddingInner(1);
+
+    var nodeTree = tree;
+    var root = d3.hierarchy(tree.node);
+    root.eachBefore(function (d) {
+      d.data.id = d.data[configuration.childID]
+    })
+      .sum(function (d) {
+        return d[configuration.value]
+      })
+      .sort(function (a, b) {
+        return b.value - a.value || b.value - a.value;
+      });
+    treemap(root);
+    var parent_element = d3.select(".parent");
+    parent_element.html(function () {
+      return root.data[configuration.childName]
+    });
+    function drawit() {
+      cell = svg.selectAll("g").data(root[configuration.children]).enter().append("g")
+        .attr("transform", function (d) {
+          return "translate(" + d.x0 + "," + d.y0 + ")";
+        });
+
+      cell.append("rect")
+        .attr("id", function (d) {
+          return d.data.id;
+        })
+        .attr("width", function (d) {
+          return d.x1 - d.x0;
+        })
+        .attr("height", function (d) {
+          return d.y1 - d.y0;
+        })
+        .attr("fill", function (d) {
+          return color(d.data[configuration.value]);
+        })
+        .on('click', function (d) {
+          redraw(d);
+          parent_element.append("a")
+            .attr("href", "javascript:void(0)")
+            .html("  :  " + root.data.child_name)
+            .on("click", function () {
+              redraw_parent(root.data[configuration.parentID]);
+            });
+        });
+
+      if (configuration && "rectangleBehavior" in configuration) {
+        for (var key in configuration.rectangleBehavior) {
+          cell.on(key, function (d) {
+            configuration.rectangleBehavior[key](d, configuration.rectangleBehaviorOptions);
+          });
+        }
+      }
+
+      cell.append("clipPath")
+        .attr("id", function (d) {
+          return "clip-" + d.data.id;
+        })
+        .append("use")
+        .attr("xlink:href", function (d) {
+          return "#" + d.data.id;
+        });
+
+      cell.append("text")
+        .attr("clip-path", function (d) {
+          return "url(#clip-" + d.data.id + ")";
+        })
+        .selectAll("tspan")
+        .data(function (d) {
+          return d.data[configuration.childName].split(/(?=[A-Z][^A-Z])/g);
+        })
+        .enter().append("tspan")
+        .attr("x", 4)
+        .attr("y", function (d, i) {
+          return 13 + i * 10;
+        })
+        .text(function (d) {
+          return d;
+        });
+
+      cell.append("title")
+        .text(function (d) {
+          return d.data.id + "\n" + format(d.value);
+        });
+    }
+
+    drawit();
+    d3.selectAll("input")
+      .data([sumBySize, sumByCount], function (d) {
+        return d ? d.name : this.value;
+      })
+      .on("change", changed);
+
+    var redraw = function (node) {
+
+      if (node.children) {
+        root = d3.hierarchy(node.data);
+        root.eachBefore(function (d) {
+          d.data.id = d.data[configuration.childID]
+        })
+          .sum(function (d) {
+            return d[configuration.value]
+          })
+          .sort(function (a, b) {
+            return b.value - a.value || b.value - a.value;
+          });
+        treemap(root);
+        d3.selectAll('g').remove()
+        drawit();
+        addChildNode(nodeTree, node);
+      }
+    }
+    var redraw_parent = function (id) {
+      var mylen = d3.selectAll("a")._groups[0].length;
+      var tickLabels = d3.selectAll("a").filter(function (d, i) {
+        if (mylen == 1) {
+          return 1;
+        }
+        else {
+          for (i < mylen; i++;) {
+            if (i == mylen) {
+              return i
+            }
+          }
+        }
+      }).remove();
+//      tickLabels.last().attr("color", "red");
+
+      if (typeof(id) != 'undefined') {
+        root = get_node(nodeTree, id);
+        root = d3.hierarchy(root);
+        root.eachBefore(function (d) {
+          d.data.id = d.data[configuration.childID]
+        })
+          .sum(function (d) {
+            return d[configuration.value]
+          })
+          .sort(function (a, b) {
+            return b.value - a.value || b.value - a.value;
+          });
+        treemap(root);
+        d3.selectAll('g').remove()
+        drawit();
+      }
+    }
+
+    function changed(sum, index, group) {
+      //treemap(root.sum(sum)) passes the sum function to root.sum
+      treemap(root.sum(sum));
+      cell.transition()
+        .duration(150)
+        .attr("transform", function (d) {
+          return "translate(" + d.x0 + "," + d.y0 + ")";
+        })
+        .select("rect")
+        .attr("width", function (d) {
+          return d.x1 - d.x0;
+        })
+        .attr("height", function (d) {
+          return d.y1 - d.y0;
+        });
+    }
+
+    function sumByCount(d) {
+      return d.children ? 0 : 1;
+    }
+
+    function sumBySize(d) {
+      return d.child_buzz;
+    }
+
+    function addChildNode(nodeTree, d3node) {
+      child_id = d3node.data.child_id;
+      parent_id = d3node.data.parent_id;
+      if (nodeTree.node.child_id == parent_id) {
+        if ('children' in nodeTree) {
+          for (var node in nodeTree.children) {
+            if (nodeTree.children[node].node == d3node.data) {
+              continue;
+            }
+            else {
+              nodeTree.children.push({node: d3node.data})
+            }
+          }
+        }
+        else {
+          nodeTree.children = [];
+          nodeTree.children.push({node: d3node.data});
+        }
+      }
+      else {
+        for (var node in nodeTree.children) {
+          addChildNode(nodeTree.children[node], d3node);
+        }
+      }
+    }
+
+    function get_node(nodeTree, id) {
+      if (nodeTree.node.child_id == id) {
+        return nodeTree.node;
+      }
+      else {
+        for (var node in nodeTree.children) {
+          root = get_node(nodeTree.children[node], id);
+
+        }
+      }
+      return root;
+    }
+
+    function setOptions(default_configuration, options) {
+      /*Options.tree_attribute_names: Gets keys from the tree. If not present sets default values.*/
+
+      if (options) {
+        for (var setting in options) {
+          if (!(Object.keys(default_configuration).indexOf(setting) > -1)) {
+            console.warn(setting + ' is not a default setting.')
+          }
+          default_configuration[setting] = options[setting];
+        }
+      }
+      return default_configuration
+    }
+  }
+//======================================================================================================
+//  d3 radialtree draws a redial zoomable graph of related items
+  /*
+  * While not required it is recommended you add the following css classes prior to attempting to render the radial tree.
+  .link {
+   fill: none;
+   stroke: #ccc;
+   opacity: 0.9;
+   stroke-width: 1.5px;
+   }
+   .node circle {
+   stroke: #fff;
+   opacity: 0.9;
+   stroke-width: 1.5px;
+   }
+   .node:not(:hover) .nodetext {
+   display: none;
+   }
+
+   text {
+   font: 9px;
+   opacity: 0.9;
+   cursor: pointer;}
+  *
+  *
+  * param: treeData (dict)
+    *  The treeData must in at least the following structure:
+    *    { "name": "node display name",  "uuid" : string, "children": [ { "name" : ..., "uuid" : ...,   children [ "name" : ..., "uuid" : ..., "size" : <number>  ]}]}
+  * param: id (string)
+  * param: options (dict) A dictionary that allows you customize renderings and behaviors.
+  *
+  * */
+
+  trensantGFX.d3radialTree = function (treeData, id, options) {
+    if (typeof options == "undefined") {
+      options = {};
+    }
+
+    var width = typeof(options["width"]) == "undefined" ? 750 : options["width"];
+    var height = typeof(options["height"]) == "undefined" ? 750 : options["height"];
+
+    var diameter = typeof(options["diameter"]) == "undefined" ? 725 : options["diameter"];
+    var duration = 750;
+
+    var nodes, links;
+    var i = 0;
+
+    var treeLayout = d3.tree().size([360, diameter / 2 - 120]), root;
+
+    var nodeSvg, linkSvg, nodeEnter, linkEnter;
+
+    var svg = d3.select("#"+id).append("svg")
+      .attr("width", width)
+      .attr("height", height);
+    var g = svg.append("g").attr("transform", "translate(" + (width / 2 + 40) + "," + (height / 2 + 90) + ")");
+
+    root = d3.hierarchy(treeData);
+    root.each(function (d) {
+      d.name = d.data.name; //transferring name to a name variable
+      d.id = i; //Assigning numerical Ids
+      i += i;
+    });
+
+    root.x0 = height / 2;
+    root.y0 = 0;
+
+    function collapse(d) {
+      if (d.children) {
+        d._children = d.children;
+        d._children.forEach(collapse);
+        d.children = null;
+      }
+    }
+
+    // root.children.forEach(collapse);
+    update(root);
+
+
+    function update(source) {
+      root = treeLayout(root);
+      nodes = treeLayout(root).descendants();
+      links = nodes.slice(1);
+      var nodeUpdate;
+      var nodeExit;
+
+      // Normalize for fixed-depth.
+      nodes.forEach(function (d) {
+        d.y = d.depth * 180;
+      });
+      nodeSvg = g.selectAll(".node")
+        .data(nodes, function (d) {
+          return d.id || (d.id = ++i);
+        });
+      nodeSvg.exit().remove();
+
+      var nodeEnter = nodeSvg.enter()
+        .append("g")
+        .attr("class", "node")
+        .attr("transform", function (d) {
+          return "translate(" + project(d.x, d.y) + ")";
+        })
+
+
+      nodeEnter.append("circle")
+        .attr("r", 5)
+        .style("fill", color).on("click", click);
+
+      nodeEnter.append("text")
+        .attr("dy", ".31em")
+        .attr("x", function (d) {
+          return d.x < 180 === !d.children ? 6 : -6;
+        })
+        .style("text-anchor", function (d) {
+          return d.x < 180 === !d.children ? "start" : "end";
+        })
+        .attr("transform", function (d) {
+          return "rotate(" + (d.x < 180 ? d.x - 90 : d.x - 270 ) + ")";
+        })
+        .text(function (d) {
+          if (d.parent) {
+            return d.name;
+          }
+          else {
+            return null
+          }
+        }).on("click", options.onClick)
+
+      // Transition nodes to their new position.
+      var nodeUpdate = nodeSvg.merge(nodeEnter).transition()
+        .duration(duration)
+        .attr("transform", function (d) {
+          return "translate(" + project(d.x, d.y) + ")";
+        });
+
+      nodeSvg.select("circle")
+        .style("fill", color);
+
+      nodeUpdate.select("text")
+        .style("fill-opacity", 1)
+        .attr("transform", function (d) {
+          return "rotate(" + (d.x < 180 ? d.x - 90 : d.x - 270 ) + ")";
+        });
+
+      // Transition exiting nodes to the parent's new position.
+      var nodeExit = nodeSvg.exit().transition()
+        .duration(duration)
+        .attr("transform", function (d) {
+          return "translate(" + source.y + "," + source.x + ")";
+        }) //for the animation to either go off there itself or come to centre
+        .remove();
+
+      nodeExit.select("circle")
+        .attr("r", 1e-6);
+
+      nodeExit.select("text")
+        .style("fill-opacity", 1e-6);
+
+      nodes.forEach(function (d) {
+        d.x0 = d.x;
+        d.y0 = d.y;
+      });
+
+
+      linkSvg = g.selectAll(".link")
+        .data(links, function (link) {
+          var id = link.id + '->' + link.parent.id;
+          return id;
+        });
+
+      // Transition links to their new position.
+      linkSvg.transition()
+        .duration(duration);
+      // .attr('d', connector);
+
+      // Enter any new links at the parent's previous position.
+      linkEnter = linkSvg.enter().insert('path', 'g')
+        .attr("class", "link")
+        .attr("d", function (d) {
+          return "M" + project(d.x, d.y)
+            + "C" + project(d.x, (d.y + d.parent.y) / 2)
+            + " " + project(d.parent.x, (d.y + d.parent.y) / 2)
+            + " " + project(d.parent.x, d.parent.y);
+        });
+      /*
+       function (d) {
+       var o = {x: source.x0, y: source.y0, parent: {x: source.x0, y: source.y0}};
+       return connector(o);
+       });*/
+
+
+      // Transition links to their new position.
+      linkSvg.merge(linkEnter).transition()
+        .duration(duration)
+        .attr("d", connector);
+
+
+      // Transition exiting nodes to the parent's new position.
+      linkSvg.exit().transition()
+        .duration(duration)
+        .attr("d", /*function (d) {
+         var o = {x: source.x, y: source.y, parent: {x: source.x, y: source.y}};
+         return connector(o);
+         })*/function (d) {
+          return "M" + project(d.x, d.y)
+            + "C" + project(d.x, (d.y + d.parent.y) / 2)
+            + " " + project(d.parent.x, (d.y + d.parent.y) / 2)
+            + " " + project(d.parent.x, d.parent.y);
+        })
+        .remove();
+
+      // Stash the old positions for transition.
+    }
+
+    function click(d) {
+      if (d.children) {
+        d._children = d.children;
+        d.children = null;
+      } else if (d._children) {
+        d.children = d._children;
+        d._children = null;
+      } else {
+        return null;
+      }
+      update(d);
+    }
+
+
+    function color(d) {
+      return d._children ? "#3182bd" // collapsed package
+        : d.children ? "#c6dbef" // expanded package
+          : "#fd8d3c"; // leaf node
+    }
+
+
+    function flatten(root) {
+      // hierarchical data to flat data for force layout
+      var nodes = [];
+
+      function recurse(node) {
+        if (node.children) node.children.forEach(recurse);
+        if (!node.id) node.id = ++i;
+        else ++i;
+        nodes.push(node);
+      }
+
+      recurse(root);
+      return nodes;
+    }
+
+
+    function project(x, y) {
+      var angle = (x - 90) / 180 * Math.PI, radius = y;
+      return [radius * Math.cos(angle), radius * Math.sin(angle)];
+    }
+
+    function connector(d) {
+      return "M" + project(d.x, d.y)
+        + "C" + project(d.x, (d.y + d.parent.y) / 2)
+        + " " + project(d.parent.x, (d.y + d.parent.y) / 2)
+        + " " + project(d.parent.x, d.parent.y)
+    }
+  }
 })(typeof trensantGFX === 'undefined'? this['trensantGFX']={}: hf);//(window.hf = window.hf || {});
 

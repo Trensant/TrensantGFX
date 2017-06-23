@@ -11,6 +11,9 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>  <!-- not part of graphics library just here for div and layour mgmt -->
 
+<!--css for d3 rendering -->
+<link rel="stylesheet" href="./style/d3radialx.css">
+
 <script type="text/javascript" src="./libs/helper-fns.js"></script>  <!-- helper-fns is a library for doing generec web work like URL param managment -->
 
 
@@ -18,13 +21,13 @@
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>  <!-- google charts loader -->
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>              <!-- as of 20170620 Google says it needs this for maps -->
 
-<script src="https://d3js.org/d3.v4.min.js"></script>  <!-- not compatible with d3.v3 or earlier  -->
+<script src="https://d3js.org/d3.v4.min.js"></script>  				 <!-- not compatible with d3.v3 or earlier  -->
 <script type="text/javascript" src="./libs/wordcloud2.js"></script>  <!-- wordcloud2.js is a wordcloud library -->
 
 
 <!-- see more about jqcloud here: https://github.com/mistic100/jQCloud -->
 <script type="text/javascript" src="./libs/jqcloud.min.js"></script> <!-- jQCloud is a word cloud library -->
-<link rel="stylesheet" href="./libs/jqcloud.min.css">
+<link rel="stylesheet" href="./libs/jqcloud.min.css"> 				 <!-- jQCloud requires this css file  -->
 
 
 <!--  maps -->
@@ -47,9 +50,7 @@
 <!-- index.html ... trensantGFX tester 
 
 M A Chatterjee 2017-06-05 :: note requires trensant-text-header.html 
-
 URL params
-
 drawBanner=false    				// supress or show the top Trensant Logo
 -->
 
@@ -65,7 +66,6 @@ drawBanner=false    				// supress or show the top Trensant Logo
 		<div id='tocDIV'></div>  <!-- table of contents goes here, dynamically populated -->
 		<br>
 		<div id="graphicsDiv"></div> <!-- chart sections go here, dynmaically populated -->
-		
 	</div>
 	</div>
 </div>
@@ -295,7 +295,7 @@ drawBanner=false    				// supress or show the top Trensant Logo
 	//render the chart
 	trensantGFX.gglDrawLineChart(lineChartData,div+"_chart",lineChartOpts);
 	
-		//===================================================================================================		
+	//===================================================================================================		
 	// trensantGFX.gglDrawPieChart() 
 	div = "gglDrawBarChartDiv";
 	drawNewSectionDiv(div,{"name":"gglDrawBarChart"});	
@@ -320,14 +320,43 @@ drawBanner=false    				// supress or show the top Trensant Logo
 	trensantGFX.gglDrawBarChart(barChartData,div+"_chart",barChartOpts);
 	
 	
+	//===================================================================================================		
+	//===================================================================================================		
+	//trensant.d3treeMap
+    var treediv = "d3treeMapDiv";
+    drawNewSectionDiv(treediv,{"name":"d3treeMapDiv"});
 
+    //emit description info
+    $("#"+treediv+"_desc").html("treemap draws a treemap");
+
+    var treeMapSampleData =  { node: { childName: "childString",   childID: "childID",   children:   [ { childName: "childstring",   parentID: "parentstring",   value: 8,   childID: "childString"   } ]   } }
+
+    //display sample data
+	trensantGFX.tgPrettyPrint(treeMapSampleData, treediv+"_data")
+
+	//render the chart
+    trensantGFX.d3TreeMap(treeMapSampleData, treediv+"_chart");
+
+	//===================================================================================================
+	//trensant.d3radialTree
+	var radialdiv = "d3radialTree";
+    drawNewSectionDiv(radialdiv,{"name":"d3radialTree"});
+
+	var radialTreeSampleData = {name: "Current Article", uuid: "none", type: "article", children: [{name: "Dow Jones Index", type: "organization", uuid: "554aa5369b72473f5ef4a73f", children: [{name: "Apple", type:"", uuid: "539210155f260eaca93b38c4", children: []}, {name: "Average", type: "", uuid: "59359f40bbd2ac573a825e37", children: []}, {name: "American Express", type: "", uuid: "52fc31a699c603f475c6a19b", children: []}]}, {name: "Wall Street", type: "location", uuid: "539210255f260eaca93b3b0d", children: [{name: "Wilbur Ross", type: "", uuid: "57d1185d9b7247278519adc0", children: [] }]}]}
+
+    //display sample data
+    trensantGFX.tgPrettyPrint(radialTreeSampleData, radialdiv+"_data")
+
+
+    //render the chart
+    trensantGFX.d3radialTree(radialTreeSampleData, radialdiv+"_chart");
 
 	// end main area-----------------------------------------------------------------------------------
 	}// mainArea body
 
-
-
 	trensantGFX.repeatUntil (trensantGFX.gglChartsLoaded , mainArea,null, 75, 35, function(r,c){if (r==false) console.log('chart load error')}); // this waits for gglcharts to load by checking every 75ms up to 35 times...
+	
+
 
 
 </script>
