@@ -1,3 +1,5 @@
+<html>
+<head>
 <!-- HTML header code for trensant-gfx demo. M A Chatterjee 20170525 -->
 <link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -14,6 +16,8 @@
 
 <!-- core graphics library includes.  -->
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>  <!-- google charts loader -->
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>              <!-- as of 20170620 Google says it needs this for maps -->
+
 <script src="https://d3js.org/d3.v4.min.js"></script>  <!-- not compatible with d3.v3 or earlier  -->
 <script type="text/javascript" src="./libs/wordcloud2.js"></script>  <!-- wordcloud2.js is a wordcloud library -->
 
@@ -32,6 +36,14 @@
 
 
 <title>Trensant Graphics Wrapper Library</title>
+<style type="text/css">
+
+.cssChart {
+	height: 500px;
+}
+</style>
+</head>
+<body>
 <!-- index.html ... trensantGFX tester 
 
 M A Chatterjee 2017-06-05 :: note requires trensant-text-header.html 
@@ -45,8 +57,8 @@ drawBanner=false    				// supress or show the top Trensant Logo
 	<div class='col-md-12'>  <!-- boostrap basic column management -->
 	<div class="row">
 		<div class='top-banner' id="topBanner">	</div> <!-- top banner is dynamically drawn -->
-		<h2>Trensant Graphics</h2>
-		<p>This is the Trensant Graphics Library Demo page.  The Trensant Graphics Library is a wrapper of several 3rd party graphics and charting libraries which are useful for visualizing data using different techniques.  See the README.md file in the distribution for more on which libraries and charts are wrapped.
+		<h1>Trensant Graphics</h1>
+		<p>This is the Trensant Graphics Library Demo page.  The Trensant Graphics Library is a wrapper of several 3rd party graphics and charting libraries which are useful for visualizing data using different techniques.  See the README.md file in the distribution for more on which libraries and charts are wrapped and how to use them.
 		<br>
 		<div id='test'></div>  <!-- spare test div, to be deleted -->
 		<h2>Charts</h2>
@@ -60,16 +72,17 @@ drawBanner=false    				// supress or show the top Trensant Logo
 
 <!-- Begin code ************************************************************************************************ -->
 <script>
+	//global vars
+	google.charts.load('current', {'packages':['table','corechart','geochart','line']});
+	google.charts.setOnLoadCallback(function(){gAvail["table"]=true; gAvail["pie"]=true; gAvail["geochart"]=true; });
+	// end static inits ......
 	var gCharts = {"toc":[]};
 	var gDrawBanner = true; 
 	if ((hf.getURLParam("drawBanner") != "false") && (gDrawBanner==true))
 		document.getElementById("topBanner").innerHTML= "<a href='http://trensant.com'><img src='./img/Trensant_apricot_flat_sm.png'></img></a><br><br>";
 	var gAvail ={};
-	//global vars
-	google.charts.load('current', {'packages':['table','corechart','geochart','line']});
-	google.charts.setOnLoadCallback(function(){gAvail["table"]=true; gAvail["pie"]=true; gAvail["geochart"]=true;});
-	// end static inits ......
-	
+	var div;
+
 	//============================================================================
 	/*
 	drawNewSectionDiv()
@@ -79,8 +92,11 @@ drawBanner=false    				// supress or show the top Trensant Logo
 	<div id=domID>
 		<h3  id='domID_heading' 	>Chart Name</h3>  			// name of this chart           
 		<p   id='domID_desc'   		>description</p>  			// description string of this chart.  can be HTML 
+		<br>
 		<h4  id='domID_dataHeading' >Chart Data Heading</h4>  	// data heading
 		<pre id='domID_data'        >data area </pre>			// raw data shown here 
+		<br>
+		<h4  id='domID_chartHeading'>Chart Example Hading</h4>  // title above chart area
 		<div id='domID_chart' 		>chart renders here</div>   // rendering area this chart
 	</div>
 
@@ -98,7 +114,9 @@ drawBanner=false    				// supress or show the top Trensant Logo
 		}
 		var i,x,dopts = {
 			"name"   : "Chart Name",
-			"line_break" : true
+			"line_break" : true,
+			"chartCss"   : 'cssChart', // this is the default cssClass for the chart div.  Can overide with a string "myChartClass1 myChartClass2" etc
+			"chartSty"   : ''          // allows styles to be passed to the chart div  eg "width:500; color:red" etc
 		};
 		if (trensantGFX.typeOf(opts) == "object")
 			for (i in opts) 
@@ -106,17 +124,20 @@ drawBanner=false    				// supress or show the top Trensant Logo
 
 		// individual sections.  these can be overriden by passing in a block like this as opts["sections"]= [ [] [] []]
 		dopts["sections"] = [
-			 //tag  , id_suffix ,  default content, css
-			 ["h2"	,'_heading'		,  dopts["name"]				 ],
-			 ["p" 	,'_desc'   		,  'Overview text goes here'	 ],
-			 ["h4"	,'_dataHeading' ,  'Example Data (click to show/hide)'				 ],
+			 //tag  , id_suffix ,  default content, css_class
+			 ["h2"	,'_heading'		,  dopts["name"]				               ],
+			 ["p" 	,'_desc'   		,  'Overview text goes here'	               ],
+			 ["br"  ,'_break1'      , ''                                           ],
+			 ["h4"	,'_dataHeading' ,  'Example Data (click to show/hide)'		   ],
 			 ["pre"	,'_data' 		,  'Formatted data example area for this chart'],
-			 ["div" ,'_chart' 		,  'rendered chart goes here'    ]
+			 ["br"  ,'_break2'      , ''                             	           ],
+			 ["h4"	,'_chartHeading',  'Example Rendering'				 		   ],			 
+			 ["div" ,'_chart' 		,  'rendered chart goes here'    , dopts["chartCss"], dopts["chartSty"]  ]
 			];
 
 		if (trensantGFX.typeOf(opts) == "object")
 			for (i in opts) 
-				dopts[i] = opts[i]; 
+				dopts[i] = opts[i];   // this loop is repeated to pick up overrides such as dopts["name"], dopts["chartCss"]
 		
 
 		var node = document.createElement("div");
@@ -125,7 +146,9 @@ drawBanner=false    				// supress or show the top Trensant Logo
 		for (i=0; i < dopts["sections"].length; i++) {
 			x = document.createElement(dopts["sections"][i][0]);
 			x["id"] = domID+dopts["sections"][i][1];
-			x["innerHTML"] = dopts["sections"][i][2];		
+			x["innerHTML"] = dopts["sections"][i][2];
+			x["className"] = typeof dopts["sections"][i][3] == "undefined" ? "" : dopts["sections"][i][3] ;  
+			x["style"]     = typeof dopts["sections"][i][4] == "undefined" ? "" : dopts["sections"][i][4] ;
 			node.appendChild(x);
 		}
 		if (dopts["line_break"] == true) {
@@ -134,9 +157,12 @@ drawBanner=false    				// supress or show the top Trensant Logo
 		}
 		document.getElementById("graphicsDiv").appendChild(node); // add this section to the document
 		$('#'+domID+"_dataHeading").click(function(){ $('#'+domID+"_data").toggle(200);});
+		$('#'+domID+"_data").hide(); // default is hidden
+
 		//update table of contents
 		addTOCEntry(dopts["name"],domID);
-		updatePageTOC();
+		updatePageTOC(); //redraw TOC
+
 		return document.getElementById(domID); // return node ref
 	}
 	
@@ -157,6 +183,8 @@ drawBanner=false    				// supress or show the top Trensant Logo
 	//===================================================================================================
 	// now begins the chart gallery
 	
+	function mainArea() {
+	//===================================================================================================
 	//===================================================================================================
 	// trensantGFX.tgPrettyPrint
 	drawNewSectionDiv('tgPrettyPrintDiv',{"name":"tgPrettyPrint"});
@@ -174,12 +202,13 @@ drawBanner=false    				// supress or show the top Trensant Logo
 	trensantGFX.tgPrettyPrint(prettyPrintSampleData,"tgPrettyPrintDiv_data");
 
 	//render the chart
-	$("#tgPrettyPrintDiv_chart").html(""); // in this case the chart and the data are the same so we don't render a chart
-
+	trensantGFX.tgPrettyPrint(prettyPrintSampleData,"tgPrettyPrintDiv_chart");
+	//$("#tgPrettyPrintDiv_chart").html(""); // in this case the chart and the data are the same so we don't render a chart
 
 	//===================================================================================================
+	//===================================================================================================
 	// trensantGFX.rowWordCloud
-	var div = "tgRowWordCloudDiv";
+	div = "tgRowWordCloudDiv";
 	drawNewSectionDiv(div,{"name":"tgRowWordCloud"});
 	
 
@@ -213,11 +242,95 @@ drawBanner=false    				// supress or show the top Trensant Logo
 	trensantGFX.tgPrettyPrint(rowWordCloudSampleData,div+"_data");
 
 	//render the chart
-	trensantGFX.drawRowWordCloud( rowWordCloudSampleData,div+"_chart",rowWordOpts);
+	trensantGFX.tgDrawRowWordCloud( rowWordCloudSampleData,div+"_chart",rowWordOpts);
+	
 	//===================================================================================================
-		
+	//===================================================================================================		
+	// trensantGFX.gglDrawPieChart() 
+	div = "gglDrawPieChartDiv";
+	drawNewSectionDiv(div,{"name":"gglDrawPieChart"});	
 
+	//emit description info
+	$("#"+div+"_desc").html("gglDrawPieChart takes an array of data of the form [[term, value],[term2, value2], [term3,value3],.. ] and renders a pie Chart using Google charts.");
+
+	var pieChartData = [   // note colors are optional, and can be HTML colors e.g. "#f44", data does not need to be sorted
+		["Category", "Percent"],  //note pie chart will convert raw values to percents
+		["deal", 	198  ],
+  		["shoe", 	1925 ],
+  		["nfl",  	495  ],
+  		["nike", 	243  ], 
+  		["speed",    490 ],
+  		[ "game",   2458 ]
+  		];	
+  	var pieChartOpts = {};
+
+	//show the raw data
+	trensantGFX.tgPrettyPrint(pieChartData,div+"_data");
+
+	//render the chart
+	trensantGFX.gglDrawPieChart(pieChartData,div+"_chart",pieChartOpts);
+	
+	//===================================================================================================
+	//===================================================================================================		
+	// trensantGFX.gglDrawPieChart() 
+	div = "gglDrawLineChartDiv";
+	drawNewSectionDiv(div,{"name":"gglDrawLineChart"});	
+
+	//emit description info
+	$("#"+div+"_desc").html("gglDrawLineChart takes an array of data of the form  and renders a line Chart using Google charts.");
+
+	var lineChartData =
+		[ 
+		['x-axis','series0','series2','series3'],
+   		[ 0,23,34,45],
+   		[ 10,34,45,63],
+   		[ 20,16,38,99],
+   		[ 30,31,36,32]
+   		];
+  	var lineChartOpts = {};
+
+	//show the raw data
+	trensantGFX.tgPrettyPrint(lineChartData,div+"_data");
+
+	//render the chart
+	trensantGFX.gglDrawLineChart(lineChartData,div+"_chart",lineChartOpts);
+	
+		//===================================================================================================		
+	// trensantGFX.gglDrawPieChart() 
+	div = "gglDrawBarChartDiv";
+	drawNewSectionDiv(div,{"name":"gglDrawBarChart"});	
+
+	//emit description info
+	$("#"+div+"_desc").html("gglDrawBarChart takes an array of data of the form  and renders a bar Chart using Google charts.");
+
+	var barChartData =
+		[ 
+		['x-axis','series0','series2','series3'],
+   		[ 0,23,34,45],
+   		[ 10,34,45,63],
+   		[ 20,16,38,99],
+   		[ 30,31,36,32]
+   		];
+  	var barChartOpts = {};
+
+	//show the raw data
+	trensantGFX.tgPrettyPrint(barChartData,div+"_data");
+
+	//render the chart
+	trensantGFX.gglDrawBarChart(barChartData,div+"_chart",barChartOpts);
+	
+	
+
+
+	// end main area-----------------------------------------------------------------------------------
+	}// mainArea body
+
+
+
+	trensantGFX.repeatUntil (trensantGFX.gglChartsLoaded , mainArea,null, 75, 35, function(r,c){if (r==false) console.log('chart load error')}); // this waits for gglcharts to load by checking every 75ms up to 35 times...
 
 
 </script>
 	
+</body>
+</html>

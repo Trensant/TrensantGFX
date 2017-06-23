@@ -57,7 +57,7 @@ trensantGFX.typeOf = function (x)   {
 	return (typeof x == "undefined") ? "undefined" : (({}).toString.call(x).match(/\s([a-zA-Z]+)/)[1].toLowerCase());
 };
 
-var _to = trensantGFX.typeOf;  //short hand used internally
+var _to = trensantGFX.typeOf;  //short hand used internally for typeof operations.
 
 //=====================================================================================================
 /* 
@@ -69,24 +69,146 @@ trensantGFX.roundNum = function (x,numDigits) {
 	numDigits =  (_to(numDigits) == 'number') ? Math.pow(10,Math.round( numDigits)) : 100;
 	return Math.round (x*numDigits) / numDigits ;
 }
-
 var _round = trensantGFX.roundNum;  // short hand used internally
 
 //=====================================================================================================
+//constrain input x in between min, max, expects numeric input
+trensantGFX.constrain = function (x,min,max) {
+    if (max < min) {a=min; min=max; max=a;}
+    if (x<=min)	{x=min;}
+    if (x>=max)	{x=max;}
+    return x;
+}
+//=====================================================================================================
 /*
-	trensantGFX.prettyPrint (data)
-		pretty a Javscript object 
+ Map an input value z in its natural range in0...in1 to the output 
+ space out0...out1 with optional clipping
+ exp_scale allows sigmoidal warping to stretch input values contrained to a small range. (floating point scale factor)
+
+ example:
+  	trensant.mapScaleEXP(33,0,100,-100,100)  --> maps 33 with input range from 0 .. 100 in to the range -100,100 linearly ==> 
+ */
+trensantGFX.mapScaleEXP = function (z, in0, in1, out0, out1, clip, exp_scale) {
+    
+    clip = (typeof clip == 'undefined')?false:clip;
+    exp_scale = (typeof exp_scale !== 'number')?false:exp_scale;
+    if (in0==in1) {return z;}
+    if (exp_scale) {
+        var y = ((z-((in1+in0) / 2.0))/(in1-in0))*exp_scale;
+        z = ((out1-out0)*(1/(1+Math.exp(-y))))+out0;
+    }
+    else
+        z = (((z-in0)/(in1-in0))*(out1-out0))+out0;
+    if (clip!=false) 
+        z=trensantGFX.constrain(z,out0,out1);
+    return z;
+}
+
+var _mapScale = trensantGFX.mapScaleEXP; //short hand used internally
+
+
+//======================================
+/* 
+	trensantGFX.containerDims(domID) 
+	returns the height and width of a given HTML container 	
+	currently uses Jquery but may change this later.  This fn is used internally for default container widths/heights
+*/
+trensantGFX.containerDims = function (domID) {
+	return { "wid": $('#'+domID).width(), "hgt" : $('#'+domID).height()}
+}
+
+var _dims = trensantGFX.containerDims;
+
+
+//=====================================================================================================
+/* 	trensantGFX.setIntervalX(callbackFn, delayBtwCalls, repetitions)
+ 	set a javascript timer to only run a max of N repetions.  
+	// Note: Only works in browser not server side as it requires access to window object.
+	// also note that callback function is called with the interval number to be used for whatever purposes the callback likes
+*/ 
+trensantGFX.setIntervalX = function(callback, delay, repetitions) {
+    var x = 0;
+    var intervalID = window.setInterval(function () {
+
+       callback(x);
+
+       if (++x >= repetitions) {
+           window.clearInterval(intervalID);
+       }
+    }, delay);
+}
+//=====================================================================================================
+/*
+	trensantGFX.repeatUntil()
+	repeatUntil runs the supplied testFn every delay milliseconds up until a max number of times.
+	if the test function returns true it runs the successFn and stops the iterations.
+
+	After the last rep has been completed the lastFn is called with (with the last testFn result and
+	with the current iteration).  lastFn is optional.  failFn is optional
 	
+	Example:
+	trensantGFX.repeatUntil(myLibsLoaded(), callMyChart(), null, 250, 10, null); // attempts to wait until my lib is loaded 10 times before giving up
+	
+*/ 
+trensantGFX.repeatUntil = function(testFn, successFn, failFn, delay, maxReps, lastFn) {
+	var _count = 0;
+	var _max   = maxReps;
+	if (typeof testFn != "function")
+		return 'err';
+	if (typeof delay != "number")
+		delay = 250;  // 250ms
+	if (typeof maxReps != "number")
+		maxReps = 1; // run 1 time.
+
+	var _testFn = testFn;
+	var _successFn 	= (typeof successFn == "function") ? successFn 	: function(){};
+	var _failFn 	= (typeof failFn 	== "function") ? failFn 	: function(){};
+	var _lastFn 	= (typeof lastFn 	== "function") ? lastFn 	: function(){};
+
+	var _f = function() {
+		var success = _testFn();
+		if (true== success) {
+			_successFn();
+			_lastFn(true,_count);
+
+		}
+		else {
+			_failFn();
+			if ( _count >= maxReps) {
+				_lastFn(success, _count);
+			}
+			else {
+				_count++;
+				window.setTimeout(_f,delay)			
+			}
+		}
+
+	}
+	_f();
+
+
+}
+//=====================================================================================================
+//=====================================================================================================
+// BEGIN Graphics Wrapper Functions
+
+//=====================================================================================================
+//=====================================================================================================
+/*
+	trensantGFX.tgPrettyPrint (data, domID, opts) 
+		prettyPrint a Javscript object 
+		this is a "native" graphics call in that it doesn't wrap another charting library
+
 	example usage:
 		trensantGFX.tgPrettyPrint({"foo":123,"bar":345,"that":[1,2,3,4,5]}, "myDomId");
  */
-trensantGFX.tgPrettyPrint = function (json, domID, opts) {        
-	var i,h;
+trensantGFX.tgPrettyPrint = function (data, domID, opts) {        
+	var i,h, json = data;
 
 	var dopts = {	   		// default options
 		"tag"   : "pre",  	// tag is the html element type to pretty print into
-		"class" : "",     	// css class(es)  e.g. "class1 class2"
-		"style" : ""  		// style as line string e.g. "color:red; font-size:#fe1"
+		"class" : "",     	// css class(es)  e.g. "class1 class2" to be applied to the whole container
+		"style" : ""  		// style as line string e.g. "color:red; font-size:#fe1" to be applied to whole container
 	};
 
 	if (_to(opts) == "object")
@@ -122,184 +244,10 @@ trensantGFX.tgPrettyPrint = function (json, domID, opts) {
 	return document.getElementById(domID);
 }
 
-
-
 //=====================================================================================================
-/* gglDrawTable(data,cols,id,opts)
-
-	draw sortable table using google charts.
-	data = [
-		[row1data, row2data, row3data],
-		[row1data, row2data, row3data],
-		..
-		]
-
-	cols must be array of types, labels e.g. 
-		[ ["string", "this column label"], ["boolean", "another label"],	["number", "label for this colum"] ]
-
-	id must be a valid HTML DOM id
-	style is a string to a HTML style set for google charts (see Google charts docs)
-	
-// example: gglDrawTable([['a',23,34],['b',23,12],['c',34,64]],[["string","labelx"],["number","this"],["number","that"]],"table-x");
-
-*/
-
-trensantGFX.gglDrawTable = function (data,cols,domID,opts) {
-	var i;
-	var dopts = {  // default options
-		showRowNumber: true, 
-		width: '80%', 
-		height: 30*4 + 'px',
-		allowHTML:true
-	}
-	if (_to(opts) == "object") // override default options
-		for (i in opts)
-			dopts[i]=opts[i];
-
-	if(data == "")
-		$("#"+domID).html("");
-	else {
-		var tdata = new google.visualization.DataTable();
-		var x;
-
-		for (x=0; x<cols.length; x++) // google charts table requires the column headers to be set up for sorting
-			tdata.addColumn(cols[x][0],cols[x][1]);
-				
-		tdata.addRows(data);		
-		var table = new google.visualization.Table(document.getElementById(domID));
-
-			
-		table.draw(tdata, dopts);
-		return table;
-	}
-}
-
-//=====================================================================================================
-/*  gglDrawHistogram(data,domID,opts)
-
-requires:
-	google.load("visualization", "1", {packages:['corechart','table']});
-
-data must be of this form:
-  	[
-  		['lablel for x axis','label for y1series','label for y2series',...],
-   		[ 12,23,34,45],
-   		[ 23,34,45,63],
-  	]
-*/
-function gglDrawLineChart(data,domID,opts) {
-    
-    var cdata = google.visualization.arrayToDataTable(data);
-    var dopts = { //default options
-      titleTextStyle: {fontSize: 16},
-      hAxis: {maxAlternation:2},
-      chartArea: {  width: "65%", height: "65%" }
-    };
-    
-    if ( _to(opts) == 'object')
-        for (var i in opts)
-            dopts[i] = opts[i];
-
-    var c2 = new google.visualization.LineChart(document.getElementById(domID));
-	c2.draw(cdata, dopts);
-	return c2; //return chart context..
-}
-
-//=====================================================================================================
-/*  gglDrawHistogram(data,domID,opts)
-	draw a histogram (binned chart) using Google Charts.
-
-    data must be a 2D array of this form 
-	[['name','value'],['foo',234],['bar',455]]
-*/
-function gglDrawHistogram(data,domID,options) {
-    
-    var dopts = {
-          title: title,
-          titleTextStyle: {fontSize: 16},
-          hAxis: {maxAlternation:2},
-          legend: { position: 'none' }
-          //histogram: { bucketSize: 1000 }
-    };
-    
-    var cdata = google.visualization.arrayToDataTable(data);
-
-    if (_to (opts) == 'object')
-        for (var i in opts)
-            dopts[i] = opts[i];
-
-    var ch = new google.visualization.Histogram(document.getElementById(domID));
-    ch.draw(cdata, dopts);
-    return ch;
-}
-
-//draw a horizontal bar chart
-//
-function gglDrawBarChart(data,title,domID,w,options) {
-    w = argSafe(w,"number",900);
-    var h = data.length *32;
-    var cdata = google.visualization.arrayToDataTable(data);
-    var doptions = {
-          title: title,
-          titleTextStyle: {fontSize: 16},
-          hAxis: {maxAlternation:2},
-          bar: {groupWidth: '80%'},
-          height: h,
-          width:w
-          //legend: { position: 'none' }
-    };
-    if (typeof options == 'object')
-        for (var i in options)
-            doptions[i] = options[i];
-
-    var cbar = new google.visualization.BarChart(document.getElementById(domID));
-    cbar.draw(cdata, doptions);
-    
-    return cbar;
-}
-
-function gglDrawPieChart(data,title,domID,w,h,options){
-    w = argSafe(w,"number",900);
-    h = argSafe(h,"number",900);
-    var cdata = google.visualization.arrayToDataTable(data);
-    var doptions = {
-          title: title,
-          titleTextStyle: {fontSize: 16},
-          hAxis: {maxAlternation:2},
-          height:h,
-          width:w,
-          chartArea: {  width: "75%", height: "75%" }
-          //legend: { position: 'none' }
-    };
-    if (typeof options == 'object')
-        for (var i in options)
-            doptions[i] = options[i];
-
-    var cp = new google.visualization.PieChart(document.getElementById(domID));
-    cp.draw(cdata, doptions);
-    return cp;
-}
-
-//=====================================================================================================
-// emit a simple HTML object as a string.  
-// s = trensantGFX.html("div","this is my content","{width:30}","class1 class2") 
-// ==> 
-// now use:
-// $("#myID").html(s) 
-//or
-// document.getElementById("myId").innerHTML = s;
-//
-trensantGFX.html = function(tag,body,sty,cls) {
-	sty = (hf.typeOf(sty) == "undefined") ? "" : " style='" +sty+ "' ";
-	cls = (hf.typeOf(cls) == "undefined") ? "" : " class='" +cls+ "' ";
-	return "<" + tag +sty+cls+" >"+body+"</"+tag+">" ;
-}
-
-
-//=====================================================================================================
-// drawRowWordCloudBase draws a word cloud with words in rows.  It is the base renderer.  see drawRowWordCloud for direct calls
+// drawRowWordCloudBase draws a word cloud with words in rows.  It is the base renderer.  see tgDrawRowWordCloud for direct calls
 // words must be of form : [["word", value, optional-color, optional-id], [] ]
-trensantGFX.drawRowWordCloudBase = function(words,domID,opts) {
+trensantGFX.tgDrawRowWordCloudBase = function(words,domID,opts) {
 	var i, dopts = { 							// default options
 		"maxSize" 	: 55,  						// any valid number for max font size 
 		"minSize" 	: 9, 	  					// any valid number for min font size
@@ -346,7 +294,7 @@ trensantGFX.drawRowWordCloudBase = function(words,domID,opts) {
 
 	var h = w.map(function(x){
 			var cls = (dopts["wclass"] == "") ? "" : "class='" + dopts["wclass"]+"'";
-			var a= "<span "+cls+"style='color:"+x[2]+"; font-size:"+hf.mapScaleEXP(x[1],min,max,dopts["minSize"],dopts["maxSize"],dopts["scale"])+dopts["sizeUnits"]+"'>"+x[0]+"</span>"; 
+			var a= "<span "+cls+"style='color:"+x[2]+"; font-size:"+_mapScale(x[1],min,max,dopts["minSize"],dopts["maxSize"],dopts["scale"])+dopts["sizeUnits"]+"'>"+x[0]+"</span>"; 
 			return a;
 		}).join(dopts["spacer"]);
 
@@ -361,9 +309,9 @@ trensantGFX.drawRowWordCloudBase = function(words,domID,opts) {
 //=====================================================================================================
 // drawRowWordCloudBase draws a word cloud with words in rows.  
 // words must be of form : [["word", value, optional-color, optional-id], [] ]
-trensantGFX.drawRowWordCloud = function (words, domID, opts) {
+trensantGFX.tgDrawRowWordCloud = function (words, domID, opts) {
 
-	trensantGFX.drawRowWordCloudBase( words,domID,opts);  // working version with bounds issues
+	trensantGFX.tgDrawRowWordCloudBase( words,domID,opts);  // working version with bounds issues
 
     var n=9,m=20;
     var rs = $("#" +domID+ " > span")[0].getClientRects()[0];
@@ -375,7 +323,7 @@ trensantGFX.drawRowWordCloud = function (words, domID, opts) {
       re = $("#" +domID+ " > span")[$("#" +domID+ " > span").length-1].getClientRects()[0];
       gTemp = {"rs":rs, "re" :re};
       m+= 0.33;
-      trensantGFX.drawRowWordCloudBase( words,domID,opts);  // working version with bounds issues
+      trensantGFX.tgDrawRowWordCloudBase( words,domID,opts);  // working version with bounds issues
 
       
       if (m > 100)
@@ -383,9 +331,220 @@ trensantGFX.drawRowWordCloud = function (words, domID, opts) {
     }
 
     m-=0.67;
-    trensantGFX.drawRowWordCloudBase( words,domID,opts);  // working version with bounds issues
+    trensantGFX.tgDrawRowWordCloudBase( words,domID,opts);  // working version with bounds issues
 
 }
+
+
+//=====================================================================================================
+//=====================================================================================================
+// Beging Google chart wrappers
+
+//=====================================================================================================
+/* gglChartsLoaded()   // function returns whether google chart functions have been loaded
+	-- since google charts loads asynchornously its easy to have situations where data is available before
+	the charts libs are (a race condition).  
+
+ */
+trensantGFX.gglChartsLoaded  = function() 
+{
+    if ((typeof google === 'undefined') || (typeof google.visualization === 'undefined') ) {
+
+       return false;
+    }
+    else {
+    	if (trensantGFX.typeOf(google.visualization.arrayToDataTable) != "function") 
+    		return false;
+    	if (trensantGFX.typeOf(google.visualization.PieChart) != "function")
+    		return false;
+    	if (trensantGFX.typeOf(google.visualization.LineChart) != "function")
+    		return false;
+    }
+    return true;
+}
+
+//=====================================================================================================
+/* gglDrawTable(data,cols,id,opts)
+
+	draw sortable table using google charts.
+	data = [
+		[row1data, row2data, row3data],
+		[row1data, row2data, row3data],
+		..
+		]
+
+	cols must be array of types, labels e.g. 
+		[ ["string", "this column label"], ["boolean", "another label"],	["number", "label for this colum"] ]
+
+	id must be a valid unqiue HTML DOM id
+	opts for google charts (see Google charts docs)
+	
+// example: gglDrawTable([['a',23,34],['b',23,12],['c',34,64]],[["string","labelx"],["number","this"],["number","that"]],"table-x");
+
+*/
+
+trensantGFX.gglDrawTable = function (data,cols,domID,opts) {
+	if (typeof google.visualization.Table == "function") {
+		var i;
+		var dopts = {  // default options
+			showRowNumber: true, 
+			width: '80%', 
+			height: 30*4 + 'px',
+			allowHTML:true
+		}
+		if (_to(opts) == "object") // override default options
+			for (i in opts)
+				dopts[i]=opts[i];
+
+		if(data == "")
+			$("#"+domID).html("");
+		else {
+			var tdata = new google.visualization.DataTable();
+			var x;
+
+			for (x=0; x<cols.length; x++) // google charts table requires the column headers to be set up for sorting
+				tdata.addColumn(cols[x][0],cols[x][1]);
+					
+			tdata.addRows(data);		
+			var table = new google.visualization.Table(document.getElementById(domID));
+
+				
+			table.draw(tdata, dopts);
+			return table;
+		}
+	}
+	return false;
+}
+
+
+//=====================================================================================================
+/*
+  gglDrawPieChart(data,domID,opts)
+
+  draw a pie chart using google charts.  
+
+  coreLibrary: Google Charts
+
+  this thin wrapper as it mostly calls gglCharts but keeps the API consistent with the other chart libs called.
+
+  data must be of form:
+  [["item1",value], ["item2", value], ["item3", value]]
+
+ */
+trensantGFX.gglDrawPieChart = function (data,domID,opts){
+
+	if (typeof google.visualization.PieChart == "function") {
+		var i;
+		var cdata = google.visualization.arrayToDataTable(data); 
+	    var dopts = {
+	          titleTextStyle: {fontSize: 16},
+	          height: "100%",
+	          width: "100%",
+	          chartArea: {  width: "75%", height: "75%" }
+	          //legend: { position: 'none' }
+	    };
+	    if (typeof opts == 'object')
+	        for (var i in opts)
+	            dopts[i] = opts[i];
+
+	    var cp = new google.visualization.PieChart(document.getElementById(domID),dopts);
+	    cp.draw(cdata, dopts);		   
+		return cp;
+	}
+	else
+		return false; // couldn't access google visualizations (perhaps not loaded at all just or not loaded yet)
+
+}
+
+//=====================================================================================================
+/*  gglDrawLineChart(data,domID,opts)
+
+requires:
+	google.load("visualization", "1", {packages:['corechart','table']});
+
+data must be of this form:
+  	[
+  		['lablel for x axis','label for y1series','label for y2series',...],
+   		[ 12,23,34,45],
+   		[ 23,34,45,63],
+  	]
+*/
+trensantGFX.gglDrawLineChart = function (data,domID,opts) {
+    if (typeof google.visualization.LineChart == "function") {
+	    var cdata = google.visualization.arrayToDataTable(data);
+	    var dopts = { //default options
+	      titleTextStyle: {fontSize: 16},
+	      hAxis: {maxAlternation:2},
+	      chartArea: {  width: "65%", height: "65%" }
+	    };
+	    
+	    if ( _to(opts) == 'object')
+	        for (var i in opts)
+	            dopts[i] = opts[i];
+
+	    var c2 = new google.visualization.LineChart(document.getElementById(domID));
+		c2.draw(cdata, dopts);
+		return c2; //return chart context..
+	}
+	return false;
+}
+//=====================================================================================================
+/*	gglDrawBarChart
+
+ */
+trensantGFX.gglDrawBarChart = function(data,domID,options) {
+	if (typeof google.visualization.BarChart == "function") {
+	    var cdata = google.visualization.arrayToDataTable(data);
+	    var doptions = {
+	          titleTextStyle: {fontSize: 16},
+	          hAxis: {maxAlternation:2},
+	          bar: {groupWidth: '80%'},
+	          height: data.length * 32,
+	          width:  _dims(domID)["wid"]
+	          //legend: { position: 'none' }
+	    };
+	    if (typeof options == 'object')
+	        for (var i in options)
+	            doptions[i] = options[i];
+
+	    var cbar = new google.visualization.BarChart(document.getElementById(domID));
+	    cbar.draw(cdata, doptions);
+	    return cbar;
+    }
+    return false;
+}
+
+//=====================================================================================================
+/*  gglDrawHistogram(data,domID,opts)
+	draw a histogram (binned chart) using Google Charts.
+
+    data must be a 2D array of this form 
+	[['name','value-heading'],['foo',234],['bar',455]]
+*/
+trensantGFX.gglDrawHistogram = function (data,domID,options) {
+
+    if (typeof google.visualization.Histogram == "function") {
+	    var dopts = {
+
+	          titleTextStyle: {fontSize: 16},
+	          hAxis: {maxAlternation:2},
+	          legend: { position: 'none' }
+	          //histogram: { bucketSize: 1000 }
+	    };
+	    
+	    var cdata = google.visualization.arrayToDataTable(data);
+
+	    if (_to (opts) == 'object')
+	        for (var i in opts)
+	            dopts[i] = opts[i];
+
+	    var ch = new google.visualization.Histogram(document.getElementById(domID));
+	    ch.draw(cdata, dopts);
+	    return ch;
+	}
+    return false;
+}
+
 
 //=================================================
 // USAGE:
@@ -466,79 +625,8 @@ trensantGFX.abbrState = function (input, to){
     }
 }
 
-//word cloud
-//words must be of form [{text:"word",size:"23"},{text:"word2",size:45}, ... }]
-//requires d3.js
-trensantGFX.d3wordcloud = function (wwords,w,h,dom_id)
-{	
-    
-    if (typeof wwords == "undefined") {
-        console.log("error in wc data");
-        return;
-    }
-    if (wwords.length < 2) {
-        console.log("word cloud data no-length");
-        return; //
-    }
-    var wmin = wwords[0]["size"];
-    var wmax = wmin;
-    console.log(wwords);
-    for (var w=1; w<wwords.length; w++) {
-        ws = wwords[w]["size"];
-        wmin = (wmin<ws)?wmin:ws;
-        wmax = (wmax>ws)?wmax:ws;
-       // console.log(ws);
-    }
-    console.log("wm :" + wmin+":"+wmax);
-    for (var w=0; w<wwords.length; w++) {
-        //console.log(wwords[w]["size"]);
-        wwords[w]["size"] = (mapScaleEXP(wwords[w]["size"],wmin,wmax,3,10));
-        //console.log(wwords[w]["size"]);
-    }
-    
-    var fill = d3.scale.category20b();
-    var max,scale = 100;
-    //console.log ("d3wordcloud:"+dom_id);
-    d3.layout.cloud().size([w, h])
-    .words( 
-    ["Hello", "world", "normally", "you", "want", "more", "words",
-    "than", "this","and","some","more","test","words","cause","this","is","so","much","fun","don't","you","think"]
-    .map(function(d) { return {text: d, size: Math.random() * 100};} )
-    //wwords        
-    )
-    .padding(5)
-    //.rotate(function() { return ~~(Math.random() * 2) * 90; }) //allows words to rotate at funky angles
-    .rotate(function() { return 0; }) //allows words to rotate at funky angles
-    //.font("Impact")
-    .fontSize(function(d) { return d.size; })
-    .on("end", draw)
-    .start();
-    
-    function draw(words) {
-    d3.select("#"+dom_id ).append("svg")
-        .attr("width", w)
-        .attr("height", h)
-        .append("g")
-        .attr("transform", "translate("+w/2+","+h/2+")") //center point
-        .selectAll("text")
-        .data(words)
-        .enter().append("text")
-        .style("font-size", function(d) { return d.size + "px"; })
-       // .style("font-family", "Impact")
-        .style("fill", function(d, i) { return fill(i); })
-        .attr("text-anchor", "middle")
-        .attr("transform", function(d) {
-        return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
-    })
-    .text(function(d) { return d.text; });
-    }	
-}
-//=====================================================================================================
-//code to get entity info
-//gettrensantGFXData("summary",{"entities":"53bf24780594e9a90cd03047,53bf11010594e9a90cd0303e"},console.log)
 
-//code with entity fuzzy text search
-//gettrensantGFXData("entity-lookup",{"prefix":"flip","type":"true","offset":9175040},console.log)
+
 
 })(typeof trensantGFX === 'undefined'? this['trensantGFX']={}: hf);//(window.hf = window.hf || {});
 

@@ -92,52 +92,75 @@ trensantGFX.gglDrawTreemap = function(data,title,domID,w,h,options,onClickCallba
     $("#descDiv").html(gLastResult["entities"]["entity_description"])
   }
 
-  //============================================================================
-  //draw a row word cloud (summary data across all intervals)
-  function drawWordsSummary() {
-    var i,z=[],w,n=9,m=20;
-    w =  gLastResult["entity-words"].reduce(function(s,x){
-      var j;
-      for (j in x["words"]) 
-        s[j] =  (x["words"][j] in s) ? s[j] + x["words"][j]: x["words"][j];
-      return s;
-    },{});
-    // now w contains a dict of all the word-freqs summed across all the intervals
-    for (i in w)
-      z.push([i,w[i],["red","green","purple","orange"][i.length%4]]); // with randomly assigned colors  
-    // z now contains an array [[word,freq] .... ]
-    z.sort(function(a,b){return b[1]-a[1]}); // sorted from most to least freq
+  
 
-    z = z.slice(0,gMaxEntityWords); //trim to gMaxEntityWords in length
-    gLastResult["entity-words-summary"] = z;
-
-    trensant.drawRowWordCloud( z,"wordsDiv",{"minSize":n,"maxSize":m,"sort":"alpha"});  // working version with bounds issues
-
-    gTemp = {};
-    var rs = $("#wordsDiv > span")[0].getClientRects()[0];
-    var re = $("#wordsDiv > span")[$("#wordsDiv > span").length-1].getClientRects()[0];
-    var box = $("#wordsDiv")[0].getClientRects()[0];
-    while (re.bottom <=  (box["bottom"]-(box["height"]*0.085))) { 
-      rs = $("#wordsDiv > span")[0].getClientRects()[0];
-      re = $("#wordsDiv > span")[$("#wordsDiv > span").length-1].getClientRects()[0];
-      gTemp = {"rs":rs, "re" :re};
-      m+= 0.33;
-      trensant.drawRowWordCloud( z,"wordsDiv",{"minSize":n,"maxSize":m,"sort":"alpha"});
-      
-      if (m > 100)
-        break;
+//word cloud
+//words must be of form [{text:"word",size:"23"},{text:"word2",size:45}, ... }]
+//requires d3.js
+trensantGFX.d3wordcloud = function (wwords,w,h,dom_id)
+{ 
+    
+    if (typeof wwords == "undefined") {
+        console.log("error in wc data");
+        return;
     }
-    m-=0.67;
-    trensant.drawRowWordCloud( z,"wordsDiv",{"minSize":n,"maxSize":m,"sort":"alpha"});
-  }
-
-  //============================================================================
-  //draw a row word cloud of last day only
-  function drawWordsLastDay() {
-    var i, w = gLastResult["entity-words"][gLastResult["entity-words"].length-1]["words"],z=[];
-    for (i in w) z.push([i,w[i],["red","green","purple","orange"][i.length%4]]);
-    trensant.drawRowWordCloud( z,"wordsDiv",{"maxSize":35,"minSize":8,"sort":"alpha"});
-  }
+    if (wwords.length < 2) {
+        console.log("word cloud data no-length");
+        return; //
+    }
+    var wmin = wwords[0]["size"];
+    var wmax = wmin;
+    console.log(wwords);
+    for (var w=1; w<wwords.length; w++) {
+        ws = wwords[w]["size"];
+        wmin = (wmin<ws)?wmin:ws;
+        wmax = (wmax>ws)?wmax:ws;
+       // console.log(ws);
+    }
+    console.log("wm :" + wmin+":"+wmax);
+    for (var w=0; w<wwords.length; w++) {
+        //console.log(wwords[w]["size"]);
+        wwords[w]["size"] = (mapScaleEXP(wwords[w]["size"],wmin,wmax,3,10));
+        //console.log(wwords[w]["size"]);
+    }
+    
+    var fill = d3.scale.category20b();
+    var max,scale = 100;
+    //console.log ("d3wordcloud:"+dom_id);
+    d3.layout.cloud().size([w, h])
+    .words( 
+    ["Hello", "world", "normally", "you", "want", "more", "words",
+    "than", "this","and","some","more","test","words","cause","this","is","so","much","fun","don't","you","think"]
+    .map(function(d) { return {text: d, size: Math.random() * 100};} )
+    //wwords        
+    )
+    .padding(5)
+    //.rotate(function() { return ~~(Math.random() * 2) * 90; }) //allows words to rotate at funky angles
+    .rotate(function() { return 0; }) //allows words to rotate at funky angles
+    //.font("Impact")
+    .fontSize(function(d) { return d.size; })
+    .on("end", draw)
+    .start();
+    
+    function draw(words) {
+    d3.select("#"+dom_id ).append("svg")
+        .attr("width", w)
+        .attr("height", h)
+        .append("g")
+        .attr("transform", "translate("+w/2+","+h/2+")") //center point
+        .selectAll("text")
+        .data(words)
+        .enter().append("text")
+        .style("font-size", function(d) { return d.size + "px"; })
+       // .style("font-family", "Impact")
+        .style("fill", function(d, i) { return fill(i); })
+        .attr("text-anchor", "middle")
+        .attr("transform", function(d) {
+        return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+    })
+    .text(function(d) { return d.text; });
+    } 
+}
   //============================================================================
   //draw rowWordsTimeCloud()
   //data must be of the form {{date:.. ,  words:{word1:freq1, word2:freq2}}}

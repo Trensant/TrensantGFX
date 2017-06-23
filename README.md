@@ -31,12 +31,13 @@ Being a client side rendering library trensantGFX only runs in a browser environ
 	...
 	//code to get tree data
 	...
-	trensantGFX.d3DrawTreeMap(treedata, {domID: "myTreemap"}); /// render a d3 treemap
+	trensantGFX.d3DrawTreeMap(treedata, domID); /// render a d3 treemap
 	
 	...
 	//code to get pie data
 	...
-	trensantGFX.gglDrawPie(piedata,{domID:"myPieChart"})
+	trensantGFX.gglDrawPie(piedata,"myPieChartDiv", {... options go here are .... });
+	
 
 </script>
 
