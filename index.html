@@ -9,6 +9,9 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>  <!-- not part of graphics library just here for div and layour mgmt -->
 
+<!--css for d3 rendering -->
+<link rel="stylesheet" href="./style/d3radialx.css">
+
 <script type="text/javascript" src="./libs/helper-fns.js"></script>  <!-- helper-fns is a library for doing generec web work like URL param managment -->
 
 
@@ -214,9 +217,12 @@ drawBanner=false    				// supress or show the top Trensant Logo
 	//render the chart
 	trensantGFX.drawRowWordCloud( rowWordCloudSampleData,div+"_chart",rowWordOpts);
 	//===================================================================================================
-//trensant.d3treeMap
+	//trensant.d3treeMap
     var treediv = "d3treeMapDiv";
     drawNewSectionDiv(treediv,{"name":"d3treeMapDiv"});
+
+    //emit description info
+    $("#"+treediv+"_desc").html("treemap draws a treemap");
 
     var treeMapSampleData =  { node: { childName: "childString",   childID: "childID",   children:   [ { childName: "childstring",   parentID: "parentstring",   value: 8,   childID: "childString"   } ]   } }
 
@@ -225,6 +231,20 @@ drawBanner=false    				// supress or show the top Trensant Logo
 
 	//render the chart
     trensantGFX.d3TreeMap(treeMapSampleData, treediv+"_chart");
+
+	//===================================================================================================
+	//trensant.d3radialTree
+	var radialdiv = "d3radialTree";
+    drawNewSectionDiv(radialdiv,{"name":"d3radialTree"});
+
+	var radialTreeSampleData = {name: "Current Article", uuid: "none", type: "article",
+ children: [{name: "Dow Jones Index", type: "organization", uuid: "554aa5369b72473f5ef4a73f", children: [{name: "Apple", type:"", uuid: "539210155f260eaca93b38c4", children: []}, {name: "Average", type: "", uuid: "59359f40bbd2ac573a825e37", children: []}, {name: "American Express", type: "", uuid: "52fc31a699c603f475c6a19b", children: []}]}, {name: "Wall Street", type: "location", uuid: "539210255f260eaca93b3b0d", children: [{name: "Wilbur Ross", type: "", uuid: "57d1185d9b7247278519adc0", children: [] }]}]}
+
+    //display sample data
+    trensantGFX.tgPrettyPrint(radialTreeSampleData, radialdiv+"_data")
+
+    //render the chart
+    trensantGFX.d3radialTree(radialTreeSampleData, radialdiv+"_chart");
 
 </script>
 	

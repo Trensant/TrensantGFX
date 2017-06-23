@@ -543,7 +543,7 @@ trensantGFX.d3wordcloud = function (wwords,w,h,dom_id)
 //======================================================================================================
   /*
    * Generates a Treemap.
-   * REQUIRED: Declare an element with an id in your html document. The id is passed to parameter id.
+   * REQUIRED: Declare an element with an id. The id is passed to parameter id.
     *  param: tree (dict)
       *  The tree must in at least the following structure:
         * { node: { child_name: "string",   child_id: "string",   children:   [ { child_name: "string",   parent_id: "string",   value: int, float, or double,   child_id: "string"   } ]   } }
@@ -849,6 +849,267 @@ trensantGFX.d3wordcloud = function (wwords,w,h,dom_id)
       return default_configuration
     }
   }
+//======================================================================================================
+//  d3 radialtree draws a redial zoomable graph of related items
+  /*
+  * While not required it is recommended you add the following css classes prior to attempting to render the radial tree.
+  .link {
+   fill: none;
+   stroke: #ccc;
+   opacity: 0.9;
+   stroke-width: 1.5px;
+   }
+   .node circle {
+   stroke: #fff;
+   opacity: 0.9;
+   stroke-width: 1.5px;
+   }
+   .node:not(:hover) .nodetext {
+   display: none;
+   }
 
+   text {
+   font: 9px;
+   opacity: 0.9;
+   cursor: pointer;}
+  *
+  *
+  * param: treeData (dict)
+    *  The treeData must in at least the following structure:
+    *    { "name": "node display name",  "uuid" : string, "children": [ { "name" : ..., "uuid" : ...,   children [ "name" : ..., "uuid" : ..., "size" : <number>  ]}]}
+  * param: id (string)
+  * param: options (dict) A dictionary that allows you customize renderings and behaviors.
+  *
+  * */
+
+  trensantGFX.d3radialTree = function (treeData, id, options) {
+    if (typeof options == "undefined") {
+      options = {};
+    }
+
+    var width = typeof(options["width"]) == "undefined" ? 750 : options["width"];
+    var height = typeof(options["height"]) == "undefined" ? 750 : options["height"];
+
+    var diameter = typeof(options["diameter"]) == "undefined" ? 725 : options["diameter"];
+    var duration = 750;
+
+    var nodes, links;
+    var i = 0;
+
+    var treeLayout = d3.tree().size([360, diameter / 2 - 120]), root;
+
+    var nodeSvg, linkSvg, nodeEnter, linkEnter;
+
+    var svg = d3.select("#"+id).append("svg")
+      .attr("width", width)
+      .attr("height", height);
+    var g = svg.append("g").attr("transform", "translate(" + (width / 2 + 40) + "," + (height / 2 + 90) + ")");
+
+    root = d3.hierarchy(treeData);
+    root.each(function (d) {
+      d.name = d.data.name; //transferring name to a name variable
+      d.id = i; //Assigning numerical Ids
+      i += i;
+    });
+
+    root.x0 = height / 2;
+    root.y0 = 0;
+
+    function collapse(d) {
+      if (d.children) {
+        d._children = d.children;
+        d._children.forEach(collapse);
+        d.children = null;
+      }
+    }
+
+    // root.children.forEach(collapse);
+    update(root);
+
+
+    function update(source) {
+      root = treeLayout(root);
+      nodes = treeLayout(root).descendants();
+      links = nodes.slice(1);
+      var nodeUpdate;
+      var nodeExit;
+
+      // Normalize for fixed-depth.
+      nodes.forEach(function (d) {
+        d.y = d.depth * 180;
+      });
+      nodeSvg = g.selectAll(".node")
+        .data(nodes, function (d) {
+          return d.id || (d.id = ++i);
+        });
+      nodeSvg.exit().remove();
+
+      var nodeEnter = nodeSvg.enter()
+        .append("g")
+        .attr("class", "node")
+        .attr("transform", function (d) {
+          return "translate(" + project(d.x, d.y) + ")";
+        })
+
+
+      nodeEnter.append("circle")
+        .attr("r", 5)
+        .style("fill", color).on("click", click);
+
+      nodeEnter.append("text")
+        .attr("dy", ".31em")
+        .attr("x", function (d) {
+          return d.x < 180 === !d.children ? 6 : -6;
+        })
+        .style("text-anchor", function (d) {
+          return d.x < 180 === !d.children ? "start" : "end";
+        })
+        .attr("transform", function (d) {
+          return "rotate(" + (d.x < 180 ? d.x - 90 : d.x - 270 ) + ")";
+        })
+        .text(function (d) {
+          if (d.parent) {
+            return d.name;
+          }
+          else {
+            return null
+          }
+        }).on("click", options.onClick)
+
+      // Transition nodes to their new position.
+      var nodeUpdate = nodeSvg.merge(nodeEnter).transition()
+        .duration(duration)
+        .attr("transform", function (d) {
+          return "translate(" + project(d.x, d.y) + ")";
+        });
+
+      nodeSvg.select("circle")
+        .style("fill", color);
+
+      nodeUpdate.select("text")
+        .style("fill-opacity", 1)
+        .attr("transform", function (d) {
+          return "rotate(" + (d.x < 180 ? d.x - 90 : d.x - 270 ) + ")";
+        });
+
+      // Transition exiting nodes to the parent's new position.
+      var nodeExit = nodeSvg.exit().transition()
+        .duration(duration)
+        .attr("transform", function (d) {
+          return "translate(" + source.y + "," + source.x + ")";
+        }) //for the animation to either go off there itself or come to centre
+        .remove();
+
+      nodeExit.select("circle")
+        .attr("r", 1e-6);
+
+      nodeExit.select("text")
+        .style("fill-opacity", 1e-6);
+
+      nodes.forEach(function (d) {
+        d.x0 = d.x;
+        d.y0 = d.y;
+      });
+
+
+      linkSvg = g.selectAll(".link")
+        .data(links, function (link) {
+          var id = link.id + '->' + link.parent.id;
+          return id;
+        });
+
+      // Transition links to their new position.
+      linkSvg.transition()
+        .duration(duration);
+      // .attr('d', connector);
+
+      // Enter any new links at the parent's previous position.
+      linkEnter = linkSvg.enter().insert('path', 'g')
+        .attr("class", "link")
+        .attr("d", function (d) {
+          return "M" + project(d.x, d.y)
+            + "C" + project(d.x, (d.y + d.parent.y) / 2)
+            + " " + project(d.parent.x, (d.y + d.parent.y) / 2)
+            + " " + project(d.parent.x, d.parent.y);
+        });
+      /*
+       function (d) {
+       var o = {x: source.x0, y: source.y0, parent: {x: source.x0, y: source.y0}};
+       return connector(o);
+       });*/
+
+
+      // Transition links to their new position.
+      linkSvg.merge(linkEnter).transition()
+        .duration(duration)
+        .attr("d", connector);
+
+
+      // Transition exiting nodes to the parent's new position.
+      linkSvg.exit().transition()
+        .duration(duration)
+        .attr("d", /*function (d) {
+         var o = {x: source.x, y: source.y, parent: {x: source.x, y: source.y}};
+         return connector(o);
+         })*/function (d) {
+          return "M" + project(d.x, d.y)
+            + "C" + project(d.x, (d.y + d.parent.y) / 2)
+            + " " + project(d.parent.x, (d.y + d.parent.y) / 2)
+            + " " + project(d.parent.x, d.parent.y);
+        })
+        .remove();
+
+      // Stash the old positions for transition.
+    }
+
+    function click(d) {
+      if (d.children) {
+        d._children = d.children;
+        d.children = null;
+      } else if (d._children) {
+        d.children = d._children;
+        d._children = null;
+      } else {
+        return null;
+      }
+      update(d);
+    }
+
+
+    function color(d) {
+      return d._children ? "#3182bd" // collapsed package
+        : d.children ? "#c6dbef" // expanded package
+          : "#fd8d3c"; // leaf node
+    }
+
+
+    function flatten(root) {
+      // hierarchical data to flat data for force layout
+      var nodes = [];
+
+      function recurse(node) {
+        if (node.children) node.children.forEach(recurse);
+        if (!node.id) node.id = ++i;
+        else ++i;
+        nodes.push(node);
+      }
+
+      recurse(root);
+      return nodes;
+    }
+
+
+    function project(x, y) {
+      var angle = (x - 90) / 180 * Math.PI, radius = y;
+      return [radius * Math.cos(angle), radius * Math.sin(angle)];
+    }
+
+    function connector(d) {
+      return "M" + project(d.x, d.y)
+        + "C" + project(d.x, (d.y + d.parent.y) / 2)
+        + " " + project(d.parent.x, (d.y + d.parent.y) / 2)
+        + " " + project(d.parent.x, d.parent.y)
+    }
+  }
 })(typeof trensantGFX === 'undefined'? this['trensantGFX']={}: hf);//(window.hf = window.hf || {});
 
