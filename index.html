@@ -115,7 +115,8 @@ drawBanner=false    				// supress or show the top Trensant Logo
 		var i,x,dopts = {
 			"name"   : "Chart Name",
 			"line_break" : true,
-			"chartCss"   : 'cssChart', // this is the default cssClass for the chart div.  Can overide with a string "myChartClass1 myChartClass2" etc
+			"chartCss"   : '' +
+            '', // this is the default cssClass for the chart div.  Can overide with a string "myChartClass1 myChartClass2" etc
 			"chartSty"   : ''          // allows styles to be passed to the chart div  eg "width:500; color:red" etc
 		};
 		if (trensantGFX.typeOf(opts) == "object")
@@ -323,33 +324,36 @@ drawBanner=false    				// supress or show the top Trensant Logo
 	//===================================================================================================		
 	//===================================================================================================		
 	//trensant.d3treeMap
-    var treediv = "d3treeMapDiv";
-    drawNewSectionDiv(treediv,{"name":"d3treeMapDiv"});
+    div = "d3treeMapDiv";
+    drawNewSectionDiv(div,{"name":"d3treeMapDiv"});
 
     //emit description info
-    $("#"+treediv+"_desc").html("treemap draws a treemap");
+    $("#"+div+"_desc").html("treemap draws a treemap");
 
     var treeMapSampleData =  { node: { childName: "childString",   childID: "childID",   children:   [ { childName: "childstring",   parentID: "parentstring",   value: 8,   childID: "childString"   } ]   } }
 
     //display sample data
-	trensantGFX.tgPrettyPrint(treeMapSampleData, treediv+"_data")
+	trensantGFX.tgPrettyPrint(treeMapSampleData, div+"_data")
 
 	//render the chart
-    trensantGFX.d3TreeMap(treeMapSampleData, treediv+"_chart");
+    trensantGFX.d3TreeMap(treeMapSampleData, div+"_chart");
 
 	//===================================================================================================
 	//trensant.d3radialTree
-	var radialdiv = "d3radialTree";
-    drawNewSectionDiv(radialdiv,{"name":"d3radialTree"});
+	div = "d3radialTree";
+    drawNewSectionDiv(div,{"name":"d3radialTree"});
 
 	var radialTreeSampleData = {name: "Current Article", uuid: "none", type: "article", children: [{name: "Dow Jones Index", type: "organization", uuid: "554aa5369b72473f5ef4a73f", children: [{name: "Apple", type:"", uuid: "539210155f260eaca93b38c4", children: []}, {name: "Average", type: "", uuid: "59359f40bbd2ac573a825e37", children: []}, {name: "American Express", type: "", uuid: "52fc31a699c603f475c6a19b", children: []}]}, {name: "Wall Street", type: "location", uuid: "539210255f260eaca93b3b0d", children: [{name: "Wilbur Ross", type: "", uuid: "57d1185d9b7247278519adc0", children: [] }]}]}
 
+    //emit description info
+    $("#"+div+"_desc").html("radiale tree draws a radialtree");
+
     //display sample data
-    trensantGFX.tgPrettyPrint(radialTreeSampleData, radialdiv+"_data")
+    trensantGFX.tgPrettyPrint(radialTreeSampleData, div+"_data")
 
 
     //render the chart
-    trensantGFX.d3radialTree(radialTreeSampleData, radialdiv+"_chart");
+    trensantGFX.d3radialTree(radialTreeSampleData, div+"_chart");
 
 	// end main area-----------------------------------------------------------------------------------
 	}// mainArea body
