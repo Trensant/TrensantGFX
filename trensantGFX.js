@@ -971,15 +971,25 @@ trensantGFX.abbrState = function (input, to){
   * */
 
   trensantGFX.d3RadialTree = function (treeData, id, options) {
+    var radialTreeDefaultConfiguration = {
+      name: "name",
+      children: "children",
+      svgWidth: 600,
+      svgHeight: 600,
+			diameter: 600,
+			duration: 750
+    }
+    configuration = setOptions(radialTreeDefaultConfiguration, options);
+    console.log(configuration);
     if (typeof options == "undefined") {
       options = {};
     }
 
-    var width = typeof(options["width"]) == "undefined" ? 750 : options["width"];
-    var height = typeof(options["height"]) == "undefined" ? 750 : options["height"];
+    var width = typeof configuration.svgWidth === "function" ? configuration.svgWidth() : configuration.svgWidth,
+      height = typeof configuration.svgHeight === "function" ? configuration.svgHeight() : configuration.svgHeight;
 
-    var diameter = typeof(options["diameter"]) == "undefined" ? 600 : options["diameter"];
-    var duration = 750;
+    var diameter = configuration.diameter;
+    var duration = configuration.duration;
 
     var nodes, links;
     var i = 0;
@@ -1197,6 +1207,20 @@ trensantGFX.abbrState = function (input, to){
         + "C" + project(d.x, (d.y + d.parent.y) / 2)
         + " " + project(d.parent.x, (d.y + d.parent.y) / 2)
         + " " + project(d.parent.x, d.parent.y)
+    }
+
+    function setOptions(default_configuration, options) {
+			/*Options.tree_attribute_names: Gets keys from the tree. If not present sets default values.*/
+
+      if (options) {
+        for (var setting in options) {
+          if (!(Object.keys(default_configuration).indexOf(setting) > -1)) {
+            console.warn(setting + ' is not a default setting.')
+          }
+          default_configuration[setting] = options[setting];
+        }
+      }
+      return default_configuration
     }
   }
 })(typeof trensantGFX === 'undefined'? this['trensantGFX']={}: hf);//(window.hf = window.hf || {});
