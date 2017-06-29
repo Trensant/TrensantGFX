@@ -977,7 +977,7 @@ trensantGFX.abbrState = function (input, to){
       svgWidth: 900,
       svgHeight: 900,
 			diameter: 600,
-			duration: 450
+			duration: 750
     }
     configuration = setOptions(radialTreeDefaultConfiguration, options);
     if (typeof options == "undefined") {
@@ -1036,7 +1036,7 @@ trensantGFX.abbrState = function (input, to){
       nodes.forEach(function (d) {
         d.y = d.depth * diameter/6;
       });
-      nodeSvg = g.selectAll(".node")
+      nodeSvg = g.selectAll(".d3RadialTreeNode")
         .data(nodes, function (d) {
           return d.id || (d.id = ++i);
         });
@@ -1044,7 +1044,7 @@ trensantGFX.abbrState = function (input, to){
 
       var nodeEnter = nodeSvg.enter()
         .append("g")
-        .attr("class", "node")
+        .attr("class", "d3RadialTreeNode")
         .attr("transform", function (d) {
           return "translate(" + project(d.x, d.y) + ")";
         });
@@ -1110,7 +1110,7 @@ trensantGFX.abbrState = function (input, to){
       });
 
 
-      linkSvg = g.selectAll(".link")
+      linkSvg = g.selectAll(".d3RadialTreelink")
         .data(links, function (link) {
           var id = link.id + '->' + link.parent.id;
           return id;
@@ -1123,7 +1123,7 @@ trensantGFX.abbrState = function (input, to){
 
       // Enter any new links at the parent's previous position.
       linkEnter = linkSvg.enter().insert('path', 'g')
-        .attr("class", "link")
+        .attr("class", "d3RadialTreelink")
         .attr("d", function (d) {
           return "M" + project(d.x, d.y)
             + "C" + project(d.x, (d.y + d.parent.y) / 2)

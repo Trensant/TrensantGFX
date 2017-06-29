@@ -1,20 +1,14 @@
-.link {
+.d3RadialTreelink {
 	fill: none;
 	stroke: #ccc;
 	opacity: 0.9;
 	stroke-width: 1.5px;
 }
-.node circle {
+.d3RadialTreeNode circle {
 	stroke: #fff;
 	opacity: 0.9;
 	stroke-width: 1.5px;
 }
-.node:not(:hover) .nodetext {
+.d3RadialTreeNode:not(:hover) .d3RadialTreeNodeText {
 	display: none;
-}
-
-text {
-	font: 9px;  /* was 8x serif */
-	opacity: 0.9;
-	cursor: pointer;
 }
