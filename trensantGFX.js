@@ -974,10 +974,10 @@ trensantGFX.abbrState = function (input, to){
     var radialTreeDefaultConfiguration = {
       name: "name",
       children: "children",
-      svgWidth: 600,
-      svgHeight: 600,
+      svgWidth: 900,
+      svgHeight: 900,
 			diameter: 600,
-			duration: 750
+			duration: 450
     }
     configuration = setOptions(radialTreeDefaultConfiguration, options);
     if (typeof options == "undefined") {
@@ -993,7 +993,8 @@ trensantGFX.abbrState = function (input, to){
     var nodes, links;
     var i = 0;
 
-    var treeLayout = d3.tree().size([360, diameter / 2 - 120]), root;
+    var treeLayout = d3.tree().size([360, diameter/2]).separation(
+    	function (a,b){return (a.parent == b.parent ? 1 : 2) / a.depth;}), root;
 
     var nodeSvg, linkSvg, nodeEnter, linkEnter;
 
