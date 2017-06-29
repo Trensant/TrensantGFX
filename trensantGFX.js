@@ -970,7 +970,7 @@ trensantGFX.abbrState = function (input, to){
   *
   * */
 
-  trensantGFX.d3radialTree = function (treeData, id, options) {
+  trensantGFX.d3RadialTree = function (treeData, id, options) {
     if (typeof options == "undefined") {
       options = {};
     }
@@ -978,7 +978,7 @@ trensantGFX.abbrState = function (input, to){
     var width = typeof(options["width"]) == "undefined" ? 750 : options["width"];
     var height = typeof(options["height"]) == "undefined" ? 750 : options["height"];
 
-    var diameter = typeof(options["diameter"]) == "undefined" ? 725 : options["diameter"];
+    var diameter = typeof(options["diameter"]) == "undefined" ? 600 : options["diameter"];
     var duration = 750;
 
     var nodes, links;
@@ -1024,7 +1024,7 @@ trensantGFX.abbrState = function (input, to){
 
       // Normalize for fixed-depth.
       nodes.forEach(function (d) {
-        d.y = d.depth * 180;
+        d.y = d.depth * diameter/6;
       });
       nodeSvg = g.selectAll(".node")
         .data(nodes, function (d) {
@@ -1037,7 +1037,7 @@ trensantGFX.abbrState = function (input, to){
         .attr("class", "node")
         .attr("transform", function (d) {
           return "translate(" + project(d.x, d.y) + ")";
-        })
+        });
 
 
       nodeEnter.append("circle")
@@ -1062,7 +1062,7 @@ trensantGFX.abbrState = function (input, to){
           else {
             return null
           }
-        }).on("click", options.onClick)
+        }).on(options && options.textClick ? options.textClick : "click", options.onClick)
 
       // Transition nodes to their new position.
       var nodeUpdate = nodeSvg.merge(nodeEnter).transition()

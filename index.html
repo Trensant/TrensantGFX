@@ -324,26 +324,90 @@ drawBanner=false    				// supress or show the top Trensant Logo
 	//===================================================================================================		
 	//===================================================================================================		
 	//trensant.d3treeMap
-    div = "d3treeMapDiv";
-    drawNewSectionDiv(div,{"name":"d3treeMapDiv"});
+    div = "d3TreeMapDiv";
+    drawNewSectionDiv(div,{"name":"d3TreeMapDiv"});
 
     //emit description info
     $("#"+div+"_desc").html("treemap draws a treemap");
 
-    var treeMapSampleData =  { node: { childName: "childString",   childID: "childID",   children:   [ { childName: "childstring",   parentID: "parentstring",   value: 8,   childID: "childString"   } ]   } }
+    var treeMapSampleData =  { node: {
+      child_name: "Anheuser-Busch",
+      child_id: "565ec0939b72473c7ec9e1ad",
+      children:
+        [
+          {
+            parent_name: "Anheuser-Busch",
+            child_tags: [],
+            child_name: "Budweiser Beer",
+            parent_id: "565ec0939b72473c7ec9e1ad",
+            child_buzz: 79,
+            child_id: "53166c755f3b284a609e1c6b",
+            children: [
+              {
+                parent_id: "53166c755f3b284a609e1c6b",
+                child_buzz: 6342,
+                child_id: "58781b703805ab195625df2c",
+                child_name: "@budweiser",
+                parent_type: "product",
+                children: [
+                  {
+                    parent_id: "58781b703805ab195625df2c",
+                    child_buzz: 3483,
+                    child_id: "565ea6efefa9d5d882d273",
+                    child_name: "childBudweiser",
+                  }
+                ]
+              },
+              {
+                parent_id: "53166c755f3b284a609e1c6b",
+                child_buzz: 3483,
+                child_id: "565ea6efefa9dd25d882d273",
+                child_name: "Budweiser"
+              },
+              {
+                parent_id: "53166c755f3b284a609e1c6b",
+                child_buzz: 250,
+                child_id: "58781a533805ab195625df2a",
+                child_name: "#budweiser"
+              },
+              {
+                parent_id: "531c755f3b284a609e1c6b",
+                child_buzz: 1250,
+                child_id: "58781a533805ab195625df2a",
+                child_name: "#my_best_budweiser",
+              }
+            ]
+          },
+          {
+            child_name: "Bud Light Beer",
+            child_type: "product",
+            parent_id: "565ec0939b72473c7ec9e1ad",
+            child_id: "53166f5c5f3b284a609e1c72",
+            children: [
+              {
+                parent_id: "53166c75284a609e1c6b",
+                child_buzz: 4342,
+                child_id: "58781b703805ab195625df2c",
+                child_name: "@budweiser",
+              }]
+
+          }
+        ]
+    } }
 
     //display sample data
 	trensantGFX.tgPrettyPrint(treeMapSampleData, div+"_data")
 
 	//render the chart
-    trensantGFX.d3TreeMap(treeMapSampleData, div+"_chart");
+    trensantGFX.d3TreeMap(treeMapSampleData, div+"_chart", {parentID: "parent_id", childID: "child_id",
+      childName: "child_name", value: "child_buzz"});
 
 	//===================================================================================================
 	//trensant.d3radialTree
-	div = "d3radialTree";
-    drawNewSectionDiv(div,{"name":"d3radialTree"});
+	div = "d3RadialTree";
+    drawNewSectionDiv(div,{"name":"d3RadialTree"});
 
-	var radialTreeSampleData = {name: "Current Article", uuid: "none", type: "article", children: [{name: "Dow Jones Index", type: "organization", uuid: "554aa5369b72473f5ef4a73f", children: [{name: "Apple", type:"", uuid: "539210155f260eaca93b38c4", children: []}, {name: "Average", type: "", uuid: "59359f40bbd2ac573a825e37", children: []}, {name: "American Express", type: "", uuid: "52fc31a699c603f475c6a19b", children: []}]}, {name: "Wall Street", type: "location", uuid: "539210255f260eaca93b3b0d", children: [{name: "Wilbur Ross", type: "", uuid: "57d1185d9b7247278519adc0", children: [] }]}]}
+	var radialTreeSampleData = {name: "Current Article", uuid: "none", type: "article", children: [{name: "Dow Jones Index", type: "organization", uuid: "554aa5369b72473f5ef4a73f", children: [{name: "Apple", type:"", uuid: "53921gh55f260eaca93b3984", children: [{name: "MacBook", type:"", uuid: "53921gh55f260egca93b3984", children: []}, {name: "IPhone", type:"", uuid: "53921gh55f260eaca97b3984", children: []}]},{name: "Home Depot", type:"", uuid: "53921gh55f260eaca93b3984", children: []}, {name: "Amgen", type:"", uuid: "539210155f260eaca93b3984", children: []}, {name: "IBM", type:"", uuid: "539210155f260eaca93b38c4", children: []}, {name: "Average", type: "", uuid: "59359f40bbd2ac573a825e37", children: []}]}, {name: "Wall Street", type: "location", uuid: "539210255f260eaca93b3b0d", children: [{name: "American Express", type: "", uuid: "52fc31a699c603f475c6a19b", children: [{name: "Credit Card", type: "", uuid: "52fc31a699c603f475c6a1", children: []}, {name: "Debt", type: "", uuid: "52fc31a699c60366f475c6a19b", children: []}, {name: "Freedom", type: "", uuid: "52fc31a699c603f455c6a19b", children: []}, {name: "Money", type: "", uuid: "52fc31a6c603f475c6a19b", children: []}, {name: "Payments", type: "", uuid: "52fc31a6199c603f475c6a19b", children: []}, {name: "Freshman", type: "", uuid: "52fc31a699c3f475c6a19b", children: []}]},{name: "Bernie Madoff", type: "", uuid: "57d1185d9b7247278519adc0", children: [] }, {name: "Greed", type: "", uuid: "57d1185d9b7247278519adc0", children: [] }]}]}
 
     //emit description info
     $("#"+div+"_desc").html("radiale tree draws a radialtree");
@@ -353,7 +417,7 @@ drawBanner=false    				// supress or show the top Trensant Logo
 
 
     //render the chart
-    trensantGFX.d3radialTree(radialTreeSampleData, div+"_chart");
+    trensantGFX.d3RadialTree(radialTreeSampleData, div+"_chart", {textClick: "mouseover", onClick: function () {d3.select(this).style("fill", "red")}});
 
 	// end main area-----------------------------------------------------------------------------------
 	}// mainArea body
