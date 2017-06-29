@@ -938,38 +938,32 @@ trensantGFX.abbrState = function (input, to){
     }
   }
 //======================================================================================================
-//  d3 radialtree draws a redial zoomable graph of related items
-  /*
-  * While not required it is recommended you add the following css classes prior to attempting to render the radial tree.
-  .link {
-   fill: none;
-   stroke: #ccc;
-   opacity: 0.9;
-   stroke-width: 1.5px;
-   }
-   .node circle {
-   stroke: #fff;
-   opacity: 0.9;
-   stroke-width: 1.5px;
-   }
-   .node:not(:hover) .nodetext {
-   display: none;
-   }
 
-   text {
-   font: 9px;
-   opacity: 0.9;
-   cursor: pointer;}
-  *
-  *
+  /*d3 radialtree draws a redial zoomable graph of related items
   * param: treeData (dict)
-    *  The treeData must in at least the following structure:
-    *    { "name": "node display name",  "uuid" : string, "children": [ { "name" : ..., "uuid" : ...,   children [ "name" : ..., "uuid" : ..., "size" : <number>  ]}]}
+    * The treeData must in at least the following structure:
+    * { "name": "node display name",  "children": [ { "name" : ..., children [ "name" : 					...,  ]}]}
   * param: id (string)
   * param: options (dict) A dictionary that allows you customize renderings and behaviors.
   *
-  * */
-
+  	* Tree data options:
+  	 	* name:: type: string, default: "name"
+  	 	* children:: type: string, default: "children"
+		* FURTHER DESCRIPTION for Tree data options:
+	 		* Frequently trees contain different keys labels. For
+	 		* example your tree label for children may be childs instead of children.
+	 		* Normally in that case you would either change the all the keys in
+	 		* you data prior to passing or specify a custom function in d3.hierarchy call.
+	 		* Instead you can specify key lables in options.
+		 	* Example: {children: childs}.
+	 *
+  *
+	* Rendering Options:
+	 	* svgWidth: type: int or function, default: 600
+	 	* svgHeight:: type: int or function, default: 600
+		*
+	*
+		*/
   trensantGFX.d3RadialTree = function (treeData, id, options) {
     var radialTreeDefaultConfiguration = {
       name: "name",
