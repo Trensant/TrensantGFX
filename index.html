@@ -407,9 +407,9 @@ drawBanner=false    				// supress or show the top Trensant Logo
 	div = "d3RadialTree";
     drawNewSectionDiv(div,{"name":"d3RadialTree"});
 
-	var radialTreeSampleData = {name: "Current Article", children: [{name: "Dow Jones Index", children: [{name: "Apple", children: [{name: "MacBook"}, {name: "IPhone"}]},{name: "Home Depot"}, {name: "Amgen"}, {name: "IBM"}, {name: "Average"}]}, {name: "Wall Street", children: [{name: "American Express", children: [{name: "Credit Card"}, {name: "Debt"}, {name: "Freedom"}, {name: "Money"}, {name: "Payments"}, {name: "Freshman"}]},{name: "Bernie Madoff"}, {name: "Greed", type: "", uuid: "57d1185d9b7247278519adc0", children: [] }]}]}
+	var radialTreeSampleData = {name: "Current Article", children: [{name: "Dow Jones Index", children: [{name: "Apple", children: [{name: "MacBook"}, {name: "IPhone"}]},{name: "Home Depot"}, {name: "Amgen"}, {name: "IBM"}, {name: "Average"}]}, {name: "Wall Street", children: [{name: "American Express", children: [{name: "Credit Card"}, {name: "Debt"}, {name: "Freedom"}, {name: "Money"}, {name: "Payments"}, {name: "Freshman"}]},{name: "Bernie Madoff"}, {name: "Greed"}]}]}
 
-    //emit description info
+	//emit description info
     $("#"+div+"_desc").html("radiale tree draws a radialtree");
 
     //display sample data
@@ -417,7 +417,7 @@ drawBanner=false    				// supress or show the top Trensant Logo
 
 
     //render the chart
-    trensantGFX.d3RadialTree(radialTreeSampleData, div+"_chart", {textClick: "mouseover", onClick: function () {d3.select(this).style("fill", "red")}});
+      trensantGFX.d3RadialTree(radialTreeSampleData, div+"_chart", {textClick: "mouseover", onClick: function () {d3.select(this).style("fill", "red")}});
 
 	// end main area-----------------------------------------------------------------------------------
 	}// mainArea body

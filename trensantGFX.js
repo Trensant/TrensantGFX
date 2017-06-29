@@ -980,7 +980,6 @@ trensantGFX.abbrState = function (input, to){
 			duration: 750
     }
     configuration = setOptions(radialTreeDefaultConfiguration, options);
-    console.log(configuration);
     if (typeof options == "undefined") {
       options = {};
     }
@@ -1003,9 +1002,9 @@ trensantGFX.abbrState = function (input, to){
       .attr("height", height);
     var g = svg.append("g").attr("transform", "translate(" + (width / 2 + 40) + "," + (height / 2 + 90) + ")");
 
-    root = d3.hierarchy(treeData);
+    root = d3.hierarchy(treeData, function (d) {return d[configuration.children] });
     root.each(function (d) {
-      d.name = d.data.name; //transferring name to a name variable
+      d.name = d.data[configuration.name]; //transferring name to a name variable
       d.id = i; //Assigning numerical Ids
       i += i;
     });
@@ -1025,7 +1024,7 @@ trensantGFX.abbrState = function (input, to){
     update(root);
 
 
-    function update(source) {
+    function update(source) { console.log(source)
       root = treeLayout(root);
       nodes = treeLayout(root).descendants();
       links = nodes.slice(1);
@@ -1067,7 +1066,7 @@ trensantGFX.abbrState = function (input, to){
         })
         .text(function (d) {
           if (d.parent) {
-            return d.name;
+            return d[configuration.name];
           }
           else {
             return null
