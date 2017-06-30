@@ -1019,7 +1019,7 @@ trensantGFX.abbrState = function (input, to){
     update(root);
 
 
-    function update(source) { console.log(source)
+    function update(source) {
       root = treeLayout(root);
       nodes = treeLayout(root).descendants();
       links = nodes.slice(1);
@@ -1216,6 +1216,156 @@ trensantGFX.abbrState = function (input, to){
       }
       return default_configuration
     }
+  }
+
+//  ====================================================================================================
+
+
+	trensantGFX.d3Chord = function(data, id, options) {
+    var chordDefaultConfiguration = {
+      matrix: "matrix",
+      groups: "groups",
+      svgWidth: 960,
+      svgHeight: 960,
+
+    }
+    configuration = setOptions(chordDefaultConfiguration, options);
+
+    var width = typeof configuration.svgWidth === "function" ? configuration.svgWidth() : configuration.svgWidth,
+      height = typeof configuration.svgHeight === "function" ? configuration.svgHeight() : configuration.svgHeight;
+
+    function fade(opacity) {
+      return function(d, i) {
+        ribbons
+          .filter(function(d) {
+            return d.source.index != i && d.target.index != i;
+          })
+          .transition()
+          .style("opacity", opacity);
+      };
+    }
+
+    var svg = d3.select("#"+id)
+				.append("svg")
+				.attr("width", configuration.svgWidth)
+				.attr("height", configuration.svgHeight),
+      width = +svg.attr("width"),
+      height = +svg.attr("height"),
+      outerRadius = Math.min(width, height) * 0.5 - 65,
+      innerRadius = outerRadius - 20;
+
+    var chord = d3.chord()
+      .padAngle(0.05)
+      .sortSubgroups(d3.descending);
+
+    var arc = d3.arc()
+      .innerRadius(innerRadius)
+      .outerRadius(outerRadius);
+
+    var ribbon = d3.ribbon()
+      .radius(innerRadius);
+
+    var color = d3.scaleOrdinal(d3.schemeCategory10);
+
+    var g = svg.append("g")
+      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
+      .datum(chord(data.matrix));
+
+    var group = g.append("g")
+      .attr("class", "groups")
+      .selectAll("g")
+      .data(function(chords) { return chords.groups; })
+      .enter().append("g");
+
+    group.append("path")
+      .style("fill", function(d) { return color(d.index); })
+      .style("stroke", function(d) { return d3.rgb(color(d.index)).darker(); })
+      .attr("d", arc)
+      .on("mouseover", fade(.1))         /* Where attempt at mouseover is made */
+      .on("mouseout", fade(1))
+
+
+    group.append("title").text(function(d) {
+      return groupTip(d);
+    });
+
+    group.append("text")
+      .attr("dy", ".35em")
+      .attr("class", "d3ChordOfficeLabel")
+      .attr("transform", function(d,i) {
+        d.angle = (d.startAngle + d.endAngle) / 2;
+        d.name = data.groups[i];
+        return "rotate(" + (d.angle * 180 / Math.PI) + ")" +
+          "translate(0," + -1.1 * (outerRadius + 10) + ")" +
+          ((d.angle > Math.PI * 3 / 4 && d.angle < Math.PI * 5 / 4) ? "rotate(180)" : "");
+      })
+      .text(function(d) {
+        return d.name;
+      });
+
+    var ribbons =   g.append("g")
+      .attr("class", "d3ChordRibbons")
+      .selectAll("path")
+      .data(function(chords) { return chords; })
+      .enter().append("path")
+      .attr("d", ribbon)
+      .style("fill", function(d) { return color(d.target.index); })
+      .style("stroke", function(d) { return d3.rgb(color(d.target.index)).darker(); });
+
+    ribbons.append("title").
+    text(function(d){return chordTip(d);});
+
+    var groupTick = group.selectAll(".d3ChordGroupTick")
+      .data(function(d) { return groupTicks(d, 1e3); })
+      .enter().append("g")
+      .attr("class", "group-tick")
+      .attr("transform", function(d) { return "rotate(" + (d.angle * 180 / Math.PI - 90) + ") translate(" + outerRadius + ",0)"; });
+
+    groupTick.append("line")
+      .attr("x2", 6);
+
+    groupTick
+      .filter(function(d) { return d.value % 2e3 === 0; })
+      .append("text")
+      .attr("x", 8)
+      .attr("dy", ".35em")
+      .attr("transform", function(d) { return d.angle > Math.PI ? "rotate(180) translate(-16)" : null; })
+      .style("text-anchor", function(d) { return d.angle > Math.PI ? "end" : null; })
+      .text(function(d) { return d.value; });
+
+    function groupTicks(d, step) {
+      var k = (d.endAngle - d.startAngle) / d.value;
+      return d3.range(0, d.value, step).map(function(value) {
+        return {value: value, angle: value * k + d.startAngle};
+      });
+    }
+
+    function chordTip(d){
+      var p = d3.format(".2%"), q = d3.formatPrefix("$,.2", 1e3)
+      return "Flow Info:\n"
+        + data.groups[d.source.index] + " → " + data.groups[d.target.index] + ": " + q(d.target.value) + "\n"
+        + data.groups[d.target.index] + " → " + data.groups[d.source.index] + ": " + q(d.source.value);
+    }
+
+    function groupTip(d) {
+      var q = d3.formatPrefix("$,.2", 1e3)
+      return "Total Managed by " + data.groups[d.index] + ":\n" + q(d.value)
+    }
+
+    function setOptions(default_configuration, options) {
+			/*Options.tree_attribute_names: Gets keys from the tree. If not present sets default values.*/
+
+      if (options) {
+        for (var setting in options) {
+          if (!(Object.keys(default_configuration).indexOf(setting) > -1)) {
+            console.warn(setting + ' is not a default setting.')
+          }
+          default_configuration[setting] = options[setting];
+        }
+      }
+      return default_configuration
+    }
+
   }
 })(typeof trensantGFX === 'undefined'? this['trensantGFX']={}: hf);//(window.hf = window.hf || {});
 
