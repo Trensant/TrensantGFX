@@ -37,13 +37,44 @@
 <!-- trensantGFX wrapper!  -->
 <script type="text/javascript" src="./trensantGFX.js"></script>      <!-- TrensantGFX is the main lib for all wrappers!                               -->
 
+<!-- code editor -->
+<link rel="stylesheet" href="./style/codeflask.css">
+<link rel="stylesheet" href="./style/prism.min.css">
+<script src="./libs/prism.min.js"></script>
+<script src="./libs/codeflask.js"></script>
+<!-- end code editor -->
 
 <title>Trensant Graphics Wrapper Library</title>
 <style type="text/css">
 
+/* raw chart data display area */
+.cssData { 
+	height : 300px;
+	overflow-y: auto;
+}
+
+/* chart display area */
 .cssChart {
 	height: 500px;
 }
+
+/* code editor stuff */
+.code-column {
+    float:left;
+    padding:15px;
+}
+.code-column h2{
+    font-size:15px;
+    background:yellow;
+}
+.codeview {
+    width:100%;
+    height:200px;
+    border:1px solid #ccc;
+    background:#f5f5f5;
+    position:relative;
+}
+/* end code editor stuff */
 </style>
 </head>
 <body>
@@ -61,7 +92,12 @@ drawBanner=false    				// supress or show the top Trensant Logo
 		<h1>Trensant Graphics</h1>
 		<p>This is the Trensant Graphics Library Demo page.  The Trensant Graphics Library is a wrapper of several 3rd party graphics and charting libraries which are useful for visualizing data using different techniques.  See the README.md file in the distribution for more on which libraries and charts are wrapped and how to use them.
 		<br>
-		<div id='test'></div>  <!-- spare test div, to be deleted -->
+		<div id='test'>
+		<!--
+			 <h2>JavaScript</h2>
+        <div class="codeview" id="code"></div>
+		-->
+		</div>  <!-- spare test div, to be deleted -->
 		<h2>Charts</h2>
 		<div id='tocDIV'></div>  <!-- table of contents goes here, dynamically populated -->
 		<br>
@@ -83,6 +119,13 @@ drawBanner=false    				// supress or show the top Trensant Logo
 	var gAvail ={};
 	var div;
 
+
+	/* code editor test
+	 var flask = new CodeFlask,
+         flasks = new CodeFlask;
+
+        //flask.run('#code', {        language: 'js'        });
+	*/
 	//============================================================================
 	/*
 	drawNewSectionDiv()
@@ -115,8 +158,8 @@ drawBanner=false    				// supress or show the top Trensant Logo
 		var i,x,dopts = {
 			"name"   : "Chart Name",
 			"line_break" : true,
-			"chartCss"   : '' +
-            '', // this is the default cssClass for the chart div.  Can overide with a string "myChartClass1 myChartClass2" etc
+			"dataCss"    : '' + 'cssData',
+			"chartCss"   : '' + 'cssChart', // this is the default cssClass for the chart div.  Can overide with a string "myChartClass1 myChartClass2" etc
 			"chartSty"   : ''          // allows styles to be passed to the chart div  eg "width:500; color:red" etc
 		};
 		if (trensantGFX.typeOf(opts) == "object")
@@ -130,7 +173,7 @@ drawBanner=false    				// supress or show the top Trensant Logo
 			 ["p" 	,'_desc'   		,  'Overview text goes here'	               ],
 			 ["br"  ,'_break1'      , ''                                           ],
 			 ["h4"	,'_dataHeading' ,  'Example Data (click to show/hide)'		   ],
-			 ["pre"	,'_data' 		,  'Formatted data example area for this chart'],
+			 ["pre"	,'_data' 		,  'Formatted data example area for this chart', dopts["dataCss"]],
 			 ["br"  ,'_break2'      , ''                             	           ],
 			 ["h4"	,'_chartHeading',  'Example Rendering'				 		   ],			 
 			 ["div" ,'_chart' 		,  'rendered chart goes here'    , dopts["chartCss"], dopts["chartSty"]  ]
@@ -154,11 +197,12 @@ drawBanner=false    				// supress or show the top Trensant Logo
 		}
 		if (dopts["line_break"] == true) {
 			x = document.createElement('hr');
+			x["style"] = "border: solid; height:0px";
 			node.appendChild(x);
 		}
 		document.getElementById("graphicsDiv").appendChild(node); // add this section to the document
 		$('#'+domID+"_dataHeading").click(function(){ $('#'+domID+"_data").toggle(200);});
-		$('#'+domID+"_data").hide(); // default is hidden
+		//$('#'+domID+"_data").hide(); // default is hidden
 
 		//update table of contents
 		addTOCEntry(dopts["name"],domID);
@@ -210,7 +254,7 @@ drawBanner=false    				// supress or show the top Trensant Logo
 	//===================================================================================================
 	// trensantGFX.rowWordCloud
 	div = "tgRowWordCloudDiv";
-	drawNewSectionDiv(div,{"name":"tgRowWordCloud"});
+	drawNewSectionDiv(div,{"name":"tgRowWordCloud", "chartSty" :" height: 100px"});
 	
 
 	//emit description info

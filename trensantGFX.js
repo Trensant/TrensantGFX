@@ -204,7 +204,7 @@ trensantGFX.tgPrettyPrint = function (data, domID, opts) {
 	var dopts = {	   		// default options
 		"tag"   : "pre",  	// tag is the html element type to pretty print into
 		"class" : "",     	// css class(es)  e.g. "class1 class2" to be applied to the whole container
-		"style" : ""  		// style as line string e.g. "color:red; font-size:#fe1" to be applied to whole container
+		"style" : "border:none"  		// style as line string e.g. "color:red; font-size:#fe1" to be applied to whole container
 	};
 
 	if (_to(opts) == "object")
@@ -542,86 +542,9 @@ trensantGFX.gglDrawHistogram = function (data,domID,options) {
 }
 
 
-//=================================================
-// USAGE:
-// abbrState('ny', 'name');
-// --> 'New York'
-// abbrState('New York', 'abbr');
-// --> 'NY'
 
-trensantGFX.abbrState = function (input, to){    
-    var states = [
-        ['Arizona', 'AZ'],
-        ['Alabama', 'AL'],
-        ['Alaska', 'AK'],
-        ['Arizona', 'AZ'],
-        ['Arkansas', 'AR'],
-        ['California', 'CA'],
-        ['Colorado', 'CO'],
-        ['Connecticut', 'CT'],
-        ['Delaware', 'DE'],
-        ['Florida', 'FL'],
-        ['Georgia', 'GA'],
-        ['Hawaii', 'HI'],
-        ['Idaho', 'ID'],
-        ['Illinois', 'IL'],
-        ['Indiana', 'IN'],
-        ['Iowa', 'IA'],
-        ['Kansas', 'KS'],
-        ['Kentucky', 'KY'],
-        ['Louisiana', 'LA'],
-        ['Maine', 'ME'],
-        ['Maryland', 'MD'],
-        ['Massachusetts', 'MA'],
-        ['Michigan', 'MI'],
-        ['Minnesota', 'MN'],
-        ['Mississippi', 'MS'],
-        ['Missouri', 'MO'],
-        ['Montana', 'MT'],
-        ['Nebraska', 'NE'],
-        ['Nevada', 'NV'],
-        ['New Hampshire', 'NH'],
-        ['New Jersey', 'NJ'],
-        ['New Mexico', 'NM'],
-        ['New York', 'NY'],
-        ['North Carolina', 'NC'],
-        ['North Dakota', 'ND'],
-        ['Ohio', 'OH'],
-        ['Oklahoma', 'OK'],
-        ['Oregon', 'OR'],
-        ['Pennsylvania', 'PA'],
-        ['Rhode Island', 'RI'],
-        ['South Carolina', 'SC'],
-        ['South Dakota', 'SD'],
-        ['Tennessee', 'TN'],
-        ['Texas', 'TX'],
-        ['Utah', 'UT'],
-        ['Vermont', 'VT'],
-        ['Virginia', 'VA'],
-        ['Washington', 'WA'],
-        ['West Virginia', 'WV'],
-        ['Wisconsin', 'WI'],
-        ['Wyoming', 'WY'],
-    ];
-
-    if (to == 'abbr'){
-        input = input.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-        for(i = 0; i < states.length; i++){
-            if(states[i][0] == input){
-                return(states[i][1]);
-            }
-        }    
-    } else if (to == 'name'){
-        input = input.toUpperCase();
-        for(i = 0; i < states.length; i++){
-            if(states[i][1] == input){
-                return(states[i][0]);
-            }
-        }    
-    }
-}
 //======================================================================================================
-trensantGFX.d3ChartsLoaded() {
+trensantGFX.d3ChartsLoaded = function () {
 	if (typeof d3 != "undefined")
 		return true;
 	return false;
