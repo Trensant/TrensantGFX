@@ -13,6 +13,7 @@
 	display: none;
 }
 
+/*=============================*/
 .d3ChordGroupTick line {
 	stroke: #000;
 }
@@ -25,4 +26,8 @@
 
 .d3ChordRibbons {
 	fill-opacity: 0.6;
+}
+/*===============================*/
+.dpath {
+	stroke: #fff;
 }

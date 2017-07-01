@@ -626,14 +626,12 @@ trensantGFX.abbrState = function (input, to){
 }
 
 
-
-
 //======================================================================================================
   /*
    * Generates a Treemap.
    * REQUIRED: Declare an element with an id. The id is passed to parameter id.
     *  param: tree (dict)
-      *  The tree must in at least the following structure:
+      *  Schema:
         * { node: { child_name: "string",   child_id: "string",   children:   [ { child_name: "string",   parent_id: "string",   value: int, float, or double,   child_id: "string"   } ]   } }
     * param: id (string)
     * param: options (dict) A dictionary that allows you customize renderings and behaviors.
@@ -941,8 +939,8 @@ trensantGFX.abbrState = function (input, to){
 
   /*d3 radialtree draws a redial zoomable graph of related items
   * param: treeData (dict)
-    * The treeData must in at least the following structure:
-    * { "name": "node display name",  "children": [ { "name" : ..., children [ "name" : 					...,  ]}]}
+    * Schema:
+    	{ "name": "node display name",  "children": [ { "name" : ..., children [ "name" : 					...,  ]}]}
   * param: id (string)
   * param: options (dict) A dictionary that allows you customize renderings and behaviors.
   *
@@ -1220,14 +1218,27 @@ trensantGFX.abbrState = function (input, to){
 
 //  ====================================================================================================
 
-
+	/*d3 chord draws a chord chart of related items
+	 * param: data (dict)
+	 	* data schema:
+	 		* {matrix : [
+	 			[0, 0, 1000, 1000],
+	 			[0, 0, 1000, 1000],
+			 	[1000, 1000, 0, 1000],
+	 			[1000, 1000, 1000, 0]
+	 			], groups: ["A", "B", "C", "D"]}
+	 * param: id (string) Element to display chart.
+	 * param: options (dict) A dictionary that allows you customize renderings and behaviors.
+	 *
+	 * Rendering Options:
+	 * svgWidth: type: int or function, default: 600
+	 * svgHeight:: type: int or function, default: 600
+	 *
+	 */
 	trensantGFX.d3Chord = function(data, id, options) {
     var chordDefaultConfiguration = {
-      matrix: "matrix",
-      groups: "groups",
       svgWidth: 960,
-      svgHeight: 960,
-
+      svgHeight: 960
     }
     configuration = setOptions(chordDefaultConfiguration, options);
 
@@ -1367,5 +1378,99 @@ trensantGFX.abbrState = function (input, to){
     }
 
   }
+//  =================================================================
+	/*d3zoombaleSunburst draws a sunburst chart of hierarchically related items
+	 * param: data (dict)
+	 	* data schema:
+	 	* {name: "string",
+			 children: [
+	 			{
+	 			name: "string",
+	 			children: [{name: "string", size: value}
+	 			]}
+	 * param: id (string) Element to display chart.
+	 * param: options (dict) A dictionary that allows you customize renderings and behaviors.
+	 *
+	 * Rendering Options:
+	 * svgWidth: type: int or function, default: 600
+	 * svgHeight:: type: int or function, default: 600
+	 *
+	 */
+	trensantGFX.d3ZoomableSunburst = function(data, id, options) {
+    var zoomableSunburstDefaultConfiguration = {
+      svgWidth: 960,
+      svgHeight: 960
+    }
+    configuration = setOptions(zoomableSunburstDefaultConfiguration , options);
+
+    var width = configuration.svgWidth,
+      height = configuration.svgHeight,
+      radius = (Math.min(width, height) / 2) - 10;
+
+    var formatNumber = d3.format(",d");
+
+    var x = d3.scaleLinear()
+      .range([0, 2 * Math.PI]);
+
+    var y = d3.scaleSqrt()
+      .range([0, radius]);
+
+    var color = d3.scaleOrdinal(d3.schemeCategory20);
+
+    var partition = d3.partition();
+
+    var arc = d3.arc()
+      .startAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x0))); })
+      .endAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x1))); })
+      .innerRadius(function(d) { return Math.max(0, y(d.y0)); })
+      .outerRadius(function(d) { return Math.max(0, y(d.y1)); });
+
+    var svg = d3.select("#"+id).append("svg")
+      .attr("width", width)
+      .attr("height", height)
+      .append("g")
+      .attr("transform", "translate(" + width / 2 + "," + (height / 2) + ")");
+
+    root = d3.hierarchy(data);
+      root.sum(function(d) { return d.size; });
+
+      svg.selectAll("g")
+        .data(partition(root).descendants())
+        .enter().append("path")
+        .attr("d", arc)
+        .style("fill", function(d) { return color((d.children ? d : d.parent).data.name); })
+        .on("click", click)
+        .append("title")
+        .text(function(d) { return d.data.name + "\n" + formatNumber(d.value); });
+
+    function click(d) {
+      svg.transition()
+        .duration(750)
+        .tween("scale", function() {
+          var xd = d3.interpolate(x.domain(), [d.x0, d.x1]),
+            yd = d3.interpolate(y.domain(), [d.y0, 1]),
+            yr = d3.interpolate(y.range(), [d.y0 ? 20 : 0, radius]);
+          return function(t) { x.domain(xd(t)); y.domain(yd(t)).range(yr(t)); };
+        })
+        .selectAll("path")
+        .attrTween("d", function(d) { return function() { return arc(d); }; });
+    }
+
+    d3.select(self.frameElement).style("height", height + "px");
+
+    function setOptions(default_configuration, options) {
+			/*Options.tree_attribute_names: Gets keys from the tree. If not present sets default values.*/
+
+      if (options) {
+        for (var setting in options) {
+          if (!(Object.keys(default_configuration).indexOf(setting) > -1)) {
+            console.warn(setting + ' is not a default setting.')
+          }
+          default_configuration[setting] = options[setting];
+        }
+      }
+      return default_configuration
+    }
+	}
 })(typeof trensantGFX === 'undefined'? this['trensantGFX']={}: hf);//(window.hf = window.hf || {});
 
