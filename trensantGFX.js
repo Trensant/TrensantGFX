@@ -56,7 +56,6 @@
 trensantGFX.typeOf = function (x)   {
 	return (typeof x == "undefined") ? "undefined" : (({}).toString.call(x).match(/\s([a-zA-Z]+)/)[1].toLowerCase());
 };
-
 var _to = trensantGFX.typeOf;  //short hand used internally for typeof operations.
 
 //=====================================================================================================
@@ -103,7 +102,6 @@ trensantGFX.mapScaleEXP = function (z, in0, in1, out0, out1, clip, exp_scale) {
         z=trensantGFX.constrain(z,out0,out1);
     return z;
 }
-
 var _mapScale = trensantGFX.mapScaleEXP; //short hand used internally
 
 
@@ -185,8 +183,6 @@ trensantGFX.repeatUntil = function(testFn, successFn, failFn, delay, maxReps, la
 
 	}
 	_f();
-
-
 }
 //=====================================================================================================
 //=====================================================================================================
@@ -624,7 +620,12 @@ trensantGFX.abbrState = function (input, to){
         }    
     }
 }
-
+//======================================================================================================
+trensantGFX.d3ChartsLoaded() {
+	if (typeof d3 != "undefined")
+		return true;
+	return false;
+}
 
 
 
