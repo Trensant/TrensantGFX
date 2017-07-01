@@ -111,4 +111,3 @@ This frees the developer from maintaining library load states accross the variou
 trensantGFX is a licensed under the BSD 2-clause license.
 See the accompanying License.txt file.
 
-

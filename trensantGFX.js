@@ -939,53 +939,57 @@ trensantGFX.d3ChartsLoaded() {
     }
   }
 //======================================================================================================
-//  d3 radialtree draws a redial zoomable graph of related items
-  /*
-  * While not required it is recommended you add the following css classes prior to attempting to render the radial tree.
-  .link {
-   fill: none;
-   stroke: #ccc;
-   opacity: 0.9;
-   stroke-width: 1.5px;
-   }
-   .node circle {
-   stroke: #fff;
-   opacity: 0.9;
-   stroke-width: 1.5px;
-   }
-   .node:not(:hover) .nodetext {
-   display: none;
-   }
 
-   text {
-   font: 9px;
-   opacity: 0.9;
-   cursor: pointer;}
-  *
-  *
+  /*d3 radialtree draws a redial zoomable graph of related items
   * param: treeData (dict)
-    *  The treeData must in at least the following structure:
-    *    { "name": "node display name",  "uuid" : string, "children": [ { "name" : ..., "uuid" : ...,   children [ "name" : ..., "uuid" : ..., "size" : <number>  ]}]}
+    * The treeData must in at least the following structure:
+    * { "name": "node display name",  "children": [ { "name" : ..., children [ "name" : 					...,  ]}]}
   * param: id (string)
   * param: options (dict) A dictionary that allows you customize renderings and behaviors.
   *
-  * */
-
-  trensantGFX.d3radialTree = function (treeData, id, options) {
+  	* Tree data options:
+  	 	* name:: type: string, default: "name"
+  	 	* children:: type: string, default: "children"
+		* FURTHER DESCRIPTION for Tree data options:
+	 		* Frequently trees contain different keys labels. For
+	 		* example your tree label for children may be childs instead of children.
+	 		* Normally in that case you would either change the all the keys in
+	 		* you data prior to passing or specify a custom function in d3.hierarchy call.
+	 		* Instead you can specify key lables in options.
+		 	* Example: {children: childs}.
+	 *
+  *
+	* Rendering Options:
+	 	* svgWidth: type: int or function, default: 600
+	 	* svgHeight:: type: int or function, default: 600
+		*
+	*
+		*/
+  trensantGFX.d3RadialTree = function (treeData, id, options) {
+    var radialTreeDefaultConfiguration = {
+      name: "name",
+      children: "children",
+      svgWidth: 900,
+      svgHeight: 900,
+			diameter: 600,
+			duration: 750
+    }
+    configuration = setOptions(radialTreeDefaultConfiguration, options);
     if (typeof options == "undefined") {
       options = {};
     }
 
-    var width = typeof(options["width"]) == "undefined" ? 750 : options["width"];
-    var height = typeof(options["height"]) == "undefined" ? 750 : options["height"];
+    var width = typeof configuration.svgWidth === "function" ? configuration.svgWidth() : configuration.svgWidth,
+      height = typeof configuration.svgHeight === "function" ? configuration.svgHeight() : configuration.svgHeight;
 
-    var diameter = typeof(options["diameter"]) == "undefined" ? 725 : options["diameter"];
-    var duration = 750;
+    var diameter = configuration.diameter;
+    var duration = configuration.duration;
 
     var nodes, links;
     var i = 0;
 
-    var treeLayout = d3.tree().size([360, diameter / 2 - 120]), root;
+    var treeLayout = d3.tree().size([360, diameter/2]).separation(
+    	function (a,b){return (a.parent == b.parent ? 1 : 2) / a.depth;}), root;
 
     var nodeSvg, linkSvg, nodeEnter, linkEnter;
 
@@ -994,9 +998,9 @@ trensantGFX.d3ChartsLoaded() {
       .attr("height", height);
     var g = svg.append("g").attr("transform", "translate(" + (width / 2 + 40) + "," + (height / 2 + 90) + ")");
 
-    root = d3.hierarchy(treeData);
+    root = d3.hierarchy(treeData, function (d) {return d[configuration.children] });
     root.each(function (d) {
-      d.name = d.data.name; //transferring name to a name variable
+      d.name = d.data[configuration.name]; //transferring name to a name variable
       d.id = i; //Assigning numerical Ids
       i += i;
     });
@@ -1016,7 +1020,7 @@ trensantGFX.d3ChartsLoaded() {
     update(root);
 
 
-    function update(source) {
+    function update(source) { console.log(source)
       root = treeLayout(root);
       nodes = treeLayout(root).descendants();
       links = nodes.slice(1);
@@ -1025,9 +1029,9 @@ trensantGFX.d3ChartsLoaded() {
 
       // Normalize for fixed-depth.
       nodes.forEach(function (d) {
-        d.y = d.depth * 180;
+        d.y = d.depth * diameter/6;
       });
-      nodeSvg = g.selectAll(".node")
+      nodeSvg = g.selectAll(".d3RadialTreeNode")
         .data(nodes, function (d) {
           return d.id || (d.id = ++i);
         });
@@ -1035,10 +1039,10 @@ trensantGFX.d3ChartsLoaded() {
 
       var nodeEnter = nodeSvg.enter()
         .append("g")
-        .attr("class", "node")
+        .attr("class", "d3RadialTreeNode")
         .attr("transform", function (d) {
           return "translate(" + project(d.x, d.y) + ")";
-        })
+        });
 
 
       nodeEnter.append("circle")
@@ -1058,12 +1062,12 @@ trensantGFX.d3ChartsLoaded() {
         })
         .text(function (d) {
           if (d.parent) {
-            return d.name;
+            return d[configuration.name];
           }
           else {
             return null
           }
-        }).on("click", options.onClick)
+        }).on(options && options.textClick ? options.textClick : "click", options.onClick)
 
       // Transition nodes to their new position.
       var nodeUpdate = nodeSvg.merge(nodeEnter).transition()
@@ -1101,7 +1105,7 @@ trensantGFX.d3ChartsLoaded() {
       });
 
 
-      linkSvg = g.selectAll(".link")
+      linkSvg = g.selectAll(".d3RadialTreelink")
         .data(links, function (link) {
           var id = link.id + '->' + link.parent.id;
           return id;
@@ -1114,7 +1118,7 @@ trensantGFX.d3ChartsLoaded() {
 
       // Enter any new links at the parent's previous position.
       linkEnter = linkSvg.enter().insert('path', 'g')
-        .attr("class", "link")
+        .attr("class", "d3RadialTreelink")
         .attr("d", function (d) {
           return "M" + project(d.x, d.y)
             + "C" + project(d.x, (d.y + d.parent.y) / 2)
@@ -1198,6 +1202,20 @@ trensantGFX.d3ChartsLoaded() {
         + "C" + project(d.x, (d.y + d.parent.y) / 2)
         + " " + project(d.parent.x, (d.y + d.parent.y) / 2)
         + " " + project(d.parent.x, d.parent.y)
+    }
+
+    function setOptions(default_configuration, options) {
+			/*Options.tree_attribute_names: Gets keys from the tree. If not present sets default values.*/
+
+      if (options) {
+        for (var setting in options) {
+          if (!(Object.keys(default_configuration).indexOf(setting) > -1)) {
+            console.warn(setting + ' is not a default setting.')
+          }
+          default_configuration[setting] = options[setting];
+        }
+      }
+      return default_configuration
     }
   }
 })(typeof trensantGFX === 'undefined'? this['trensantGFX']={}: hf);//(window.hf = window.hf || {});
