@@ -689,7 +689,7 @@ trensantGFX.abbrState = function (input, to){
 
     var width = typeof treeMapConfiguration.svgWidth === "function" ? treeMapConfiguration.svgWidth() : treeMapConfiguration.svgWidth,
       height = typeof treeMapConfiguration.svgHeight === "function" ? treeMapConfiguration.svgHeight() : treeMapConfiguration.svgHeight;
-    console.log(height)
+
     d3.select('#'+id).append("p").classed("parent", true)
     d3.select('#'+id)
       .append("svg")
