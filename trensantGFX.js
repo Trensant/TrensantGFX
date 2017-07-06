@@ -818,7 +818,7 @@ trensantGFX.abbrState = function (input, to){
             return b.value - a.value || b.value - a.value;
           });
         treemap(root);
-        d3.selectAll('g').remove()
+        svg.selectAll('g').remove()
         drawit();
         addChildNode(nodeTree, node);
       }
