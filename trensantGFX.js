@@ -679,16 +679,16 @@ trensantGFX.abbrState = function (input, to){
       svgBehavior: null,
       svgBehaviorOptions: null
     }
-    configuration = setOptions(treemapDefaultConfiguration, options);
+    treeMapConfiguration = setOptions(treemapDefaultConfiguration, options);
 
     var fader = function (color) {
-        return d3.interpolateRgb(color, "#fff")(configuration.fader);
+        return d3.interpolateRgb(color, "#fff")(treeMapConfiguration.fader);
       },
       color = d3.scaleOrdinal(d3.schemeCategory20.map(fader)),
       format = d3.format(",d");
 
-    var width = typeof configuration.svgWidth === "function" ? configuration.svgWidth() : configuration.svgWidth,
-      height = typeof configuration.svgHeight === "function" ? configuration.svgHeight() : configuration.svgHeight;
+    var width = typeof treeMapConfiguration.svgWidth === "function" ? treeMapConfiguration.svgWidth() : treeMapConfiguration.svgWidth,
+      height = typeof treeMapConfiguration.svgHeight === "function" ? treeMapConfiguration.svgHeight() : treeMapConfiguration.svgHeight;
 
     d3.select('#'+id).append("p").classed("parent", true)
     d3.select('#'+id)
@@ -698,10 +698,10 @@ trensantGFX.abbrState = function (input, to){
       .attr("width", width)
       .attr("height", height)
       .style("font", "10px sans-serif")
-    if ("svgBehavior" in configuration) {
-      for (var key in configuration.svgBehavior) {
+    if ("svgBehavior" in treeMapConfiguration) {
+      for (var key in treeMapConfiguration.svgBehavior) {
         svg.on(key, function () {
-          configuration.svgBehavior[key](configuration.svgBehaviorOptions);
+          treeMapConfiguration.svgBehavior[key](treeMapConfiguration.svgBehaviorOptions);
         });
       }
     }
@@ -715,10 +715,10 @@ trensantGFX.abbrState = function (input, to){
     var nodeTree = tree;
     var root = d3.hierarchy(tree.node);
     root.eachBefore(function (d) {
-      d.data.id = d.data[configuration.childID]
+      d.data.id = d.data[treeMapConfiguration.childID]
     })
       .sum(function (d) {
-        return d[configuration.value]
+        return d[treeMapConfiguration.value]
       })
       .sort(function (a, b) {
         return b.value - a.value || b.value - a.value;
@@ -726,10 +726,10 @@ trensantGFX.abbrState = function (input, to){
     treemap(root);
     var parent_element = d3.select(".parent");
     parent_element.html(function () {
-      return root.data[configuration.childName]
+      return root.data[treeMapConfiguration.childName]
     });
     function drawit() {
-      cell = svg.selectAll("g").data(root[configuration.children]).enter().append("g")
+      cell = svg.selectAll("g").data(root[treeMapConfiguration.children]).enter().append("g")
         .attr("transform", function (d) {
           return "translate(" + d.x0 + "," + d.y0 + ")";
         });
@@ -745,7 +745,7 @@ trensantGFX.abbrState = function (input, to){
           return d.y1 - d.y0;
         })
         .attr("fill", function (d) {
-          return color(d.data[configuration.value]);
+          return color(d.data[treeMapConfiguration.value]);
         })
         .on('click', function (d) {
           redraw(d);
@@ -753,14 +753,14 @@ trensantGFX.abbrState = function (input, to){
             .attr("href", "javascript:void(0)")
             .html("  :  " + root.data.child_name)
             .on("click", function () {
-              redraw_parent(root.data[configuration.parentID]);
+              redraw_parent(root.data[treeMapConfiguration.parentID]);
             });
         });
 
-      if (configuration && "rectangleBehavior" in configuration) {
-        for (var key in configuration.rectangleBehavior) {
+      if (treeMapConfiguration && "rectangleBehavior" in treeMapConfiguration) {
+        for (var key in treeMapConfiguration.rectangleBehavior) {
           cell.on(key, function (d) {
-            configuration.rectangleBehavior[key](d, configuration.rectangleBehaviorOptions);
+            treeMapConfiguration.rectangleBehavior[key](d, treeMapConfiguration.rectangleBehaviorOptions);
           });
         }
       }
@@ -780,7 +780,7 @@ trensantGFX.abbrState = function (input, to){
         })
         .selectAll("tspan")
         .data(function (d) {
-          return d.data[configuration.childName].split(/(?=[A-Z][^A-Z])/g);
+          return d.data[treeMapConfiguration.childName].split(/(?=[A-Z][^A-Z])/g);
         })
         .enter().append("tspan")
         .attr("x", 4)
@@ -809,10 +809,10 @@ trensantGFX.abbrState = function (input, to){
       if (node.children) {
         root = d3.hierarchy(node.data);
         root.eachBefore(function (d) {
-          d.data.id = d.data[configuration.childID]
+          d.data.id = d.data[treeMapConfiguration.childID]
         })
           .sum(function (d) {
-            return d[configuration.value]
+            return d[treeMapConfiguration.value]
           })
           .sort(function (a, b) {
             return b.value - a.value || b.value - a.value;
@@ -843,10 +843,10 @@ trensantGFX.abbrState = function (input, to){
         root = get_node(nodeTree, id);
         root = d3.hierarchy(root);
         root.eachBefore(function (d) {
-          d.data.id = d.data[configuration.childID]
+          d.data.id = d.data[treeMapConfiguration.childID]
         })
           .sum(function (d) {
-            return d[configuration.value]
+            return d[treeMapConfiguration.value]
           })
           .sort(function (a, b) {
             return b.value - a.value || b.value - a.value;
@@ -971,16 +971,16 @@ trensantGFX.abbrState = function (input, to){
 			diameter: 600,
 			duration: 750
     }
-    configuration = setOptions(radialTreeDefaultConfiguration, options);
+    radialTreeConfiguration = setOptions(radialTreeDefaultConfiguration, options);
     if (typeof options == "undefined") {
       options = {};
     }
 
-    var width = typeof configuration.svgWidth === "function" ? configuration.svgWidth() : configuration.svgWidth,
-      height = typeof configuration.svgHeight === "function" ? configuration.svgHeight() : configuration.svgHeight;
+    var width = typeof radialTreeConfiguration.svgWidth === "function" ? radialTreeConfiguration.svgWidth() : radialTreeConfiguration.svgWidth,
+      height = typeof radialTreeConfiguration.svgHeight === "function" ? radialTreeConfiguration.svgHeight() : radialTreeConfiguration.svgHeight;
 
-    var diameter = configuration.diameter;
-    var duration = configuration.duration;
+    var diameter = radialTreeConfiguration.diameter;
+    var duration = radialTreeConfiguration.duration;
 
     var nodes, links;
     var i = 0;
@@ -995,9 +995,9 @@ trensantGFX.abbrState = function (input, to){
       .attr("height", height);
     var g = svg.append("g").attr("transform", "translate(" + (width / 2 + 40) + "," + (height / 2 + 90) + ")");
 
-    root = d3.hierarchy(treeData, function (d) {return d[configuration.children] });
+    root = d3.hierarchy(treeData, function (d) {return d[radialTreeConfiguration.children] });
     root.each(function (d) {
-      d.name = d.data[configuration.name]; //transferring name to a name variable
+      d.name = d.data[radialTreeConfiguration.name]; //transferring name to a name variable
       d.id = i; //Assigning numerical Ids
       i += i;
     });
@@ -1059,7 +1059,7 @@ trensantGFX.abbrState = function (input, to){
         })
         .text(function (d) {
           if (d.parent) {
-            return d[configuration.name];
+            return d[radialTreeConfiguration.name];
           }
           else {
             return null
@@ -1240,10 +1240,10 @@ trensantGFX.abbrState = function (input, to){
       svgWidth: 960,
       svgHeight: 960
     }
-    configuration = setOptions(chordDefaultConfiguration, options);
+    chordConfiguration = setOptions(chordDefaultConfiguration, options);
 
-    var width = typeof configuration.svgWidth === "function" ? configuration.svgWidth() : configuration.svgWidth,
-      height = typeof configuration.svgHeight === "function" ? configuration.svgHeight() : configuration.svgHeight;
+    var width = typeof chordConfiguration.svgWidth === "function" ? chordConfiguration.svgWidth() : chordConfiguration.svgWidth,
+      height = typeof chordConfiguration.svgHeight === "function" ? chordConfiguration.svgHeight() : chordConfiguration.svgHeight;
 
     function fade(opacity) {
       return function(d, i) {
@@ -1258,8 +1258,8 @@ trensantGFX.abbrState = function (input, to){
 
     var svg = d3.select("#"+id)
 				.append("svg")
-				.attr("width", configuration.svgWidth)
-				.attr("height", configuration.svgHeight),
+				.attr("width", chordConfiguration.svgWidth)
+				.attr("height", chordConfiguration.svgHeight),
       width = +svg.attr("width"),
       height = +svg.attr("height"),
       outerRadius = Math.min(width, height) * 0.5 - 65,
@@ -1401,10 +1401,10 @@ trensantGFX.abbrState = function (input, to){
       svgWidth: 960,
       svgHeight: 960
     }
-    configuration = setOptions(zoomableSunburstDefaultConfiguration , options);
+    sunburstConfiguration = setOptions(zoomableSunburstDefaultConfiguration , options);
 
-    var width = configuration.svgWidth,
-      height = configuration.svgHeight,
+    var width = sunburstConfiguration.svgWidth,
+      height = sunburstConfiguration.svgHeight,
       radius = (Math.min(width, height) / 2) - 10;
 
     var formatNumber = d3.format(",d");
