@@ -750,12 +750,14 @@ trensantGFX.abbrState = function (input, to){
         })
         .on('click', function (d) {
           redraw(d);
-          parent_element.append("a")
-            .attr("href", "javascript:void(0)")
-            .html("  :  " + root.data.child_name)
-            .on("click", function () {
-              redraw_parent(root.data[treeMapConfiguration.parentID]);
-            });
+          if (d.data[treeMapConfiguration.children]) {
+            parent_element.append("a")
+              .attr("href", "javascript:void(0)")
+              .html("  :  " + root.data.child_name)
+              .on("click", function () {
+                redraw_parent(root.data[treeMapConfiguration.parentID]);
+              });
+          }
         });
 
       if (treeMapConfiguration && "rectangleBehavior" in treeMapConfiguration) {
@@ -826,8 +828,9 @@ trensantGFX.abbrState = function (input, to){
     }
 
     var redraw_parent = function (id) {
-      var mylen = d3.selectAll("a")._groups[0].length;
-      var tickLabels = d3.selectAll("a").filter(function (d, i) {
+      var mylen = d3.selectAll(".parent a")._groups[0].length;
+
+      var tickLabels = d3.selectAll(".parent a").filter(function (d, i) {
         if (mylen == 1) {
           return 1;
         }
@@ -839,7 +842,6 @@ trensantGFX.abbrState = function (input, to){
           }
         }
       }).remove();
-//      tickLabels.last().attr("color", "red");
 
       if (typeof(id) != 'undefined') {
         root = get_node(nodeTree, id);
