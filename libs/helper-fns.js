@@ -29,7 +29,7 @@
         gPageTime = x.getTime();
         if (typeof msg === 'undefined')
             msg = 'hf.Timer started:';
-        console.log(msg+gPageTime);
+        // console.log(msg+gPageTime);
     };
     
     //read out current timer value
