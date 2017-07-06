@@ -689,7 +689,7 @@ trensantGFX.abbrState = function (input, to){
 
     var width = typeof treeMapConfiguration.svgWidth === "function" ? treeMapConfiguration.svgWidth() : treeMapConfiguration.svgWidth,
       height = typeof treeMapConfiguration.svgHeight === "function" ? treeMapConfiguration.svgHeight() : treeMapConfiguration.svgHeight;
-
+    console.log(height)
     d3.select('#'+id).append("p").classed("parent", true)
     d3.select('#'+id)
       .append("svg")
@@ -972,7 +972,6 @@ trensantGFX.abbrState = function (input, to){
       children: "children",
       svgWidth: 900,
       svgHeight: 900,
-			diameter: 600,
 			duration: 750
     }
     radialTreeConfiguration = setOptions(radialTreeDefaultConfiguration, options);
@@ -983,7 +982,7 @@ trensantGFX.abbrState = function (input, to){
     var width = typeof radialTreeConfiguration.svgWidth === "function" ? radialTreeConfiguration.svgWidth() : radialTreeConfiguration.svgWidth,
       height = typeof radialTreeConfiguration.svgHeight === "function" ? radialTreeConfiguration.svgHeight() : radialTreeConfiguration.svgHeight;
 
-    var diameter = radialTreeConfiguration.diameter;
+    var diameter = Math.min(width, height) * 0.9 - 10;
     var duration = radialTreeConfiguration.duration;
 
     var nodes, links;
@@ -1266,7 +1265,7 @@ trensantGFX.abbrState = function (input, to){
 				.attr("height", chordConfiguration.svgHeight),
       width = +svg.attr("width"),
       height = +svg.attr("height"),
-      outerRadius = Math.min(width, height) * 0.5 - 65,
+      outerRadius = Math.min(width, height) * 0.5,
       innerRadius = outerRadius - 20;
 
     var chord = d3.chord()
@@ -1409,7 +1408,7 @@ trensantGFX.abbrState = function (input, to){
 
     var width = sunburstConfiguration.svgWidth,
       height = sunburstConfiguration.svgHeight,
-      radius = (Math.min(width, height) / 2) - 10;
+      radius = (Math.min(width, height) / 2 - 10) ;
 
     var formatNumber = d3.format(",d");
 
