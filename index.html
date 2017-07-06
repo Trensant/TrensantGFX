@@ -416,7 +416,7 @@ drawBanner=false    				// supress or show the top Trensant Logo
     trensantGFX.tgPrettyPrint(radialTreeSampleData, div+"_data")
 
     //render the chart
-      trensantGFX.d3RadialTree(radialTreeSampleData, div+"_chart", {textClick: "mouseover", onClick: function () {d3.select(this).style("fill", "red")}, svgWidth: $('#'+div).width()});
+      trensantGFX.d3RadialTree(radialTreeSampleData, div+"_chart", {textClick: "mouseover", onClick: function () {d3.select(this).style("fill", "red")}, svgHeight: 700,svgWidth: $('#'+div).width()});
 
 //  ===================================================================================================
 	  div = "d3Chord";

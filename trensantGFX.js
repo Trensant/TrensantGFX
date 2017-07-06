@@ -728,6 +728,7 @@ trensantGFX.abbrState = function (input, to){
     parent_element.html(function () {
       return root.data[treeMapConfiguration.childName]
     });
+
     function drawit() {
       cell = svg.selectAll("g").data(root[treeMapConfiguration.children]).enter().append("g")
         .attr("transform", function (d) {
@@ -823,6 +824,7 @@ trensantGFX.abbrState = function (input, to){
         addChildNode(nodeTree, node);
       }
     }
+
     var redraw_parent = function (id) {
       var mylen = d3.selectAll("a")._groups[0].length;
       var tickLabels = d3.selectAll("a").filter(function (d, i) {
@@ -993,7 +995,7 @@ trensantGFX.abbrState = function (input, to){
     var svg = d3.select("#"+id).append("svg")
       .attr("width", width)
       .attr("height", height);
-    var g = svg.append("g").attr("transform", "translate(" + (width / 2 + 40) + "," + (height / 2 + 90) + ")");
+    var g = svg.append("g").attr("transform", "translate(" + (width / 2) + "," + (height / 2) + ")");
 
     root = d3.hierarchy(treeData, function (d) {return d[radialTreeConfiguration.children] });
     root.each(function (d) {
