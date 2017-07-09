@@ -4,21 +4,12 @@
     No dependancies on any libraries.  
     
     M A Chatterjee (c) 2013 
-    
+    trimmed 2017
     
  */
  
 (function (hf, undefined) {
     //"use strict";
-    //argSafe take a variable and atype and returns a default value if its not the supplied type        
-    hf.argSafe = function (arg, argTypeStr, def_value) {
-        if (typeof argTypeStr === 'undefined')
-            argTypeStr = 'undefined';
-        if (typeof arg === argTypeStr)
-            return arg;
-        else
-            return def_value;
-    }
 
     // crude performance measurements
     var gPageTime = 0;
@@ -29,7 +20,7 @@
         gPageTime = x.getTime();
         if (typeof msg === 'undefined')
             msg = 'hf.Timer started:';
-        console.log(msg+gPageTime);
+        //console.log(msg+gPageTime);
     };
     
     //read out current timer value
@@ -81,16 +72,6 @@
 
 
 
-
-    hf.makeImg = function(path,alt,w,h,auto) {
-        var s="<img ";
-        s+= "src='"+path+"' ";
-        s+= "alt='"+alt+ "' ";
-        s+= typeof w !== "undefined" ? "width='" +w+"' " : "";
-        s+= typeof h !== "undefined" ? "height='"+h+"' " : "";
-        s+= "></img>";
-        return s;
-    }
     // set a client side cookie.  Adapted from W3 Schools
     hf.setCookie = function (cname, cvalue, exdays) {
         var d = new Date();
@@ -242,15 +223,6 @@
         return mood;
     }
     
-    //returns pos neg neutral counts on a scall of 0 to 100 with optional sigmoidal warping
-    hf.moodRanged2 = function(pos,neg,neu,scale) {
-        if ((pos+neg+neu)==0)
-            neu=1;
-        mood = hf.interpWeight(pos,neg,neu)*100;
-        mood = hf.mapScaleEXP(mood,-100,100,0,100,true,scale); 
-        mood = Math.round(mood);
-        return mood;
-    }
     
     //returns buzz on scale of 0.. 100.   
     //scale provides optional power warping. (use a small fraction such as 0.4)
@@ -270,151 +242,10 @@
                 
         return 100*br;
     }
-
-    
-    //2D array sorter function
-    //x is number of column, dir==true then sort up, else reverse sort
-    //use with array.sort
-    //if myArray[][] then
-    //myArray.sort(hf.sort2D(2)); sort the array using the default direction of down
-    
-    hf.sort2D = function (x,dir) {
-        if(dir == false)
-            return (function sort_by_column(a,b) {
-                    tl=function(z) {if (typeof z == 'string') return z.toLowerCase(); else return z;}    
-                    return ((this.tl(a[x]) < this.tl(b[x])) ? -1:((this.tl(b[x])<this.tl(a[x]))?1:0));
-            });
-        else
-            return (function sort_by_column(a,b) {
-                    tl=function(z) {if (typeof z == 'string') return z.toLowerCase(); else return z;}
-                    return ((this.tl(a[x]) > this.tl(b[x])) ? -1:((this.tl(b[x])>this.tl(a[x]))?1:0));
-            });
-    }
+ 
     
     
-    
-    // returns a copy of the selected columns of an array.
-    // eg cloneArrayCols([[1,2,3,4],[5,6,7,8]],1,3)
-    // returns [[2,3],[6,7]] // clone of data not a ref back to the original array
-    // _Not_ a deep copy.  Assumes each row has same # of cols.
-    hf.cloneArrayCols =function (data_array,x,y) {
-        if (data_array.length < 1)
-                return [];
-        if ((typeof data_array[0] != 'object')  ||
-            (typeof data_array[0].length == 'undefined') 
-            )
-            return hf.cloneArrayCols([data_array],x,y)[0]; //handles 1D case             
-        if (typeof x != 'number') x=0;
-        if (typeof y != 'number') y=data_array[0].length;
-        var a = [];
-        for (var i=0; i< data_array.length; i++)
-            a[i] = data_array[i].slice(x,y);
-        return a;    
-    }
-    
-    hf.swapArrayCols = function (data_array,x,y) {
-        if (data_array.length < 1)
-                return [];
-        if ((typeof data_array[0].length == 'undefined')|| 
-            (typeof data_array[0] != 'object'))
-            return hf.swapArrayCols([data_array],x,y)[0]; //handles 1D case             
-        if (typeof x != 'number') x=0;
-        if (typeof y != 'number') y=x;
-        
-        for (var i=0; i< data_array.length; i++) {
-            var a = data_array[i][x];
-            data_array[i][x] = data_array[i][y];
-            data_array[i][y] = a;
-        }
-        return data_array;    
-    }
-    
-    //removes a column starting from col x and going to y
-    //if y not supplied only x is removed
-    hf.removeArrayCols =function (data_array,x,y) {
-        if (data_array.length < 1)
-                return [];
-        if ((typeof data_array[0].length == 'undefined')|| 
-            (typeof data_array[0] != 'object'))
-            return hf.removeArrayCols([data_array],x,y)[0]; //handles 1D case             
-        if (typeof x != 'number') x=0;
-        if (typeof y != 'number') y=x;
-        var new_array = hf.cloneArrayCols(0,data_array[0].length);
-        var a = [];
-        for (var i=0; i< new_array.length; i++)
-            a[i] = new_array[i].splice(x,y);
-        return a;    
-    }
-    
-    //given a 2D array, return an array only consisting of the columns in colList
-    //in colList order
-    hf.extractArrayCols =function (data_array,col_list) {
-        if (data_array.length < 1)
-                return [];
-        if ((typeof data_array[0].length == 'undefined') || 
-            (typeof data_array[0] != 'object'))
-            return hf.extractArrayCols([data_array],col_list)[0]; //handles 1D case             
-        if (typeof col_list.length == 'undefined') return [];
-        
-        var a = [];
-        for (var i=0; i < data_array.length; i++) {
-            var b = [];
-            for (var j=0; j < col_list.length; j++) {
-                k = col_list[j];
-                if (typeof k != 'number') {
-                    console.log('extractArrayCols non number index');
-                    return [];
-                }
-                b.push(data_array[i][col_list[j]]);
-            }
-            a.push(b);
-        }
-        return a;
-    }
-    
-    //color stretch for heatmaps.
-    hf.colorStretch = function (heatmap_data, stretchval) {
-        if (typeof stretchval === 'undefined')
-            stretchval = 5;
-        var zs = hf.getURLParam('colorStretch',5);   // URL param overide
-        stretchval =  (zs != 5) ? zs : stretchval; 
-            
-        var min_m = heatmap_data.slice(2,heatmap_data.length).reduce(function(xi,xd){return (xi<xd[3]) ? xi : xd[3];}, 101);
-        var max_m = heatmap_data.slice(2,heatmap_data.length).reduce(function(xi,xd){return (xi>xd[3]) ? xi : xd[3];},-101);
-
-        //optional color stretch
-        if (stretchval != "false") {
-            stretchval = Number(stretchval);
-        
-            console.log("color stretch",min_m,max_m);
-            for (var u =2; u < heatmap_data.length; u++) {
-                var uu =  heatmap_data[u][3];
-                heatmap_data[u][3] = Math.round(hf.mapScaleEXP(heatmap_data[u][3], min_m,max_m,-100,100,true,stretchval));
-                //console.log(Math.round(uu),Math.round(heatmap_data[u][3]));
-            }
-            //var min_m = heatmap_data.slice(2,heatmap_data.length).reduce(function(xi,xd){return (xi<xd[3]) ? xi : xd[3];}, 101);
-            //var max_m = heatmap_data.slice(2,heatmap_data.length).reduce(function(xi,xd){return (xi>xd[3]) ? xi : xd[3];},-101);
-            //console.log("color stretch",min_m,max_m);
-
-        }
-    }
-    
-    
-    
-    
-    //simple pattern matching
-    // poor man's prefix-match search for tagType in an array of text tags.
-    // e.g. if tagType = "foo" and Tags=["bar","foo:this","blah"]' will return ':this'
-    hf.matchTags = function (tagType,tags){
-       for(var i=0; i<tags.length; i++) {
-            if (tags[i].indexOf(tagType) === 0) {
-                var s= tags[i].substr(tagType.length,tags[i].length);
-                return s;
-            }
-        }
-        return ' ';
-    }
-    
+     
     //isHex returns a number of hex digits found or false if non-hex string.
     //allow is an optional string of characters "-+."etc to permit in the string.
     //the allow characters are not counted in the result

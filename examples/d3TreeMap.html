@@ -1,0 +1,102 @@
+<!doctype HTML>
+<html>
+<head>
+<!-- jquery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>     <!-- jquery is used for DOM stuff  -->
+
+<!--css for d3 rendering -->
+<link rel="stylesheet" href="../style/trensantGFX.css">
+
+<script type="text/javascript" src="../libs/helper-fns.js"></script>  <!-- helper-fns is a library for doing generec web work like URL param managment -->
+
+
+<script src="https://d3js.org/d3.v4.min.js"></script>  				 <!-- not compatible with d3.v3 or earlier  -->
+
+<!-- trensantGFX wrapper  -->
+<script type="text/javascript" src="../trensantGFX.js"></script>      <!-- TrensantGFX is the main lib for all wrappers!                               -->
+
+<style> 
+.chartCSS {
+	height : 100%;
+	width  : 100%;
+}
+</style>
+
+</head>
+
+<body>
+<div class="chartCSS" id="_chart"></div>
+<script>
+
+ var treeMapSampleData =  { node: {
+      child_name: "Anheuser-Busch",
+      child_id: "565ec0939b72473c7ec9e1ad",
+      children:
+        [
+          {
+            parent_name: "Anheuser-Busch",
+            child_tags: [],
+            child_name: "Budweiser Beer",
+            parent_id: "565ec0939b72473c7ec9e1ad",
+            child_buzz: 79,
+            child_id: "53166c755f3b284a609e1c6b",
+            children: [
+              {
+                parent_id: "53166c755f3b284a609e1c6b",
+                child_buzz: 6342,
+                child_id: "58781b703805ab195625df2c",
+                child_name: "@budweiser",
+                parent_type: "product",
+                children: [
+                  {
+                    parent_id: "58781b703805ab195625df2c",
+                    child_buzz: 3483,
+                    child_id: "565ea6efefa9d5d882d273",
+                    child_name: "childBudweiser",
+                  }
+                ]
+              },
+              {
+                parent_id: "53166c755f3b284a609e1c6b",
+                child_buzz: 3483,
+                child_id: "565ea6efefa9dd25d882d273",
+                child_name: "Budweiser"
+              },
+              {
+                parent_id: "53166c755f3b284a609e1c6b",
+                child_buzz: 250,
+                child_id: "58781a533805ab195625df2a",
+                child_name: "#budweiser"
+              },
+              {
+                parent_id: "531c755f3b284a609e1c6b",
+                child_buzz: 1250,
+                child_id: "58781a533805ab195625df2a",
+                child_name: "#my_best_budweiser",
+              }
+            ]
+          },
+          {
+            child_name: "Bud Light Beer",
+            child_type: "product",
+            parent_id: "565ec0939b72473c7ec9e1ad",
+            child_id: "53166f5c5f3b284a609e1c72",
+            children: [
+              {
+                parent_id: "53166c75284a609e1c6b",
+                child_buzz: 4342,
+                child_id: "58781b703805ab195625df2c",
+                child_name: "@budweiser",
+              }]
+
+          }
+        ]
+    } }
+
+	//render the chart
+    trensantGFX.d3TreeMap(treeMapSampleData, "_chart", {parentID: "parent_id", childID: "child_id",
+      childName: "child_name", value: "child_buzz"});
+</script>
+
+</body>
+</html>

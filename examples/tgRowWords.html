@@ -1,0 +1,58 @@
+<!doctype HTML>
+<html>
+<head>
+<!-- jquery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>     <!-- jquery is used for DOM stuff  -->
+
+<!--css for d3 rendering -->
+<link rel="stylesheet" href="../style/trensantGFX.css">
+
+<script type="text/javascript" src="../libs/helper-fns.js"></script>  <!-- helper-fns is a library for doing generec web work like URL param managment -->
+
+<!-- trensantGFX wrapper  -->
+<script type="text/javascript" src="../trensantGFX.js"></script>      <!-- TrensantGFX is the main lib for all wrappers!                               -->
+
+<style> 
+.chartCSS {
+	height : 100%;
+	width  : 100%;
+}
+</style>
+
+</head>
+
+<body>
+<div class="chartCSS" id="_chart"></div>
+<script>
+
+
+	var rowWordCloudSampleData = [   // note colors are optional, and can be HTML colors e.g. "#f44", data does not need to be sorted
+		["deal", 1998, "red"],
+  		["shoe", 1925, "red"],
+  		["nfl",  1895, "orange" ],
+  		["nike", 1698,   "red"  ], 
+  		["lucrative", 1673, "green" ],
+  		["@nfl",    1649,   "red"  ],
+  		["obj",    1469,    "orange"],
+  		["5-year",  1405,    "purple" ],  
+  		["25m",    1402,    "orange"],
+  		["safety",  690,    "purple"],
+  		["player",   566,    "purple"],
+  		["@browns",  545,   "green" ],
+  		["league",    531,    "purple" ],
+  		[ "much",    525,    "red"  ],  
+  		[ "speed",    490,    "green"],
+  		[ "receiving",  486,   "green"],
+		["fastest",  4484,    "orange"],
+  		[  "game",   458,    "red"  ],
+  		[ "midseason",   456,  "green"]
+  		];	
+
+  	var rowWordOpts = {"minSize":10,"maxSize":30,"sort":"alpha"};
+
+	//render the chart
+	trensantGFX.tgDrawRowWordCloud( rowWordCloudSampleData,"_chart",rowWordOpts);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!doctype html>
+<!-- 
+	examples.html
+	
+	starter template for graphics lib stand alone demos / tests.
+
+	M A Chatterjee 2017-07-07
+
+-->
+<html>
+
+<head>
+<!-- HTML header code for trensant-gfx demo. M A Chatterjee 20170525 -->
+<link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- jquery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>     <!-- jquery is used for DOM stuff  --><!-- core graphics library includes.  -->
+
+
+<!-- bootstrap is used for div management -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>  <!-- not part of graphics library just here for div and layour mgmt -->
+
+
+
+<script src="../libs/helper-fns.js"></script>	    <!-- misc hacking support like reading cookies, URLs, number scaling -->                       
+</head>
+
+<body>
+<br><br>
+<div class='container' >     <!-- boostrap container               -->
+	<div class='col-md-12'>  <!-- boostrap basic column management -->
+	<div class="row">
+		<div class='top-banner' id="topBanner">	</div> <!-- top banner is dynamically drawn -->
+		<h1>Trensant Graphics Library Examples</h1>
+		<p>This is the Trensant Graphics Library Examples Landing page.  The Trensant Graphics Library is a wrapper of several 3rd party graphics and charting libraries which are useful for visualizing data using different techniques.  See the README.md file in the distribution for more on which libraries and charts are wrapped and how to use them.</p>
+	</div>
+		<br>
+		<h2>Examples</h2>
+		<div id='tocDiv'></div>  <!-- table of contents goes here, dynamically populated -->
+		<br>
+	</div>
+</div>
+<script type="text/javascript">
+	var gDrawBanner = true; 
+	if ((hf.getURLParam("drawBanner") != "false") && (gDrawBanner==true))
+		document.getElementById("topBanner").innerHTML= "<a href='http://trensant.com'><img src='../img/Trensant_apricot_flat_sm.png'></img></a><br><br>";
+
+	//==========================================================================================
+	/* this function adds an entry to our Table of contents.  
+		The params are used as follow:
+		tableTitle  // this appears on this page as the title (e.g. "gglPieChart")
+		tableDesc   // this appears on this page as the description (e.g. ggPieChart draws a pie chart using Google Charts....)
+
+		urlTitle    // this is the title that is passed in to the chart example stand alone page as a URL param
+		urlDesc    	// this is the description that passed to the chart example stand alone page as a URL param
+		urlSrc		// this is the path to the file that contains the stand-alone chart load.
+	*/
+	function makeTocEntry(tableTitle,tableDesc,urlTitle,urlDesc,urlSrc) {
+		var s = "";
+		s+= "<h2>"+ tableTitle +"</h2>";
+		s+= "<p>" + tableDesc  +"</p>";
+		s+= hf.makeLink(tableTitle,"./live_edit.html?src="+encodeURIComponent(urlSrc)+"&titleText="+encodeURIComponent(urlTitle)+"&descText="+encodeURIComponent(urlDesc),true);
+		s+= "<br>";
+		return s;
+	}
+
+	//  now we add the graphics links for each chart's stand alone page.
+	var tocContent = "";
+
+	//tocContent += makeTocEntry("TocName","TocDesc", "URLTitle", "URLDesc", "URLSrc");
+
+	tocContent += makeTocEntry("tgRowWords","tgRowWords is a library call to the built in row words chart.", "TrensantGFX.tgRowWords", "row Words is a way to visualize words as in a row and can be drawn alphabetized or by size.", "tgRowWords.html");
+
+	tocContent += makeTocEntry("d3TreeMap","d3TreeMap is a library call to the wrapper to the d3.v4 TreeMap renderer.", "TrensantGFX.d3TreeMap", "d3TreeMap a way to visualize a hiearchal tree data set.", "d3TreeMap.html");
+
+
+
+	$("#tocDiv").html(tocContent);
+
+</script>
+</body>
+</html>

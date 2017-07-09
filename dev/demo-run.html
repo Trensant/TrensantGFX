@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>ACE in Action</title>
+<style type="text/css" media="screen">
+#editor { 
+    font-size: 11pt;
+    font-family: "Courier New", Courier;
+
+    height: 500px;
+    width : 800px;
+}
+
+</style>
+</head>
+<body>
+<h3>Code Editor Test</h3>
+<br>
+<div id="editor"></div>
+    
+<script src="../code_editor/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+<script>
+     x = "<!DOCTYPE html><html>\n<head>\n<title>Test</title>\n</head>\n<body>\n<h2>This is a test</h2>\n<pre>Here is some text</pre>\n<script>\n\tvar x=3;\n\tfunction foo(a){return 3+a;};\n<\/script>\n<\/body>\n</html>\n";
+
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/mono_industrial"); // the "path" is set by where "ace.js" is
+    editor.getSession().setMode("ace/mode/html");
+    editor.setOption("tabSize", 4);
+    editor.$blockScrolling = Infinity;
+    editor.setValue(x);
+    editor.clearSelection();
+    
+
+</script>
+</body>
+</html>
+
+    
