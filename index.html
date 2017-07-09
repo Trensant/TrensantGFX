@@ -7,26 +7,25 @@
 <!-- jquery -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>     <!-- jquery is used for DOM stuff  -->
 
-<!-- bootstrap is used for div management -->
+<!-- bootstrap is used for div management on this page -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>  <!-- not part of graphics library just here for div and layour mgmt -->
 
-<!--css for d3 rendering -->
-<link rel="stylesheet" href="./style/trensantGFX.css">
 
 <script type="text/javascript" src="./libs/helper-fns.js"></script>  <!-- helper-fns is a library for doing generec web work like URL param managment -->
 
 
 <!-- core graphics library includes.  -->
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>  <!-- google charts loader -->
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>              <!-- as of 20170620 Google says it needs this for maps -->
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>  <!-- google charts loader, note there is no offline version -->
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>              <!-- as of 20170620 Google says it needs this for maps      -->
 
 <script src="https://d3js.org/d3.v4.min.js"></script>  				 <!-- not compatible with d3.v3 or earlier  -->
 <script type="text/javascript" src="./libs/wordcloud2.js"></script>  <!-- wordcloud2.js is a wordcloud library -->
 
+<script type="text/javascript" src="./libs/plotly.min.js"></script>  <!-- loads the excellent plot.ly lib.  see more at plot.ly -->
 
 <!-- see more about jqcloud here: https://github.com/mistic100/jQCloud -->
-<script type="text/javascript" src="./libs/jqcloud.min.js"></script> <!-- jQCloud is a word cloud library -->
+<script type="text/javascript" src="./libs/jqcloud.min.js"></script> <!-- jQCloud is a word cloud library (requires jquery-->
 <link rel="stylesheet" href="./libs/jqcloud.min.css"> 				 <!-- jQCloud requires this css file  -->
 
 
@@ -34,17 +33,21 @@
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBwB-0FhqcR0eYbf4utsUNN02i8olM6ork" ></script>  <!-- google maps -->
 
 
-<!-- trensantGFX wrapper!  -->
-<script type="text/javascript" src="./trensantGFX.js"></script>      <!-- TrensantGFX is the main lib for all wrappers!                               -->
+<!--shared css for trensantGFX rendering -->
+<link rel="stylesheet" href="./style/trensantGFX.css">
 
-<!-- code editor -  uses the ace code editor, learn more here: https://ace.c9.io/ -->
+<!-- trensantGFX wrapper!  -->
+<script type="text/javascript" src="./trensantGFX.js"></script>      <!-- TrensantGFX is the main lib for all wrappers!        -->
+
+<!--  code editor -  uses the ace code editor, learn more here: https://ace.c9.io/ 
 <script src="./code_editor/src-min-noconflict/ace.js"></script>
-<!-- end code editor -->
+ -end code editor-
+-->
 
 <title>Trensant Graphics Wrapper Library</title>
 <style type="text/css">
 
-/* raw chart data display area */
+/* raw chart data display area above each chart */
 .cssData { 
 	height : 300px;
 	overflow-y: auto;
@@ -52,7 +55,7 @@
 
 /* chart display area */
 .cssChart {
-	height: 600px;
+	height: 700px;
 }
 
 </style>

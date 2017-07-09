@@ -590,18 +590,18 @@ trensantGFX.d3ChartsLoaded = function () {
   */
   trensantGFX.d3TreeMap = function (tree, id, options) {
     var treemapDefaultConfiguration = {
-      parentID: 'parentID',
-      childID: "childID",
-      childName: "childName",
-      children: "children",
-      value: "value",
-      svgWidth: 600,
-      svgHeight: 600,
-      fader: 0.5,
-      rectangleBehavior: null,
-      rectangleBehaviorOptions: null,
-      svgBehavior: null,
-      svgBehaviorOptions: null
+		parentID: 'parentID',
+		childID: "childID",
+		childName: "childName",
+		children: "children",
+		value: "value",
+		svgWidth: trensantGFX.containerDims(id).wid ,
+		svgHeight: trensantGFX.containerDims(id).hgt,
+		fader: 0.5,
+		rectangleBehavior: null,
+		rectangleBehaviorOptions: null,
+		svgBehavior: null,
+		svgBehaviorOptions: null
     }
     configuration = setOptions(treemapDefaultConfiguration, options);
 
@@ -888,11 +888,11 @@ trensantGFX.d3ChartsLoaded = function () {
 		*/
   trensantGFX.d3RadialTree = function (treeData, id, options) {
     var radialTreeDefaultConfiguration = {
-      name: "name",
-      children: "children",
-      svgWidth: 900,
-      svgHeight: 900,
-			diameter: 600,
+			name: "name",
+			children: "children",
+			svgWidth: trensantGFX.containerDims(id).wid,
+			svgHeight: trensantGFX.containerDims(id).hgt,
+			diameter: trensantGFX.containerDims(id).wid/2,
 			duration: 750
     }
     configuration = setOptions(radialTreeDefaultConfiguration, options);
@@ -1159,10 +1159,10 @@ trensantGFX.d3ChartsLoaded = function () {
 	 * svgHeight:: type: int or function, default: 600
 	 *
 	 */
-	trensantGFX.d3Chord = function(data, id, options) {
+trensantGFX.d3Chord = function(data, id, options) {
     var chordDefaultConfiguration = {
-      svgWidth: 960,
-      svgHeight: 960
+      svgWidth: trensantGFX.containerDims(id).wid,
+      svgHeight: trensantGFX.containerDims(id).hgt
     }
     configuration = setOptions(chordDefaultConfiguration, options);
 
@@ -1321,80 +1321,80 @@ trensantGFX.d3ChartsLoaded = function () {
 	 *
 	 */
 	trensantGFX.d3ZoomableSunburst = function(data, id, options) {
-    var zoomableSunburstDefaultConfiguration = {
-      svgWidth: 960,
-      svgHeight: 960
-    }
-    configuration = setOptions(zoomableSunburstDefaultConfiguration , options);
+	    var zoomableSunburstDefaultConfiguration = {
+	      svgWidth: trensantGFX.containerDims(id).wid,
+	      svgHeight: trensantGFX.containerDims(id).hgt
+	    }
+	    configuration = setOptions(zoomableSunburstDefaultConfiguration , options);
 
-    var width = configuration.svgWidth,
-      height = configuration.svgHeight,
-      radius = (Math.min(width, height) / 2) - 10;
+	    var width = configuration.svgWidth,
+	      height = configuration.svgHeight,
+	      radius = (Math.min(width, height) / 2) - 10;
 
-    var formatNumber = d3.format(",d");
+	    var formatNumber = d3.format(",d");
 
-    var x = d3.scaleLinear()
-      .range([0, 2 * Math.PI]);
+	    var x = d3.scaleLinear()
+	      .range([0, 2 * Math.PI]);
 
-    var y = d3.scaleSqrt()
-      .range([0, radius]);
+	    var y = d3.scaleSqrt()
+	      .range([0, radius]);
 
-    var color = d3.scaleOrdinal(d3.schemeCategory20);
+	    var color = d3.scaleOrdinal(d3.schemeCategory20);
 
-    var partition = d3.partition();
+	    var partition = d3.partition();
 
-    var arc = d3.arc()
-      .startAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x0))); })
-      .endAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x1))); })
-      .innerRadius(function(d) { return Math.max(0, y(d.y0)); })
-      .outerRadius(function(d) { return Math.max(0, y(d.y1)); });
+	    var arc = d3.arc()
+	      .startAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x0))); })
+	      .endAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x1))); })
+	      .innerRadius(function(d) { return Math.max(0, y(d.y0)); })
+	      .outerRadius(function(d) { return Math.max(0, y(d.y1)); });
 
-    var svg = d3.select("#"+id).append("svg")
-      .attr("width", width)
-      .attr("height", height)
-      .append("g")
-      .attr("transform", "translate(" + width / 2 + "," + (height / 2) + ")");
+	    var svg = d3.select("#"+id).append("svg")
+	      .attr("width", width)
+	      .attr("height", height)
+	      .append("g")
+	      .attr("transform", "translate(" + width / 2 + "," + (height / 2) + ")");
 
-    root = d3.hierarchy(data);
-      root.sum(function(d) { return d.size; });
+	    root = d3.hierarchy(data);
+	      root.sum(function(d) { return d.size; });
 
-      svg.selectAll("g")
-        .data(partition(root).descendants())
-        .enter().append("path")
-        .attr("d", arc)
-        .style("fill", function(d) { return color((d.children ? d : d.parent).data.name); })
-        .on("click", click)
-        .append("title")
-        .text(function(d) { return d.data.name + "\n" + formatNumber(d.value); });
+	      svg.selectAll("g")
+	        .data(partition(root).descendants())
+	        .enter().append("path")
+	        .attr("d", arc)
+	        .style("fill", function(d) { return color((d.children ? d : d.parent).data.name); })
+	        .on("click", click)
+	        .append("title")
+	        .text(function(d) { return d.data.name + "\n" + formatNumber(d.value); });
 
-    function click(d) {
-      svg.transition()
-        .duration(750)
-        .tween("scale", function() {
-          var xd = d3.interpolate(x.domain(), [d.x0, d.x1]),
-            yd = d3.interpolate(y.domain(), [d.y0, 1]),
-            yr = d3.interpolate(y.range(), [d.y0 ? 20 : 0, radius]);
-          return function(t) { x.domain(xd(t)); y.domain(yd(t)).range(yr(t)); };
-        })
-        .selectAll("path")
-        .attrTween("d", function(d) { return function() { return arc(d); }; });
-    }
+	    function click(d) {
+	      svg.transition()
+	        .duration(750)
+	        .tween("scale", function() {
+	          var xd = d3.interpolate(x.domain(), [d.x0, d.x1]),
+	            yd = d3.interpolate(y.domain(), [d.y0, 1]),
+	            yr = d3.interpolate(y.range(), [d.y0 ? 20 : 0, radius]);
+	          return function(t) { x.domain(xd(t)); y.domain(yd(t)).range(yr(t)); };
+	        })
+	        .selectAll("path")
+	        .attrTween("d", function(d) { return function() { return arc(d); }; });
+	    }
 
-    d3.select(self.frameElement).style("height", height + "px");
+	    d3.select(self.frameElement).style("height", height + "px");
 
-    function setOptions(default_configuration, options) {
-			/*Options.tree_attribute_names: Gets keys from the tree. If not present sets default values.*/
+	    function setOptions(default_configuration, options) {
+				/*Options.tree_attribute_names: Gets keys from the tree. If not present sets default values.*/
 
-      if (options) {
-        for (var setting in options) {
-          if (!(Object.keys(default_configuration).indexOf(setting) > -1)) {
-            console.warn(setting + ' is not a default setting.')
-          }
-          default_configuration[setting] = options[setting];
-        }
-      }
-      return default_configuration
-    }
+	      if (options) {
+	        for (var setting in options) {
+	          if (!(Object.keys(default_configuration).indexOf(setting) > -1)) {
+	            console.warn(setting + ' is not a default setting.')
+	          }
+	          default_configuration[setting] = options[setting];
+	        }
+	      }
+	      return default_configuration
+	    }
 	}
 })(typeof trensantGFX === 'undefined'? this['trensantGFX']={}: hf);//(window.hf = window.hf || {});
 
