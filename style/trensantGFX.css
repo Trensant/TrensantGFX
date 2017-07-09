@@ -12,3 +12,22 @@
 .d3RadialTreeNode:not(:hover) .d3RadialTreeNodeText {
 	display: none;
 }
+
+/*=============================*/
+.d3ChordGroupTick line {
+	stroke: #000;
+}
+
+.d3ChordOfficeLabel {
+	font-size: 25px;
+	font: sans-serif;
+	text-anchor: middle;
+}
+
+.d3ChordRibbons {
+	fill-opacity: 0.6;
+}
+/*===============================*/
+.dpath {
+	stroke: #fff;
+}

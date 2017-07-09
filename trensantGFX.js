@@ -550,14 +550,12 @@ trensantGFX.d3ChartsLoaded = function () {
 	return false;
 }
 
-
-
 //======================================================================================================
   /*
    * Generates a Treemap.
    * REQUIRED: Declare an element with an id. The id is passed to parameter id.
     *  param: tree (dict)
-      *  The tree must in at least the following structure:
+      *  Schema:
         * { node: { child_name: "string",   child_id: "string",   children:   [ { child_name: "string",   parent_id: "string",   value: int, float, or double,   child_id: "string"   } ]   } }
     * param: id (string)
     * param: options (dict) A dictionary that allows you customize renderings and behaviors.
@@ -865,8 +863,8 @@ trensantGFX.d3ChartsLoaded = function () {
 
   /*d3 radialtree draws a redial zoomable graph of related items
   * param: treeData (dict)
-    * The treeData must in at least the following structure:
-    * { "name": "node display name",  "children": [ { "name" : ..., children [ "name" : 					...,  ]}]}
+    * Schema:
+    	{ "name": "node display name",  "children": [ { "name" : ..., children [ "name" : 					...,  ]}]}
   * param: id (string)
   * param: options (dict) A dictionary that allows you customize renderings and behaviors.
   *
@@ -943,7 +941,7 @@ trensantGFX.d3ChartsLoaded = function () {
     update(root);
 
 
-    function update(source) { console.log(source)
+    function update(source) {
       root = treeLayout(root);
       nodes = treeLayout(root).descendants();
       links = nodes.slice(1);
@@ -1141,5 +1139,262 @@ trensantGFX.d3ChartsLoaded = function () {
       return default_configuration
     }
   }
+
+//  ====================================================================================================
+
+	/*d3 chord draws a chord chart of related items
+	 * param: data (dict)
+	 	* data schema:
+	 		* {matrix : [
+	 			[0, 0, 1000, 1000],
+	 			[0, 0, 1000, 1000],
+			 	[1000, 1000, 0, 1000],
+	 			[1000, 1000, 1000, 0]
+	 			], groups: ["A", "B", "C", "D"]}
+	 * param: id (string) Element to display chart.
+	 * param: options (dict) A dictionary that allows you customize renderings and behaviors.
+	 *
+	 * Rendering Options:
+	 * svgWidth: type: int or function, default: 600
+	 * svgHeight:: type: int or function, default: 600
+	 *
+	 */
+	trensantGFX.d3Chord = function(data, id, options) {
+    var chordDefaultConfiguration = {
+      svgWidth: 960,
+      svgHeight: 960
+    }
+    configuration = setOptions(chordDefaultConfiguration, options);
+
+    var width = typeof configuration.svgWidth === "function" ? configuration.svgWidth() : configuration.svgWidth,
+      height = typeof configuration.svgHeight === "function" ? configuration.svgHeight() : configuration.svgHeight;
+
+    function fade(opacity) {
+      return function(d, i) {
+        ribbons
+          .filter(function(d) {
+            return d.source.index != i && d.target.index != i;
+          })
+          .transition()
+          .style("opacity", opacity);
+      };
+    }
+
+    var svg = d3.select("#"+id)
+				.append("svg")
+				.attr("width", configuration.svgWidth)
+				.attr("height", configuration.svgHeight),
+      width = +svg.attr("width"),
+      height = +svg.attr("height"),
+      outerRadius = Math.min(width, height) * 0.5 - 65,
+      innerRadius = outerRadius - 20;
+
+    var chord = d3.chord()
+      .padAngle(0.05)
+      .sortSubgroups(d3.descending);
+
+    var arc = d3.arc()
+      .innerRadius(innerRadius)
+      .outerRadius(outerRadius);
+
+    var ribbon = d3.ribbon()
+      .radius(innerRadius);
+
+    var color = d3.scaleOrdinal(d3.schemeCategory10);
+
+    var g = svg.append("g")
+      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
+      .datum(chord(data.matrix));
+
+    var group = g.append("g")
+      .attr("class", "groups")
+      .selectAll("g")
+      .data(function(chords) { return chords.groups; })
+      .enter().append("g");
+
+    group.append("path")
+      .style("fill", function(d) { return color(d.index); })
+      .style("stroke", function(d) { return d3.rgb(color(d.index)).darker(); })
+      .attr("d", arc)
+      .on("mouseover", fade(.1))         /* Where attempt at mouseover is made */
+      .on("mouseout", fade(1))
+
+
+    group.append("title").text(function(d) {
+      return groupTip(d);
+    });
+
+    group.append("text")
+      .attr("dy", ".35em")
+      .attr("class", "d3ChordOfficeLabel")
+      .attr("transform", function(d,i) {
+        d.angle = (d.startAngle + d.endAngle) / 2;
+        d.name = data.groups[i];
+        return "rotate(" + (d.angle * 180 / Math.PI) + ")" +
+          "translate(0," + -1.1 * (outerRadius + 10) + ")" +
+          ((d.angle > Math.PI * 3 / 4 && d.angle < Math.PI * 5 / 4) ? "rotate(180)" : "");
+      })
+      .text(function(d) {
+        return d.name;
+      });
+
+    var ribbons =   g.append("g")
+      .attr("class", "d3ChordRibbons")
+      .selectAll("path")
+      .data(function(chords) { return chords; })
+      .enter().append("path")
+      .attr("d", ribbon)
+      .style("fill", function(d) { return color(d.target.index); })
+      .style("stroke", function(d) { return d3.rgb(color(d.target.index)).darker(); });
+
+    ribbons.append("title").
+    text(function(d){return chordTip(d);});
+
+    var groupTick = group.selectAll(".d3ChordGroupTick")
+      .data(function(d) { return groupTicks(d, 1e3); })
+      .enter().append("g")
+      .attr("class", "group-tick")
+      .attr("transform", function(d) { return "rotate(" + (d.angle * 180 / Math.PI - 90) + ") translate(" + outerRadius + ",0)"; });
+
+    groupTick.append("line")
+      .attr("x2", 6);
+
+    groupTick
+      .filter(function(d) { return d.value % 2e3 === 0; })
+      .append("text")
+      .attr("x", 8)
+      .attr("dy", ".35em")
+      .attr("transform", function(d) { return d.angle > Math.PI ? "rotate(180) translate(-16)" : null; })
+      .style("text-anchor", function(d) { return d.angle > Math.PI ? "end" : null; })
+      .text(function(d) { return d.value; });
+
+    function groupTicks(d, step) {
+      var k = (d.endAngle - d.startAngle) / d.value;
+      return d3.range(0, d.value, step).map(function(value) {
+        return {value: value, angle: value * k + d.startAngle};
+      });
+    }
+
+    function chordTip(d){
+      var p = d3.format(".2%"), q = d3.formatPrefix("$,.2", 1e3)
+      return "Flow Info:\n"
+        + data.groups[d.source.index] + " → " + data.groups[d.target.index] + ": " + q(d.target.value) + "\n"
+        + data.groups[d.target.index] + " → " + data.groups[d.source.index] + ": " + q(d.source.value);
+    }
+
+    function groupTip(d) {
+      var q = d3.formatPrefix("$,.2", 1e3)
+      return "Total Managed by " + data.groups[d.index] + ":\n" + q(d.value)
+    }
+
+    function setOptions(default_configuration, options) {
+			/*Options.tree_attribute_names: Gets keys from the tree. If not present sets default values.*/
+
+      if (options) {
+        for (var setting in options) {
+          if (!(Object.keys(default_configuration).indexOf(setting) > -1)) {
+            console.warn(setting + ' is not a default setting.')
+          }
+          default_configuration[setting] = options[setting];
+        }
+      }
+      return default_configuration
+    }
+
+  }
+//  =================================================================
+	/*d3zoombaleSunburst draws a sunburst chart of hierarchically related items
+	 * param: data (dict)
+	 	* data schema:
+	 	* {name: "string",
+			 children: [
+	 			{
+	 			name: "string",
+	 			children: [{name: "string", size: value}
+	 			]}
+	 * param: id (string) Element to display chart.
+	 * param: options (dict) A dictionary that allows you customize renderings and behaviors.
+	 *
+	 * Rendering Options:
+	 * svgWidth: type: int or function, default: 600
+	 * svgHeight:: type: int or function, default: 600
+	 *
+	 */
+	trensantGFX.d3ZoomableSunburst = function(data, id, options) {
+    var zoomableSunburstDefaultConfiguration = {
+      svgWidth: 960,
+      svgHeight: 960
+    }
+    configuration = setOptions(zoomableSunburstDefaultConfiguration , options);
+
+    var width = configuration.svgWidth,
+      height = configuration.svgHeight,
+      radius = (Math.min(width, height) / 2) - 10;
+
+    var formatNumber = d3.format(",d");
+
+    var x = d3.scaleLinear()
+      .range([0, 2 * Math.PI]);
+
+    var y = d3.scaleSqrt()
+      .range([0, radius]);
+
+    var color = d3.scaleOrdinal(d3.schemeCategory20);
+
+    var partition = d3.partition();
+
+    var arc = d3.arc()
+      .startAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x0))); })
+      .endAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x1))); })
+      .innerRadius(function(d) { return Math.max(0, y(d.y0)); })
+      .outerRadius(function(d) { return Math.max(0, y(d.y1)); });
+
+    var svg = d3.select("#"+id).append("svg")
+      .attr("width", width)
+      .attr("height", height)
+      .append("g")
+      .attr("transform", "translate(" + width / 2 + "," + (height / 2) + ")");
+
+    root = d3.hierarchy(data);
+      root.sum(function(d) { return d.size; });
+
+      svg.selectAll("g")
+        .data(partition(root).descendants())
+        .enter().append("path")
+        .attr("d", arc)
+        .style("fill", function(d) { return color((d.children ? d : d.parent).data.name); })
+        .on("click", click)
+        .append("title")
+        .text(function(d) { return d.data.name + "\n" + formatNumber(d.value); });
+
+    function click(d) {
+      svg.transition()
+        .duration(750)
+        .tween("scale", function() {
+          var xd = d3.interpolate(x.domain(), [d.x0, d.x1]),
+            yd = d3.interpolate(y.domain(), [d.y0, 1]),
+            yr = d3.interpolate(y.range(), [d.y0 ? 20 : 0, radius]);
+          return function(t) { x.domain(xd(t)); y.domain(yd(t)).range(yr(t)); };
+        })
+        .selectAll("path")
+        .attrTween("d", function(d) { return function() { return arc(d); }; });
+    }
+
+    d3.select(self.frameElement).style("height", height + "px");
+
+    function setOptions(default_configuration, options) {
+			/*Options.tree_attribute_names: Gets keys from the tree. If not present sets default values.*/
+
+      if (options) {
+        for (var setting in options) {
+          if (!(Object.keys(default_configuration).indexOf(setting) > -1)) {
+            console.warn(setting + ' is not a default setting.')
+          }
+          default_configuration[setting] = options[setting];
+        }
+      }
+      return default_configuration
+    }
+	}
 })(typeof trensantGFX === 'undefined'? this['trensantGFX']={}: hf);//(window.hf = window.hf || {});
 
