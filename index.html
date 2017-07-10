@@ -33,11 +33,11 @@
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBwB-0FhqcR0eYbf4utsUNN02i8olM6ork" ></script>  <!-- google maps -->
 
 
-<!--shared css for trensantGFX rendering -->
-<link rel="stylesheet" href="./style/trensantGFX.css">
+<!--shared css for tgw rendering -->
+<link rel="stylesheet" href="./style/tgw.css">
 
-<!-- trensantGFX wrapper!  -->
-<script type="text/javascript" src="./trensantGFX.js"></script>      <!-- TrensantGFX is the main lib for all wrappers!        -->
+<!-- tgw wrapper!  -->
+<script type="text/javascript" src="./libs/tgw.js"></script>      <!-- tgw is the main lib for all wrappers!        -->
 
 <!--  code editor -  uses the ace code editor, learn more here: https://ace.c9.io/ 
 <script src="./code_editor/src-min-noconflict/ace.js"></script>
@@ -62,7 +62,7 @@
 </style>
 </head>
 <body>
-<!-- index.html ... trensantGFX tester 
+<!-- index.html ... tgw tester
 
 M A Chatterjee 2017-06-05 :: note requires trensant-text-header.html 
 URL params
@@ -146,7 +146,7 @@ drawBanner=false    				// supress or show the top Trensant Logo
 			"chartCss"   : '' + 'cssChart', // this is the default cssClass for the chart div.  Can overide with a string "myChartClass1 myChartClass2" etc
 			"chartSty"   : ''          // allows styles to be passed to the chart div  eg "width:500; color:red" etc
 		};
-		if (trensantGFX.typeOf(opts) == "object")
+		if (tgw.typeOf(opts) == "object")
 			for (i in opts) 
 				dopts[i] = opts[i]; 
 
@@ -163,14 +163,13 @@ drawBanner=false    				// supress or show the top Trensant Logo
 			 ["div" ,'_chart' 		,  ''    , dopts["chartCss"], dopts["chartSty"]  ]
 			];
 
-		if (trensantGFX.typeOf(opts) == "object")
+		if (tgw.typeOf(opts) == "object")
 			for (i in opts) 
 				dopts[i] = opts[i];   // this loop is repeated to pick up overrides such as dopts["name"], dopts["chartCss"]
 		
 
 		var node = document.createElement("div");
 		node["id"] = domID; // the id for container div
-
 		for (i=0; i < dopts["sections"].length; i++) {
 			x = document.createElement(dopts["sections"][i][0]);
 			x["id"] = domID+dopts["sections"][i][1];
@@ -215,7 +214,7 @@ drawBanner=false    				// supress or show the top Trensant Logo
 	function mainArea() {
 	//===================================================================================================
 	//===================================================================================================
-	// trensantGFX.tgPrettyPrint
+	// tgw.tgPrettyPrint
 	drawNewSectionDiv('tgPrettyPrintDiv',{"name":"tgPrettyPrint"});
 	var prettyPrintSampleData = {
 		"sample-array" : [1,2,3,4,5,"another piece"],
@@ -225,24 +224,24 @@ drawBanner=false    				// supress or show the top Trensant Logo
 	};
 
 	//emit description info
-	$("#tgPrettyPrintDiv_desc").html("tgPrettyPrint is a function for taking any JSON object and pretty printing to an HTML container div.<br><pre>//Example<br>var x= ... my data of any valid javascript type ...;<br>trensantGFX.tgPrettyPrint(myData,myDiv);<br></pre>");
+	$("#tgPrettyPrintDiv_desc").html("tgPrettyPrint is a function for taking any JSON object and pretty printing to an HTML container div.<br><pre>//Example<br>var x= ... my data of any valid javascript type ...;<br>tgw.tgPrettyPrint(myData,myDiv);<br></pre>");
 
 	//show the raw data
-	trensantGFX.tgPrettyPrint(prettyPrintSampleData,"tgPrettyPrintDiv_data");
+	tgw.tgPrettyPrint(prettyPrintSampleData,"tgPrettyPrintDiv_data");
 
 	//render the chart
-	trensantGFX.tgPrettyPrint(prettyPrintSampleData,"tgPrettyPrintDiv_chart");
+	tgw.tgPrettyPrint(prettyPrintSampleData,"tgPrettyPrintDiv_chart");
 	//$("#tgPrettyPrintDiv_chart").html(""); // in this case the chart and the data are the same so we don't render a chart
 
 	//===================================================================================================
 	//===================================================================================================
-	// trensantGFX.rowWordCloud
+	// tgw.rowWordCloud
 	div = "tgRowWordCloudDiv";
 	drawNewSectionDiv(div,{"name":"tgRowWordCloud", "chartSty" :" height: 100px"});
 	
 
 	//emit description info
-	$("#"+div+"_desc").html("tgRowWordCloud takes an array of word frequencies of the form [[word, freq, optional_color],[word2, freq2, optional_color], [word3,freq3],.. ] and renders a word cloud as a series of rows in a div. <br>Options include minSize, maxSize, and sort.  Sorting can be alpha, ralpha (reverse alpha), and numeric.  See docs.  <br><pre>var x = [['word1', 12], ['word2', 52], ['word3', 45]];<br>trensantGFX.drawRowWordCloud(x,myDiv);<br></pre>");
+	$("#"+div+"_desc").html("tgRowWordCloud takes an array of word frequencies of the form [[word, freq, optional_color],[word2, freq2, optional_color], [word3,freq3],.. ] and renders a word cloud as a series of rows in a div. <br>Options include minSize, maxSize, and sort.  Sorting can be alpha, ralpha (reverse alpha), and numeric.  See docs.  <br><pre>var x = [['word1', 12], ['word2', 52], ['word3', 45]];<br>tgw.drawRowWordCloud(x,myDiv);<br></pre>");
 
 	var rowWordCloudSampleData = [   // note colors are optional, and can be HTML colors e.g. "#f44", data does not need to be sorted
 		["deal", 1998, "red"],
@@ -268,14 +267,14 @@ drawBanner=false    				// supress or show the top Trensant Logo
   	var rowWordOpts = {"minSize":10,"maxSize":30,"sort":"alpha"};
 
 	//show the raw data
-	trensantGFX.tgPrettyPrint(rowWordCloudSampleData,div+"_data");
+	tgw.tgPrettyPrint(rowWordCloudSampleData,div+"_data");
 
 	//render the chart
-	trensantGFX.tgDrawRowWordCloud( rowWordCloudSampleData,div+"_chart",rowWordOpts);
+	tgw.tgDrawRowWordCloud( rowWordCloudSampleData,div+"_chart",rowWordOpts);
 	
 	//===================================================================================================
 	//===================================================================================================		
-	// trensantGFX.gglDrawPieChart() 
+	// tgw.gglDrawPieChart()
 	div = "gglDrawPieChartDiv";
 	drawNewSectionDiv(div,{"name":"gglDrawPieChart"});	
 
@@ -294,14 +293,14 @@ drawBanner=false    				// supress or show the top Trensant Logo
   	var pieChartOpts = {};
 
 	//show the raw data
-	trensantGFX.tgPrettyPrint(pieChartData,div+"_data");
+	tgw.tgPrettyPrint(pieChartData,div+"_data");
 
 	//render the chart
-	trensantGFX.gglDrawPieChart(pieChartData,div+"_chart",pieChartOpts);
+	tgw.gglDrawPieChart(pieChartData,div+"_chart",pieChartOpts);
 	
 	//===================================================================================================
 	//===================================================================================================		
-	// trensantGFX.gglDrawPieChart() 
+	// tgw.gglDrawPieChart()
 	div = "gglDrawLineChartDiv";
 	drawNewSectionDiv(div,{"name":"gglDrawLineChart"});	
 
@@ -319,13 +318,13 @@ drawBanner=false    				// supress or show the top Trensant Logo
   	var lineChartOpts = {};
 
 	//show the raw data
-	trensantGFX.tgPrettyPrint(lineChartData,div+"_data");
+	tgw.tgPrettyPrint(lineChartData,div+"_data");
 
 	//render the chart
-	trensantGFX.gglDrawLineChart(lineChartData,div+"_chart",lineChartOpts);
+	tgw.gglDrawLineChart(lineChartData,div+"_chart",lineChartOpts);
 	
 	//===================================================================================================		
-	// trensantGFX.gglDrawPieChart() 
+	// tgw.gglDrawPieChart()
 	div = "gglDrawBarChartDiv";
 	drawNewSectionDiv(div,{"name":"gglDrawBarChart"});	
 
@@ -343,17 +342,17 @@ drawBanner=false    				// supress or show the top Trensant Logo
   	var barChartOpts = {};
 
 	//show the raw data
-	trensantGFX.tgPrettyPrint(barChartData,div+"_data");
+	tgw.tgPrettyPrint(barChartData,div+"_data");
 
 	//render the chart
-	trensantGFX.gglDrawBarChart(barChartData,div+"_chart",barChartOpts);
+	tgw.gglDrawBarChart(barChartData,div+"_chart",barChartOpts);
 	
 	
 	//===================================================================================================		
 	//===================================================================================================		
 	//trensant.d3treeMap
     div = "d3TreeMapDiv";
-    drawNewSectionDiv(div,{"name":"d3TreeMapDiv"});
+    drawNewSectionDiv(div,{"name":"d3TreeMapDiv", "chartSty": "height:400"});
 
     //emit description info
     $("#"+div+"_desc").html("treemap draws a treemap");
@@ -424,16 +423,16 @@ drawBanner=false    				// supress or show the top Trensant Logo
     } }
 
     //display sample data
-	trensantGFX.tgPrettyPrint(treeMapSampleData, div+"_data")
+	tgw.tgPrettyPrint(treeMapSampleData, div+"_data")
 
 	//render the chart
-    trensantGFX.d3TreeMap(treeMapSampleData, div+"_chart", {parentID: "parent_id", childID: "child_id",
-      childName: "child_name", value: "child_buzz"});
+    tgw.d3TreeMap(treeMapSampleData, div+"_chart", {parentID: "parent_id", childID: "child_id",
+      childName: "child_name", value: "child_buzz", svgHeight: $('#'+div+"_chart").height()-50,svgWidth: $('#'+div+"_chart").width()-50});
 
 	//===================================================================================================
 	//trensant.d3radialTree
 	div = "d3RadialTree";
-    drawNewSectionDiv(div,{"name":"d3RadialTree"});
+    drawNewSectionDiv(div,{"name":"d3RadialTree", "chartSty": "height:400"});
 
 	var radialTreeSampleData = {name: "Current Article", children: [{name: "Dow Jones Index", children: [{name: "Apple", children: [{name: "MacBook"}, {name: "IPhone"}]},{name: "Home Depot"}, {name: "Amgen"}, {name: "IBM"}, {name: "Average"}]}, {name: "Wall Street", children: [{name: "American Express", children: [{name: "Credit Card"}, {name: "Debt"}, {name: "Freedom"}, {name: "Money"}, {name: "Payments"}, {name: "Freshman"}]},{name: "Bernie Madoff"}, {name: "Greed"}]}]}
 
@@ -441,15 +440,14 @@ drawBanner=false    				// supress or show the top Trensant Logo
     $("#"+div+"_desc").html("radiale tree draws a radialtree");
 
     //display sample data
-    trensantGFX.tgPrettyPrint(radialTreeSampleData, div+"_data")
-
+    tgw.tgPrettyPrint(radialTreeSampleData, div+"_data")
 
     //render the chart
-      trensantGFX.d3RadialTree(radialTreeSampleData, div+"_chart", {textClick: "mouseover", onClick: function () {d3.select(this).style("fill", "red")}});
+      tgw.d3RadialTree(radialTreeSampleData, div+"_chart", {textClick: "mouseover", onClick: function () {d3.select(this).style("fill", "red")}, svgHeight: $('#'+div+"_chart").height()-50,svgWidth: $('#'+div+"_chart").width()-50});
 
 //  ===================================================================================================
 	  div = "d3Chord";
-	  drawNewSectionDiv(div,{"name":"d3Chord"});
+	  drawNewSectionDiv(div,{"name":"d3Chord", "chartSty": "height:400"});
 	  var chordSampleData = {matrix : [
         [0, 0, 1000, 1000],
         [0, 0, 1000, 1000],
@@ -461,14 +459,13 @@ drawBanner=false    				// supress or show the top Trensant Logo
       $("#"+div+"_desc").html("Chord Chart");
 
       //display sample data
-      trensantGFX.tgPrettyPrint(chordSampleData, div+"_data");
-
+      tgw.tgPrettyPrint(chordSampleData, div+"_data");
       //render the chart
-      trensantGFX.d3Chord(chordSampleData, div+"_chart", {});
+      tgw.d3Chord(chordSampleData, div+"_chart", {svgHeight: $('#'+div+"_chart").height()-50, svgWidth: $('#'+div+"_chart").width()-50});
 
 // ===================================================================================================
 	  div = "d3ZoomableSunburst";
-      drawNewSectionDiv(div,{"name":"d3ZoomableSunburst"});
+      drawNewSectionDiv(div,{"name":"d3ZoomableSunburst", "chartSty": "height:400"});
       var sunburstSampleData = {name: "flare",
         children: [
           {
@@ -508,16 +505,16 @@ drawBanner=false    				// supress or show the top Trensant Logo
       $("#"+div+"_desc").html("Zoomable Sunburst");
 
       //display sample data
-      trensantGFX.tgPrettyPrint(sunburstSampleData, div+"_data");
+      tgw.tgPrettyPrint(sunburstSampleData, div+"_data");
 
       //render the chart
-      trensantGFX.d3ZoomableSunburst(sunburstSampleData, div+"_chart", {});
+      tgw.d3ZoomableSunburst(sunburstSampleData, div+"_chart", {svgHeight: $('#'+div+"_chart").height()-50,svgWidth: $('#'+div+"_chart").width()-50});
 
 
 	// end main area-----------------------------------------------------------------------------------
 	}// mainArea body
 
-	trensantGFX.repeatUntil (trensantGFX.gglChartsLoaded , mainArea,null, 75, 35, function(r,c){if (r==false) console.log('chart load error')}); // this waits for gglcharts to load by checking every 75ms up to 35 times...
+	tgw.repeatUntil (tgw.gglChartsLoaded , mainArea,null, 75, 35, function(r,c){if (r==false) console.log('chart load error')}); // this waits for gglcharts to load by checking every 75ms up to 35 times...
 	
 </script>
 	

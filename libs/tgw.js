@@ -1,4 +1,4 @@
-/*  trensantGFX Functions
+/*  tgw Functions
 	see README.md
 	
  	
@@ -40,39 +40,39 @@
 
  */
 
-(function (trensantGFX, undefined) {
+(function (tgw, undefined) {
 
 //=====================================================================================================
 /* 
-	trensantGFX.typeOf (data) returns a useful type info for any object, including dates etc
+	tgw.typeOf (data) returns a useful type info for any object, including dates etc
 
 	examples: 
-		trensantGFX.typeOf(23)  // returns "number"
-		trensantGFX.typeOf({})  // returns "object"
-		trensantGFX.typeOf([])  // returns "array"
-		trensantGFX.typeOf(new Date()) // returns "date"
+		tgw.typeOf(23)  // returns "number"
+		tgw.typeOf({})  // returns "object"
+		tgw.typeOf([])  // returns "array"
+		tgw.typeOf(new Date()) // returns "date"
 
 */
-trensantGFX.typeOf = function (x)   {
+tgw.typeOf = function (x)   {
 	return (typeof x == "undefined") ? "undefined" : (({}).toString.call(x).match(/\s([a-zA-Z]+)/)[1].toLowerCase());
 };
-var _to = trensantGFX.typeOf;  //short hand used internally for typeof operations.
+var _to = tgw.typeOf;  //short hand used internally for typeof operations.
 
 //=====================================================================================================
 /* 
-	trensantGFX.roundNum(x,numDigits)
+	tgw.roundNum(x,numDigits)
 
 	round a number to specified sig digits.	 default is 2
 */
-trensantGFX.roundNum = function (x,numDigits) {
+tgw.roundNum = function (x,numDigits) {
 	numDigits =  (_to(numDigits) == 'number') ? Math.pow(10,Math.round( numDigits)) : 100;
 	return Math.round (x*numDigits) / numDigits ;
 }
-var _round = trensantGFX.roundNum;  // short hand used internally
+var _round = tgw.roundNum;  // short hand used internally
 
 //=====================================================================================================
 //constrain input x in between min, max, expects numeric input
-trensantGFX.constrain = function (x,min,max) {
+tgw.constrain = function (x,min,max) {
     if (max < min) {a=min; min=max; max=a;}
     if (x<=min)	{x=min;}
     if (x>=max)	{x=max;}
@@ -87,7 +87,7 @@ trensantGFX.constrain = function (x,min,max) {
  example:
   	trensant.mapScaleEXP(33,0,100,-100,100)  --> maps 33 with input range from 0 .. 100 in to the range -100,100 linearly ==> 
  */
-trensantGFX.mapScaleEXP = function (z, in0, in1, out0, out1, clip, exp_scale) {
+tgw.mapScaleEXP = function (z, in0, in1, out0, out1, clip, exp_scale) {
     
     clip = (typeof clip == 'undefined')?false:clip;
     exp_scale = (typeof exp_scale !== 'number')?false:exp_scale;
@@ -99,32 +99,32 @@ trensantGFX.mapScaleEXP = function (z, in0, in1, out0, out1, clip, exp_scale) {
     else
         z = (((z-in0)/(in1-in0))*(out1-out0))+out0;
     if (clip!=false) 
-        z=trensantGFX.constrain(z,out0,out1);
+        z=tgw.constrain(z,out0,out1);
     return z;
 }
-var _mapScale = trensantGFX.mapScaleEXP; //short hand used internally
+var _mapScale = tgw.mapScaleEXP; //short hand used internally
 
 
 //======================================
 /* 
-	trensantGFX.containerDims(domID) 
+	tgw.containerDims(domID)
 	returns the height and width of a given HTML container 	
 	currently uses Jquery but may change this later.  This fn is used internally for default container widths/heights
 */
-trensantGFX.containerDims = function (domID) {
+tgw.containerDims = function (domID) {
 	return { "wid": $('#'+domID).width(), "hgt" : $('#'+domID).height()}
 }
 
-var _dims = trensantGFX.containerDims;
+var _dims = tgw.containerDims;
 
 
 //=====================================================================================================
-/* 	trensantGFX.setIntervalX(callbackFn, delayBtwCalls, repetitions)
+/* 	tgw.setIntervalX(callbackFn, delayBtwCalls, repetitions)
  	set a javascript timer to only run a max of N repetions.  
 	// Note: Only works in browser not server side as it requires access to window object.
 	// also note that callback function is called with the interval number to be used for whatever purposes the callback likes
 */ 
-trensantGFX.setIntervalX = function(callback, delay, repetitions) {
+tgw.setIntervalX = function(callback, delay, repetitions) {
     var x = 0;
     var intervalID = window.setInterval(function () {
 
@@ -137,7 +137,7 @@ trensantGFX.setIntervalX = function(callback, delay, repetitions) {
 }
 //=====================================================================================================
 /*
-	trensantGFX.repeatUntil()
+	tgw.repeatUntil()
 	repeatUntil runs the supplied testFn every delay milliseconds up until a maxReps number of times.
 	if the test function returns true it runs the successFn and stops the iterations.
 
@@ -145,10 +145,10 @@ trensantGFX.setIntervalX = function(callback, delay, repetitions) {
 	with the current iteration).  lastFn is optional.  failFn is optional
 	
 	Example:
-	trensantGFX.repeatUntil(myLibsLoaded(), callMyChart(), null, 250, 10, null); // attempts to wait until mylib is loaded 10 times before giving up
+	tgw.repeatUntil(myLibsLoaded(), callMyChart(), null, 250, 10, null); // attempts to wait until mylib is loaded 10 times before giving up
 	
 */ 
-trensantGFX.repeatUntil = function(testFn, successFn, failFn, delay, maxReps, lastFn) {
+tgw.repeatUntil = function(testFn, successFn, failFn, delay, maxReps, lastFn) {
 	var _count = 0;
 	var _max   = maxReps;
 	if (typeof testFn != "function")
@@ -191,14 +191,14 @@ trensantGFX.repeatUntil = function(testFn, successFn, failFn, delay, maxReps, la
 //=====================================================================================================
 //=====================================================================================================
 /*
-	trensantGFX.tgPrettyPrint (data, domID, opts) 
+	tgw.tgPrettyPrint (data, domID, opts)
 		prettyPrint a Javscript object 
 		this is a "native" graphics call in that it doesn't wrap another charting library
 
 	example usage:
-		trensantGFX.tgPrettyPrint({"foo":123,"bar":345,"that":[1,2,3,4,5]}, "myDomId");
+		tgw.tgPrettyPrint({"foo":123,"bar":345,"that":[1,2,3,4,5]}, "myDomId");
  */
-trensantGFX.tgPrettyPrint = function (data, domID, opts) {        
+tgw.tgPrettyPrint = function (data, domID, opts) {
 	var i,h, json = data;
 
 	var dopts = {	   		// default options
@@ -243,7 +243,7 @@ trensantGFX.tgPrettyPrint = function (data, domID, opts) {
 //=====================================================================================================
 // drawRowWordCloudBase draws a word cloud with words in rows.  It is the base renderer.  see tgDrawRowWordCloud for direct calls
 // words must be of form : [["word", value, optional-color, optional-id], [] ]
-trensantGFX.tgDrawRowWordCloudBase = function(words,domID,opts) {
+tgw.tgDrawRowWordCloudBase = function(words,domID,opts) {
 	var i, dopts = { 							// default options
 		"maxSize" 	: 55,  						// any valid number for max font size 
 		"minSize" 	: 9, 	  					// any valid number for min font size
@@ -305,9 +305,9 @@ trensantGFX.tgDrawRowWordCloudBase = function(words,domID,opts) {
 //=====================================================================================================
 // drawRowWordCloudBase draws a word cloud with words in rows.  
 // words must be of form : [["word", value, optional-color, optional-id], [] ]
-trensantGFX.tgDrawRowWordCloud = function (words, domID, opts) {
+tgw.tgDrawRowWordCloud = function (words, domID, opts) {
 
-	trensantGFX.tgDrawRowWordCloudBase( words,domID,opts);  // working version with bounds issues
+	tgw.tgDrawRowWordCloudBase( words,domID,opts);  // working version with bounds issues
 
     var n=9,m=20;
     var rs = $("#" +domID+ " > span")[0].getClientRects()[0];
@@ -319,7 +319,7 @@ trensantGFX.tgDrawRowWordCloud = function (words, domID, opts) {
       re = $("#" +domID+ " > span")[$("#" +domID+ " > span").length-1].getClientRects()[0];
       gTemp = {"rs":rs, "re" :re};
       m+= 0.33;
-      trensantGFX.tgDrawRowWordCloudBase( words,domID,opts);  // working version with bounds issues
+      tgw.tgDrawRowWordCloudBase( words,domID,opts);  // working version with bounds issues
 
       
       if (m > 100)
@@ -327,7 +327,7 @@ trensantGFX.tgDrawRowWordCloud = function (words, domID, opts) {
     }
 
     m-=0.67;
-    trensantGFX.tgDrawRowWordCloudBase( words,domID,opts);  // working version with bounds issues
+    tgw.tgDrawRowWordCloudBase( words,domID,opts);  // working version with bounds issues
 
 }
 
@@ -342,18 +342,18 @@ trensantGFX.tgDrawRowWordCloud = function (words, domID, opts) {
 	the charts libs are (a race condition).  
 
  */
-trensantGFX.gglChartsLoaded  = function() 
+tgw.gglChartsLoaded  = function()
 {
     if ((typeof google === 'undefined') || (typeof google.visualization === 'undefined') ) {
 
        return false;
     }
     else {
-    	if (trensantGFX.typeOf(google.visualization.arrayToDataTable) != "function") 
+    	if (tgw.typeOf(google.visualization.arrayToDataTable) != "function")
     		return false;
-    	if (trensantGFX.typeOf(google.visualization.PieChart) != "function")
+    	if (tgw.typeOf(google.visualization.PieChart) != "function")
     		return false;
-    	if (trensantGFX.typeOf(google.visualization.LineChart) != "function")
+    	if (tgw.typeOf(google.visualization.LineChart) != "function")
     		return false;
     }
     return true;
@@ -379,7 +379,7 @@ trensantGFX.gglChartsLoaded  = function()
 
 */
 
-trensantGFX.gglDrawTable = function (data,cols,domID,opts) {
+tgw.gglDrawTable = function (data,cols,domID,opts) {
 	if (typeof google.visualization.Table == "function") {
 		var i;
 		var dopts = {  // default options
@@ -427,7 +427,7 @@ trensantGFX.gglDrawTable = function (data,cols,domID,opts) {
   [["item1",value], ["item2", value], ["item3", value]]
 
  */
-trensantGFX.gglDrawPieChart = function (data,domID,opts){
+tgw.gglDrawPieChart = function (data,domID,opts){
 
 	if (typeof google.visualization.PieChart == "function") {
 		var i;
@@ -465,7 +465,7 @@ data must be of this form:
    		[ 23,34,45,63],
   	]
 */
-trensantGFX.gglDrawLineChart = function (data,domID,opts) {
+tgw.gglDrawLineChart = function (data,domID,opts) {
     if (typeof google.visualization.LineChart == "function") {
 	    var cdata = google.visualization.arrayToDataTable(data);
 	    var dopts = { //default options
@@ -488,7 +488,7 @@ trensantGFX.gglDrawLineChart = function (data,domID,opts) {
 /*	gglDrawBarChart
 
  */
-trensantGFX.gglDrawBarChart = function(data,domID,options) {
+tgw.gglDrawBarChart = function(data,domID,options) {
 	if (typeof google.visualization.BarChart == "function") {
 	    var cdata = google.visualization.arrayToDataTable(data);
 	    var doptions = {
@@ -517,7 +517,7 @@ trensantGFX.gglDrawBarChart = function(data,domID,options) {
     data must be a 2D array of this form 
 	[['name','value-heading'],['foo',234],['bar',455]]
 */
-trensantGFX.gglDrawHistogram = function (data,domID,options) {
+tgw.gglDrawHistogram = function (data,domID,options) {
 
     if (typeof google.visualization.Histogram == "function") {
 	    var dopts = {
@@ -544,7 +544,7 @@ trensantGFX.gglDrawHistogram = function (data,domID,options) {
 
 
 //======================================================================================================
-trensantGFX.d3ChartsLoaded = function () {
+tgw.d3ChartsLoaded = function () {
 	if (typeof d3 != "undefined")
 		return true;
 	return false;
@@ -588,31 +588,31 @@ trensantGFX.d3ChartsLoaded = function () {
          * svgBehaviorOptions: type: any, default: null
      *
   */
-  trensantGFX.d3TreeMap = function (tree, id, options) {
+  tgw.d3TreeMap = function (tree, id, options) {
     var treemapDefaultConfiguration = {
 		parentID: 'parentID',
 		childID: "childID",
 		childName: "childName",
 		children: "children",
 		value: "value",
-		svgWidth: trensantGFX.containerDims(id).wid ,
-		svgHeight: trensantGFX.containerDims(id).hgt,
+		svgWidth: tgw.containerDims(id).wid ,
+		svgHeight: tgw.containerDims(id).hgt,
 		fader: 0.5,
 		rectangleBehavior: null,
 		rectangleBehaviorOptions: null,
 		svgBehavior: null,
 		svgBehaviorOptions: null
     }
-    configuration = setOptions(treemapDefaultConfiguration, options);
+    treeMapConfiguration = setOptions(treemapDefaultConfiguration, options);
 
     var fader = function (color) {
-        return d3.interpolateRgb(color, "#fff")(configuration.fader);
+        return d3.interpolateRgb(color, "#fff")(treeMapConfiguration.fader);
       },
       color = d3.scaleOrdinal(d3.schemeCategory20.map(fader)),
       format = d3.format(",d");
 
-    var width = typeof configuration.svgWidth === "function" ? configuration.svgWidth() : configuration.svgWidth,
-      height = typeof configuration.svgHeight === "function" ? configuration.svgHeight() : configuration.svgHeight;
+    var width = typeof treeMapConfiguration.svgWidth === "function" ? treeMapConfiguration.svgWidth() : treeMapConfiguration.svgWidth,
+      height = typeof treeMapConfiguration.svgHeight === "function" ? treeMapConfiguration.svgHeight() : treeMapConfiguration.svgHeight;
 
     d3.select('#'+id).append("p").classed("parent", true)
     d3.select('#'+id)
@@ -622,10 +622,10 @@ trensantGFX.d3ChartsLoaded = function () {
       .attr("width", width)
       .attr("height", height)
       .style("font", "10px sans-serif")
-    if ("svgBehavior" in configuration) {
-      for (var key in configuration.svgBehavior) {
+    if ("svgBehavior" in treeMapConfiguration) {
+      for (var key in treeMapConfiguration.svgBehavior) {
         svg.on(key, function () {
-          configuration.svgBehavior[key](configuration.svgBehaviorOptions);
+          treeMapConfiguration.svgBehavior[key](treeMapConfiguration.svgBehaviorOptions);
         });
       }
     }
@@ -639,10 +639,10 @@ trensantGFX.d3ChartsLoaded = function () {
     var nodeTree = tree;
     var root = d3.hierarchy(tree.node);
     root.eachBefore(function (d) {
-      d.data.id = d.data[configuration.childID]
+      d.data.id = d.data[treeMapConfiguration.childID]
     })
       .sum(function (d) {
-        return d[configuration.value]
+        return d[treeMapConfiguration.value]
       })
       .sort(function (a, b) {
         return b.value - a.value || b.value - a.value;
@@ -650,10 +650,11 @@ trensantGFX.d3ChartsLoaded = function () {
     treemap(root);
     var parent_element = d3.select(".parent");
     parent_element.html(function () {
-      return root.data[configuration.childName]
+      return root.data[treeMapConfiguration.childName]
     });
+
     function drawit() {
-      cell = svg.selectAll("g").data(root[configuration.children]).enter().append("g")
+      cell = svg.selectAll("g").data(root[treeMapConfiguration.children]).enter().append("g")
         .attr("transform", function (d) {
           return "translate(" + d.x0 + "," + d.y0 + ")";
         });
@@ -669,22 +670,24 @@ trensantGFX.d3ChartsLoaded = function () {
           return d.y1 - d.y0;
         })
         .attr("fill", function (d) {
-          return color(d.data[configuration.value]);
+          return color(d.data[treeMapConfiguration.value]);
         })
         .on('click', function (d) {
           redraw(d);
-          parent_element.append("a")
-            .attr("href", "javascript:void(0)")
-            .html("  :  " + root.data.child_name)
-            .on("click", function () {
-              redraw_parent(root.data[configuration.parentID]);
-            });
+          if (d.data[treeMapConfiguration.children]) {
+            parent_element.append("a")
+              .attr("href", "javascript:void(0)")
+              .html("  :  " + root.data.child_name)
+              .on("click", function () {
+                redraw_parent(root.data[treeMapConfiguration.parentID]);
+              });
+          }
         });
 
-      if (configuration && "rectangleBehavior" in configuration) {
-        for (var key in configuration.rectangleBehavior) {
+      if (treeMapConfiguration && "rectangleBehavior" in treeMapConfiguration) {
+        for (var key in treeMapConfiguration.rectangleBehavior) {
           cell.on(key, function (d) {
-            configuration.rectangleBehavior[key](d, configuration.rectangleBehaviorOptions);
+            treeMapConfiguration.rectangleBehavior[key](d, treeMapConfiguration.rectangleBehaviorOptions);
           });
         }
       }
@@ -704,7 +707,7 @@ trensantGFX.d3ChartsLoaded = function () {
         })
         .selectAll("tspan")
         .data(function (d) {
-          return d.data[configuration.childName].split(/(?=[A-Z][^A-Z])/g);
+          return d.data[treeMapConfiguration.childName].split(/(?=[A-Z][^A-Z])/g);
         })
         .enter().append("tspan")
         .attr("x", 4)
@@ -733,23 +736,25 @@ trensantGFX.d3ChartsLoaded = function () {
       if (node.children) {
         root = d3.hierarchy(node.data);
         root.eachBefore(function (d) {
-          d.data.id = d.data[configuration.childID]
+          d.data.id = d.data[treeMapConfiguration.childID]
         })
           .sum(function (d) {
-            return d[configuration.value]
+            return d[treeMapConfiguration.value]
           })
           .sort(function (a, b) {
             return b.value - a.value || b.value - a.value;
           });
         treemap(root);
-        d3.selectAll('g').remove()
+        svg.selectAll('g').remove()
         drawit();
         addChildNode(nodeTree, node);
       }
     }
+
     var redraw_parent = function (id) {
-      var mylen = d3.selectAll("a")._groups[0].length;
-      var tickLabels = d3.selectAll("a").filter(function (d, i) {
+      var mylen = d3.selectAll(".parent a")._groups[0].length;
+
+      var tickLabels = d3.selectAll(".parent a").filter(function (d, i) {
         if (mylen == 1) {
           return 1;
         }
@@ -761,22 +766,21 @@ trensantGFX.d3ChartsLoaded = function () {
           }
         }
       }).remove();
-//      tickLabels.last().attr("color", "red");
 
       if (typeof(id) != 'undefined') {
         root = get_node(nodeTree, id);
         root = d3.hierarchy(root);
         root.eachBefore(function (d) {
-          d.data.id = d.data[configuration.childID]
+          d.data.id = d.data[treeMapConfiguration.childID]
         })
           .sum(function (d) {
-            return d[configuration.value]
+            return d[treeMapConfiguration.value]
           })
           .sort(function (a, b) {
             return b.value - a.value || b.value - a.value;
           });
         treemap(root);
-        d3.selectAll('g').remove()
+        svg.selectAll('g').remove()
         drawit();
       }
     }
@@ -886,25 +890,25 @@ trensantGFX.d3ChartsLoaded = function () {
 		*
 	*
 		*/
-  trensantGFX.d3RadialTree = function (treeData, id, options) {
+  tgw.d3RadialTree = function (treeData, id, options) {
     var radialTreeDefaultConfiguration = {
 			name: "name",
 			children: "children",
-			svgWidth: trensantGFX.containerDims(id).wid,
-			svgHeight: trensantGFX.containerDims(id).hgt,
-			diameter: trensantGFX.containerDims(id).wid/2,
+			svgWidth: tgw.containerDims(id).wid,
+			svgHeight: tgw.containerDims(id).hgt,
+			diameter: tgw.containerDims(id).wid/2,
 			duration: 750
     }
-    configuration = setOptions(radialTreeDefaultConfiguration, options);
+    radialTreeConfiguration = setOptions(radialTreeDefaultConfiguration, options);
     if (typeof options == "undefined") {
       options = {};
     }
 
-    var width = typeof configuration.svgWidth === "function" ? configuration.svgWidth() : configuration.svgWidth,
-      height = typeof configuration.svgHeight === "function" ? configuration.svgHeight() : configuration.svgHeight;
+    var width = typeof radialTreeConfiguration.svgWidth === "function" ? radialTreeConfiguration.svgWidth() : radialTreeConfiguration.svgWidth,
+      height = typeof radialTreeConfiguration.svgHeight === "function" ? radialTreeConfiguration.svgHeight() : radialTreeConfiguration.svgHeight;
 
-    var diameter = configuration.diameter;
-    var duration = configuration.duration;
+    var diameter = Math.min(width, height) * 0.9 - 10;
+    var duration = radialTreeConfiguration.duration;
 
     var nodes, links;
     var i = 0;
@@ -917,11 +921,11 @@ trensantGFX.d3ChartsLoaded = function () {
     var svg = d3.select("#"+id).append("svg")
       .attr("width", width)
       .attr("height", height);
-    var g = svg.append("g").attr("transform", "translate(" + (width / 2 + 40) + "," + (height / 2 + 90) + ")");
+    var g = svg.append("g").attr("transform", "translate(" + (width / 2) + "," + (height / 2) + ")");
 
-    root = d3.hierarchy(treeData, function (d) {return d[configuration.children] });
+    root = d3.hierarchy(treeData, function (d) {return d[radialTreeConfiguration.children] });
     root.each(function (d) {
-      d.name = d.data[configuration.name]; //transferring name to a name variable
+      d.name = d.data[radialTreeConfiguration.name]; //transferring name to a name variable
       d.id = i; //Assigning numerical Ids
       i += i;
     });
@@ -983,7 +987,7 @@ trensantGFX.d3ChartsLoaded = function () {
         })
         .text(function (d) {
           if (d.parent) {
-            return d[configuration.name];
+            return d[radialTreeConfiguration.name];
           }
           else {
             return null
@@ -1159,15 +1163,15 @@ trensantGFX.d3ChartsLoaded = function () {
 	 * svgHeight:: type: int or function, default: 600
 	 *
 	 */
-trensantGFX.d3Chord = function(data, id, options) {
+tgw.d3Chord = function(data, id, options) {
     var chordDefaultConfiguration = {
-      svgWidth: trensantGFX.containerDims(id).wid,
-      svgHeight: trensantGFX.containerDims(id).hgt
+      svgWidth: tgw.containerDims(id).wid,
+      svgHeight: tgw.containerDims(id).hgt
     }
-    configuration = setOptions(chordDefaultConfiguration, options);
+    chordConfiguration = setOptions(chordDefaultConfiguration, options);
 
-    var width = typeof configuration.svgWidth === "function" ? configuration.svgWidth() : configuration.svgWidth,
-      height = typeof configuration.svgHeight === "function" ? configuration.svgHeight() : configuration.svgHeight;
+    var width = typeof chordConfiguration.svgWidth === "function" ? chordConfiguration.svgWidth() : chordConfiguration.svgWidth,
+      height = typeof chordConfiguration.svgHeight === "function" ? chordConfiguration.svgHeight() : chordConfiguration.svgHeight;
 
     function fade(opacity) {
       return function(d, i) {
@@ -1182,11 +1186,11 @@ trensantGFX.d3Chord = function(data, id, options) {
 
     var svg = d3.select("#"+id)
 				.append("svg")
-				.attr("width", configuration.svgWidth)
-				.attr("height", configuration.svgHeight),
+				.attr("width", chordConfiguration.svgWidth)
+				.attr("height", chordConfiguration.svgHeight),
       width = +svg.attr("width"),
       height = +svg.attr("height"),
-      outerRadius = Math.min(width, height) * 0.5 - 65,
+      outerRadius = Math.min(width, height) * 0.5,
       innerRadius = outerRadius - 20;
 
     var chord = d3.chord()
@@ -1320,81 +1324,81 @@ trensantGFX.d3Chord = function(data, id, options) {
 	 * svgHeight:: type: int or function, default: 600
 	 *
 	 */
-	trensantGFX.d3ZoomableSunburst = function(data, id, options) {
-	    var zoomableSunburstDefaultConfiguration = {
-	      svgWidth: trensantGFX.containerDims(id).wid,
-	      svgHeight: trensantGFX.containerDims(id).hgt
-	    }
-	    configuration = setOptions(zoomableSunburstDefaultConfiguration , options);
+	tgw.d3ZoomableSunburst = function(data, id, options) {
+    var zoomableSunburstDefaultConfiguration = {
+      svgWidth: tgw.containerDims(id).wid,
+      svgHeight: tgw.containerDims(id).hgt
+    }
+    sunburstConfiguration = setOptions(zoomableSunburstDefaultConfiguration , options);
 
-	    var width = configuration.svgWidth,
-	      height = configuration.svgHeight,
-	      radius = (Math.min(width, height) / 2) - 10;
+    var width = sunburstConfiguration.svgWidth,
+      height = sunburstConfiguration.svgHeight,
+      radius = (Math.min(width, height) / 2 - 10) ;
 
-	    var formatNumber = d3.format(",d");
+    var formatNumber = d3.format(",d");
 
-	    var x = d3.scaleLinear()
-	      .range([0, 2 * Math.PI]);
+    var x = d3.scaleLinear()
+      .range([0, 2 * Math.PI]);
 
-	    var y = d3.scaleSqrt()
-	      .range([0, radius]);
+    var y = d3.scaleSqrt()
+      .range([0, radius]);
 
-	    var color = d3.scaleOrdinal(d3.schemeCategory20);
+    var color = d3.scaleOrdinal(d3.schemeCategory20);
 
-	    var partition = d3.partition();
+    var partition = d3.partition();
 
-	    var arc = d3.arc()
-	      .startAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x0))); })
-	      .endAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x1))); })
-	      .innerRadius(function(d) { return Math.max(0, y(d.y0)); })
-	      .outerRadius(function(d) { return Math.max(0, y(d.y1)); });
+    var arc = d3.arc()
+      .startAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x0))); })
+      .endAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x1))); })
+      .innerRadius(function(d) { return Math.max(0, y(d.y0)); })
+      .outerRadius(function(d) { return Math.max(0, y(d.y1)); });
 
-	    var svg = d3.select("#"+id).append("svg")
-	      .attr("width", width)
-	      .attr("height", height)
-	      .append("g")
-	      .attr("transform", "translate(" + width / 2 + "," + (height / 2) + ")");
+    var svg = d3.select("#"+id).append("svg")
+      .attr("width", width)
+      .attr("height", height)
+      .append("g")
+      .attr("transform", "translate(" + width / 2 + "," + (height / 2) + ")");
 
-	    root = d3.hierarchy(data);
-	      root.sum(function(d) { return d.size; });
+    root = d3.hierarchy(data);
+      root.sum(function(d) { return d.size; });
 
-	      svg.selectAll("g")
-	        .data(partition(root).descendants())
-	        .enter().append("path")
-	        .attr("d", arc)
-	        .style("fill", function(d) { return color((d.children ? d : d.parent).data.name); })
-	        .on("click", click)
-	        .append("title")
-	        .text(function(d) { return d.data.name + "\n" + formatNumber(d.value); });
+      svg.selectAll("g")
+        .data(partition(root).descendants())
+        .enter().append("path")
+        .attr("d", arc)
+        .style("fill", function(d) { return color((d.children ? d : d.parent).data.name); })
+        .on("click", click)
+        .append("title")
+        .text(function(d) { return d.data.name + "\n" + formatNumber(d.value); });
 
-	    function click(d) {
-	      svg.transition()
-	        .duration(750)
-	        .tween("scale", function() {
-	          var xd = d3.interpolate(x.domain(), [d.x0, d.x1]),
-	            yd = d3.interpolate(y.domain(), [d.y0, 1]),
-	            yr = d3.interpolate(y.range(), [d.y0 ? 20 : 0, radius]);
-	          return function(t) { x.domain(xd(t)); y.domain(yd(t)).range(yr(t)); };
-	        })
-	        .selectAll("path")
-	        .attrTween("d", function(d) { return function() { return arc(d); }; });
-	    }
+    function click(d) {
+      svg.transition()
+        .duration(750)
+        .tween("scale", function() {
+          var xd = d3.interpolate(x.domain(), [d.x0, d.x1]),
+            yd = d3.interpolate(y.domain(), [d.y0, 1]),
+            yr = d3.interpolate(y.range(), [d.y0 ? 20 : 0, radius]);
+          return function(t) { x.domain(xd(t)); y.domain(yd(t)).range(yr(t)); };
+        })
+        .selectAll("path")
+        .attrTween("d", function(d) { return function() { return arc(d); }; });
+    }
 
-	    d3.select(self.frameElement).style("height", height + "px");
+    d3.select(self.frameElement).style("height", height + "px");
 
-	    function setOptions(default_configuration, options) {
-				/*Options.tree_attribute_names: Gets keys from the tree. If not present sets default values.*/
+    function setOptions(default_configuration, options) {
+			/*Options.tree_attribute_names: Gets keys from the tree. If not present sets default values.*/
 
-	      if (options) {
-	        for (var setting in options) {
-	          if (!(Object.keys(default_configuration).indexOf(setting) > -1)) {
-	            console.warn(setting + ' is not a default setting.')
-	          }
-	          default_configuration[setting] = options[setting];
-	        }
-	      }
-	      return default_configuration
-	    }
+      if (options) {
+        for (var setting in options) {
+          if (!(Object.keys(default_configuration).indexOf(setting) > -1)) {
+            console.warn(setting + ' is not a default setting.')
+          }
+          default_configuration[setting] = options[setting];
+        }
+      }
+      return default_configuration
+    }
 	}
-})(typeof trensantGFX === 'undefined'? this['trensantGFX']={}: hf);//(window.hf = window.hf || {});
+})(typeof tgw === 'undefined'? this['tgw']={}: hf);//(window.hf = window.hf || {});
 
