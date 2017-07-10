@@ -1400,5 +1400,5 @@ trensantGFX.d3Chord = function(data, id, options) {
       return default_configuration
     }
 	}
-})(typeof trensantGFX === 'undefined'? this['trensantGFX']={}: hf);//(window.hf = window.hf || {});
+})(typeof trensantGFX === 'undefined'? this['tgw']={}: hf);//(window.hf = window.hf || {});
 
