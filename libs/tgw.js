@@ -1,4 +1,4 @@
-/*  trensantGFX Functions
+/*  tgw Functions
 	see README.md
 	
  	
@@ -40,39 +40,39 @@
 
  */
 
-(function (trensantGFX, undefined) {
+(function (tgw, undefined) {
 
 //=====================================================================================================
 /* 
-	trensantGFX.typeOf (data) returns a useful type info for any object, including dates etc
+	tgw.typeOf (data) returns a useful type info for any object, including dates etc
 
 	examples: 
-		trensantGFX.typeOf(23)  // returns "number"
-		trensantGFX.typeOf({})  // returns "object"
-		trensantGFX.typeOf([])  // returns "array"
-		trensantGFX.typeOf(new Date()) // returns "date"
+		tgw.typeOf(23)  // returns "number"
+		tgw.typeOf({})  // returns "object"
+		tgw.typeOf([])  // returns "array"
+		tgw.typeOf(new Date()) // returns "date"
 
 */
-trensantGFX.typeOf = function (x)   {
+tgw.typeOf = function (x)   {
 	return (typeof x == "undefined") ? "undefined" : (({}).toString.call(x).match(/\s([a-zA-Z]+)/)[1].toLowerCase());
 };
-var _to = trensantGFX.typeOf;  //short hand used internally for typeof operations.
+var _to = tgw.typeOf;  //short hand used internally for typeof operations.
 
 //=====================================================================================================
 /* 
-	trensantGFX.roundNum(x,numDigits)
+	tgw.roundNum(x,numDigits)
 
 	round a number to specified sig digits.	 default is 2
 */
-trensantGFX.roundNum = function (x,numDigits) {
+tgw.roundNum = function (x,numDigits) {
 	numDigits =  (_to(numDigits) == 'number') ? Math.pow(10,Math.round( numDigits)) : 100;
 	return Math.round (x*numDigits) / numDigits ;
 }
-var _round = trensantGFX.roundNum;  // short hand used internally
+var _round = tgw.roundNum;  // short hand used internally
 
 //=====================================================================================================
 //constrain input x in between min, max, expects numeric input
-trensantGFX.constrain = function (x,min,max) {
+tgw.constrain = function (x,min,max) {
     if (max < min) {a=min; min=max; max=a;}
     if (x<=min)	{x=min;}
     if (x>=max)	{x=max;}
@@ -87,7 +87,7 @@ trensantGFX.constrain = function (x,min,max) {
  example:
   	trensant.mapScaleEXP(33,0,100,-100,100)  --> maps 33 with input range from 0 .. 100 in to the range -100,100 linearly ==> 
  */
-trensantGFX.mapScaleEXP = function (z, in0, in1, out0, out1, clip, exp_scale) {
+tgw.mapScaleEXP = function (z, in0, in1, out0, out1, clip, exp_scale) {
     
     clip = (typeof clip == 'undefined')?false:clip;
     exp_scale = (typeof exp_scale !== 'number')?false:exp_scale;
@@ -99,32 +99,32 @@ trensantGFX.mapScaleEXP = function (z, in0, in1, out0, out1, clip, exp_scale) {
     else
         z = (((z-in0)/(in1-in0))*(out1-out0))+out0;
     if (clip!=false) 
-        z=trensantGFX.constrain(z,out0,out1);
+        z=tgw.constrain(z,out0,out1);
     return z;
 }
-var _mapScale = trensantGFX.mapScaleEXP; //short hand used internally
+var _mapScale = tgw.mapScaleEXP; //short hand used internally
 
 
 //======================================
 /* 
-	trensantGFX.containerDims(domID) 
+	tgw.containerDims(domID)
 	returns the height and width of a given HTML container 	
 	currently uses Jquery but may change this later.  This fn is used internally for default container widths/heights
 */
-trensantGFX.containerDims = function (domID) {
+tgw.containerDims = function (domID) {
 	return { "wid": $('#'+domID).width(), "hgt" : $('#'+domID).height()}
 }
 
-var _dims = trensantGFX.containerDims;
+var _dims = tgw.containerDims;
 
 
 //=====================================================================================================
-/* 	trensantGFX.setIntervalX(callbackFn, delayBtwCalls, repetitions)
+/* 	tgw.setIntervalX(callbackFn, delayBtwCalls, repetitions)
  	set a javascript timer to only run a max of N repetions.  
 	// Note: Only works in browser not server side as it requires access to window object.
 	// also note that callback function is called with the interval number to be used for whatever purposes the callback likes
 */ 
-trensantGFX.setIntervalX = function(callback, delay, repetitions) {
+tgw.setIntervalX = function(callback, delay, repetitions) {
     var x = 0;
     var intervalID = window.setInterval(function () {
 
@@ -137,7 +137,7 @@ trensantGFX.setIntervalX = function(callback, delay, repetitions) {
 }
 //=====================================================================================================
 /*
-	trensantGFX.repeatUntil()
+	tgw.repeatUntil()
 	repeatUntil runs the supplied testFn every delay milliseconds up until a maxReps number of times.
 	if the test function returns true it runs the successFn and stops the iterations.
 
@@ -145,10 +145,10 @@ trensantGFX.setIntervalX = function(callback, delay, repetitions) {
 	with the current iteration).  lastFn is optional.  failFn is optional
 	
 	Example:
-	trensantGFX.repeatUntil(myLibsLoaded(), callMyChart(), null, 250, 10, null); // attempts to wait until mylib is loaded 10 times before giving up
+	tgw.repeatUntil(myLibsLoaded(), callMyChart(), null, 250, 10, null); // attempts to wait until mylib is loaded 10 times before giving up
 	
 */ 
-trensantGFX.repeatUntil = function(testFn, successFn, failFn, delay, maxReps, lastFn) {
+tgw.repeatUntil = function(testFn, successFn, failFn, delay, maxReps, lastFn) {
 	var _count = 0;
 	var _max   = maxReps;
 	if (typeof testFn != "function")
@@ -191,14 +191,14 @@ trensantGFX.repeatUntil = function(testFn, successFn, failFn, delay, maxReps, la
 //=====================================================================================================
 //=====================================================================================================
 /*
-	trensantGFX.tgPrettyPrint (data, domID, opts) 
+	tgw.tgPrettyPrint (data, domID, opts)
 		prettyPrint a Javscript object 
 		this is a "native" graphics call in that it doesn't wrap another charting library
 
 	example usage:
-		trensantGFX.tgPrettyPrint({"foo":123,"bar":345,"that":[1,2,3,4,5]}, "myDomId");
+		tgw.tgPrettyPrint({"foo":123,"bar":345,"that":[1,2,3,4,5]}, "myDomId");
  */
-trensantGFX.tgPrettyPrint = function (data, domID, opts) {        
+tgw.tgPrettyPrint = function (data, domID, opts) {
 	var i,h, json = data;
 
 	var dopts = {	   		// default options
@@ -243,7 +243,7 @@ trensantGFX.tgPrettyPrint = function (data, domID, opts) {
 //=====================================================================================================
 // drawRowWordCloudBase draws a word cloud with words in rows.  It is the base renderer.  see tgDrawRowWordCloud for direct calls
 // words must be of form : [["word", value, optional-color, optional-id], [] ]
-trensantGFX.tgDrawRowWordCloudBase = function(words,domID,opts) {
+tgw.tgDrawRowWordCloudBase = function(words,domID,opts) {
 	var i, dopts = { 							// default options
 		"maxSize" 	: 55,  						// any valid number for max font size 
 		"minSize" 	: 9, 	  					// any valid number for min font size
@@ -305,9 +305,9 @@ trensantGFX.tgDrawRowWordCloudBase = function(words,domID,opts) {
 //=====================================================================================================
 // drawRowWordCloudBase draws a word cloud with words in rows.  
 // words must be of form : [["word", value, optional-color, optional-id], [] ]
-trensantGFX.tgDrawRowWordCloud = function (words, domID, opts) {
+tgw.tgDrawRowWordCloud = function (words, domID, opts) {
 
-	trensantGFX.tgDrawRowWordCloudBase( words,domID,opts);  // working version with bounds issues
+	tgw.tgDrawRowWordCloudBase( words,domID,opts);  // working version with bounds issues
 
     var n=9,m=20;
     var rs = $("#" +domID+ " > span")[0].getClientRects()[0];
@@ -319,7 +319,7 @@ trensantGFX.tgDrawRowWordCloud = function (words, domID, opts) {
       re = $("#" +domID+ " > span")[$("#" +domID+ " > span").length-1].getClientRects()[0];
       gTemp = {"rs":rs, "re" :re};
       m+= 0.33;
-      trensantGFX.tgDrawRowWordCloudBase( words,domID,opts);  // working version with bounds issues
+      tgw.tgDrawRowWordCloudBase( words,domID,opts);  // working version with bounds issues
 
       
       if (m > 100)
@@ -327,7 +327,7 @@ trensantGFX.tgDrawRowWordCloud = function (words, domID, opts) {
     }
 
     m-=0.67;
-    trensantGFX.tgDrawRowWordCloudBase( words,domID,opts);  // working version with bounds issues
+    tgw.tgDrawRowWordCloudBase( words,domID,opts);  // working version with bounds issues
 
 }
 
@@ -342,18 +342,18 @@ trensantGFX.tgDrawRowWordCloud = function (words, domID, opts) {
 	the charts libs are (a race condition).  
 
  */
-trensantGFX.gglChartsLoaded  = function() 
+tgw.gglChartsLoaded  = function()
 {
     if ((typeof google === 'undefined') || (typeof google.visualization === 'undefined') ) {
 
        return false;
     }
     else {
-    	if (trensantGFX.typeOf(google.visualization.arrayToDataTable) != "function") 
+    	if (tgw.typeOf(google.visualization.arrayToDataTable) != "function")
     		return false;
-    	if (trensantGFX.typeOf(google.visualization.PieChart) != "function")
+    	if (tgw.typeOf(google.visualization.PieChart) != "function")
     		return false;
-    	if (trensantGFX.typeOf(google.visualization.LineChart) != "function")
+    	if (tgw.typeOf(google.visualization.LineChart) != "function")
     		return false;
     }
     return true;
@@ -379,7 +379,7 @@ trensantGFX.gglChartsLoaded  = function()
 
 */
 
-trensantGFX.gglDrawTable = function (data,cols,domID,opts) {
+tgw.gglDrawTable = function (data,cols,domID,opts) {
 	if (typeof google.visualization.Table == "function") {
 		var i;
 		var dopts = {  // default options
@@ -427,7 +427,7 @@ trensantGFX.gglDrawTable = function (data,cols,domID,opts) {
   [["item1",value], ["item2", value], ["item3", value]]
 
  */
-trensantGFX.gglDrawPieChart = function (data,domID,opts){
+tgw.gglDrawPieChart = function (data,domID,opts){
 
 	if (typeof google.visualization.PieChart == "function") {
 		var i;
@@ -465,7 +465,7 @@ data must be of this form:
    		[ 23,34,45,63],
   	]
 */
-trensantGFX.gglDrawLineChart = function (data,domID,opts) {
+tgw.gglDrawLineChart = function (data,domID,opts) {
     if (typeof google.visualization.LineChart == "function") {
 	    var cdata = google.visualization.arrayToDataTable(data);
 	    var dopts = { //default options
@@ -488,7 +488,7 @@ trensantGFX.gglDrawLineChart = function (data,domID,opts) {
 /*	gglDrawBarChart
 
  */
-trensantGFX.gglDrawBarChart = function(data,domID,options) {
+tgw.gglDrawBarChart = function(data,domID,options) {
 	if (typeof google.visualization.BarChart == "function") {
 	    var cdata = google.visualization.arrayToDataTable(data);
 	    var doptions = {
@@ -517,7 +517,7 @@ trensantGFX.gglDrawBarChart = function(data,domID,options) {
     data must be a 2D array of this form 
 	[['name','value-heading'],['foo',234],['bar',455]]
 */
-trensantGFX.gglDrawHistogram = function (data,domID,options) {
+tgw.gglDrawHistogram = function (data,domID,options) {
 
     if (typeof google.visualization.Histogram == "function") {
 	    var dopts = {
@@ -544,7 +544,7 @@ trensantGFX.gglDrawHistogram = function (data,domID,options) {
 
 
 //======================================================================================================
-trensantGFX.d3ChartsLoaded = function () {
+tgw.d3ChartsLoaded = function () {
 	if (typeof d3 != "undefined")
 		return true;
 	return false;
@@ -588,15 +588,15 @@ trensantGFX.d3ChartsLoaded = function () {
          * svgBehaviorOptions: type: any, default: null
      *
   */
-  trensantGFX.d3TreeMap = function (tree, id, options) {
+  tgw.d3TreeMap = function (tree, id, options) {
     var treemapDefaultConfiguration = {
 		parentID: 'parentID',
 		childID: "childID",
 		childName: "childName",
 		children: "children",
 		value: "value",
-		svgWidth: trensantGFX.containerDims(id).wid ,
-		svgHeight: trensantGFX.containerDims(id).hgt,
+		svgWidth: tgw.containerDims(id).wid ,
+		svgHeight: tgw.containerDims(id).hgt,
 		fader: 0.5,
 		rectangleBehavior: null,
 		rectangleBehaviorOptions: null,
@@ -890,13 +890,13 @@ trensantGFX.d3ChartsLoaded = function () {
 		*
 	*
 		*/
-  trensantGFX.d3RadialTree = function (treeData, id, options) {
+  tgw.d3RadialTree = function (treeData, id, options) {
     var radialTreeDefaultConfiguration = {
 			name: "name",
 			children: "children",
-			svgWidth: trensantGFX.containerDims(id).wid,
-			svgHeight: trensantGFX.containerDims(id).hgt,
-			diameter: trensantGFX.containerDims(id).wid/2,
+			svgWidth: tgw.containerDims(id).wid,
+			svgHeight: tgw.containerDims(id).hgt,
+			diameter: tgw.containerDims(id).wid/2,
 			duration: 750
     }
     radialTreeConfiguration = setOptions(radialTreeDefaultConfiguration, options);
@@ -1163,10 +1163,10 @@ trensantGFX.d3ChartsLoaded = function () {
 	 * svgHeight:: type: int or function, default: 600
 	 *
 	 */
-trensantGFX.d3Chord = function(data, id, options) {
+tgw.d3Chord = function(data, id, options) {
     var chordDefaultConfiguration = {
-      svgWidth: trensantGFX.containerDims(id).wid,
-      svgHeight: trensantGFX.containerDims(id).hgt
+      svgWidth: tgw.containerDims(id).wid,
+      svgHeight: tgw.containerDims(id).hgt
     }
     chordConfiguration = setOptions(chordDefaultConfiguration, options);
 
@@ -1324,10 +1324,10 @@ trensantGFX.d3Chord = function(data, id, options) {
 	 * svgHeight:: type: int or function, default: 600
 	 *
 	 */
-	trensantGFX.d3ZoomableSunburst = function(data, id, options) {
+	tgw.d3ZoomableSunburst = function(data, id, options) {
     var zoomableSunburstDefaultConfiguration = {
-      svgWidth: trensantGFX.containerDims(id).wid,
-      svgHeight: trensantGFX.containerDims(id).hgt
+      svgWidth: tgw.containerDims(id).wid,
+      svgHeight: tgw.containerDims(id).hgt
     }
     sunburstConfiguration = setOptions(zoomableSunburstDefaultConfiguration , options);
 
@@ -1400,5 +1400,5 @@ trensantGFX.d3Chord = function(data, id, options) {
       return default_configuration
     }
 	}
-})(typeof trensantGFX === 'undefined'? this['tgw']={}: hf);//(window.hf = window.hf || {});
+})(typeof tgw === 'undefined'? this['tgw']={}: hf);//(window.hf = window.hf || {});
 
