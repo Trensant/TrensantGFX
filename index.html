@@ -169,7 +169,6 @@ drawBanner=false    				// supress or show the top Trensant Logo
 
 		var node = document.createElement("div");
 		node["id"] = domID; // the id for container div
-
 		for (i=0; i < dopts["sections"].length; i++) {
 			x = document.createElement(dopts["sections"][i][0]);
 			x["id"] = domID+dopts["sections"][i][1];
@@ -352,7 +351,7 @@ drawBanner=false    				// supress or show the top Trensant Logo
 	//===================================================================================================		
 	//trensant.d3treeMap
     div = "d3TreeMapDiv";
-    drawNewSectionDiv(div,{"name":"d3TreeMapDiv"});
+    drawNewSectionDiv(div,{"name":"d3TreeMapDiv", "chartSty": "height:400"});
 
     //emit description info
     $("#"+div+"_desc").html("treemap draws a treemap");
@@ -427,12 +426,12 @@ drawBanner=false    				// supress or show the top Trensant Logo
 
 	//render the chart
     trensantGFX.d3TreeMap(treeMapSampleData, div+"_chart", {parentID: "parent_id", childID: "child_id",
-      childName: "child_name", value: "child_buzz"});
+      childName: "child_name", value: "child_buzz", svgHeight: $('#'+div+"_chart").height()-50,svgWidth: $('#'+div+"_chart").width()-50});
 
 	//===================================================================================================
 	//trensant.d3radialTree
 	div = "d3RadialTree";
-    drawNewSectionDiv(div,{"name":"d3RadialTree"});
+    drawNewSectionDiv(div,{"name":"d3RadialTree", "chartSty": "height:400"});
 
 	var radialTreeSampleData = {name: "Current Article", children: [{name: "Dow Jones Index", children: [{name: "Apple", children: [{name: "MacBook"}, {name: "IPhone"}]},{name: "Home Depot"}, {name: "Amgen"}, {name: "IBM"}, {name: "Average"}]}, {name: "Wall Street", children: [{name: "American Express", children: [{name: "Credit Card"}, {name: "Debt"}, {name: "Freedom"}, {name: "Money"}, {name: "Payments"}, {name: "Freshman"}]},{name: "Bernie Madoff"}, {name: "Greed"}]}]}
 
@@ -442,13 +441,12 @@ drawBanner=false    				// supress or show the top Trensant Logo
     //display sample data
     trensantGFX.tgPrettyPrint(radialTreeSampleData, div+"_data")
 
-
     //render the chart
-      trensantGFX.d3RadialTree(radialTreeSampleData, div+"_chart", {textClick: "mouseover", onClick: function () {d3.select(this).style("fill", "red")}});
+      trensantGFX.d3RadialTree(radialTreeSampleData, div+"_chart", {textClick: "mouseover", onClick: function () {d3.select(this).style("fill", "red")}, svgHeight: $('#'+div+"_chart").height()-50,svgWidth: $('#'+div+"_chart").width()-50});
 
 //  ===================================================================================================
 	  div = "d3Chord";
-	  drawNewSectionDiv(div,{"name":"d3Chord"});
+	  drawNewSectionDiv(div,{"name":"d3Chord", "chartSty": "height:400"});
 	  var chordSampleData = {matrix : [
         [0, 0, 1000, 1000],
         [0, 0, 1000, 1000],
@@ -461,13 +459,12 @@ drawBanner=false    				// supress or show the top Trensant Logo
 
       //display sample data
       trensantGFX.tgPrettyPrint(chordSampleData, div+"_data");
-
       //render the chart
-      trensantGFX.d3Chord(chordSampleData, div+"_chart", {});
+      trensantGFX.d3Chord(chordSampleData, div+"_chart", {svgHeight: $('#'+div+"_chart").height()-50, svgWidth: $('#'+div+"_chart").width()-50});
 
 // ===================================================================================================
 	  div = "d3ZoomableSunburst";
-      drawNewSectionDiv(div,{"name":"d3ZoomableSunburst"});
+      drawNewSectionDiv(div,{"name":"d3ZoomableSunburst", "chartSty": "height:400"});
       var sunburstSampleData = {name: "flare",
         children: [
           {
@@ -510,7 +507,7 @@ drawBanner=false    				// supress or show the top Trensant Logo
       trensantGFX.tgPrettyPrint(sunburstSampleData, div+"_data");
 
       //render the chart
-      trensantGFX.d3ZoomableSunburst(sunburstSampleData, div+"_chart", {});
+      trensantGFX.d3ZoomableSunburst(sunburstSampleData, div+"_chart", {svgHeight: $('#'+div+"_chart").height()-50,svgWidth: $('#'+div+"_chart").width()-50});
 
 
 	// end main area-----------------------------------------------------------------------------------

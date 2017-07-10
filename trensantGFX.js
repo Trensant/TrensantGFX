@@ -603,16 +603,16 @@ trensantGFX.d3ChartsLoaded = function () {
 		svgBehavior: null,
 		svgBehaviorOptions: null
     }
-    configuration = setOptions(treemapDefaultConfiguration, options);
+    treeMapConfiguration = setOptions(treemapDefaultConfiguration, options);
 
     var fader = function (color) {
-        return d3.interpolateRgb(color, "#fff")(configuration.fader);
+        return d3.interpolateRgb(color, "#fff")(treeMapConfiguration.fader);
       },
       color = d3.scaleOrdinal(d3.schemeCategory20.map(fader)),
       format = d3.format(",d");
 
-    var width = typeof configuration.svgWidth === "function" ? configuration.svgWidth() : configuration.svgWidth,
-      height = typeof configuration.svgHeight === "function" ? configuration.svgHeight() : configuration.svgHeight;
+    var width = typeof treeMapConfiguration.svgWidth === "function" ? treeMapConfiguration.svgWidth() : treeMapConfiguration.svgWidth,
+      height = typeof treeMapConfiguration.svgHeight === "function" ? treeMapConfiguration.svgHeight() : treeMapConfiguration.svgHeight;
 
     d3.select('#'+id).append("p").classed("parent", true)
     d3.select('#'+id)
@@ -622,10 +622,10 @@ trensantGFX.d3ChartsLoaded = function () {
       .attr("width", width)
       .attr("height", height)
       .style("font", "10px sans-serif")
-    if ("svgBehavior" in configuration) {
-      for (var key in configuration.svgBehavior) {
+    if ("svgBehavior" in treeMapConfiguration) {
+      for (var key in treeMapConfiguration.svgBehavior) {
         svg.on(key, function () {
-          configuration.svgBehavior[key](configuration.svgBehaviorOptions);
+          treeMapConfiguration.svgBehavior[key](treeMapConfiguration.svgBehaviorOptions);
         });
       }
     }
@@ -639,10 +639,10 @@ trensantGFX.d3ChartsLoaded = function () {
     var nodeTree = tree;
     var root = d3.hierarchy(tree.node);
     root.eachBefore(function (d) {
-      d.data.id = d.data[configuration.childID]
+      d.data.id = d.data[treeMapConfiguration.childID]
     })
       .sum(function (d) {
-        return d[configuration.value]
+        return d[treeMapConfiguration.value]
       })
       .sort(function (a, b) {
         return b.value - a.value || b.value - a.value;
@@ -650,10 +650,11 @@ trensantGFX.d3ChartsLoaded = function () {
     treemap(root);
     var parent_element = d3.select(".parent");
     parent_element.html(function () {
-      return root.data[configuration.childName]
+      return root.data[treeMapConfiguration.childName]
     });
+
     function drawit() {
-      cell = svg.selectAll("g").data(root[configuration.children]).enter().append("g")
+      cell = svg.selectAll("g").data(root[treeMapConfiguration.children]).enter().append("g")
         .attr("transform", function (d) {
           return "translate(" + d.x0 + "," + d.y0 + ")";
         });
@@ -669,22 +670,24 @@ trensantGFX.d3ChartsLoaded = function () {
           return d.y1 - d.y0;
         })
         .attr("fill", function (d) {
-          return color(d.data[configuration.value]);
+          return color(d.data[treeMapConfiguration.value]);
         })
         .on('click', function (d) {
           redraw(d);
-          parent_element.append("a")
-            .attr("href", "javascript:void(0)")
-            .html("  :  " + root.data.child_name)
-            .on("click", function () {
-              redraw_parent(root.data[configuration.parentID]);
-            });
+          if (d.data[treeMapConfiguration.children]) {
+            parent_element.append("a")
+              .attr("href", "javascript:void(0)")
+              .html("  :  " + root.data.child_name)
+              .on("click", function () {
+                redraw_parent(root.data[treeMapConfiguration.parentID]);
+              });
+          }
         });
 
-      if (configuration && "rectangleBehavior" in configuration) {
-        for (var key in configuration.rectangleBehavior) {
+      if (treeMapConfiguration && "rectangleBehavior" in treeMapConfiguration) {
+        for (var key in treeMapConfiguration.rectangleBehavior) {
           cell.on(key, function (d) {
-            configuration.rectangleBehavior[key](d, configuration.rectangleBehaviorOptions);
+            treeMapConfiguration.rectangleBehavior[key](d, treeMapConfiguration.rectangleBehaviorOptions);
           });
         }
       }
@@ -704,7 +707,7 @@ trensantGFX.d3ChartsLoaded = function () {
         })
         .selectAll("tspan")
         .data(function (d) {
-          return d.data[configuration.childName].split(/(?=[A-Z][^A-Z])/g);
+          return d.data[treeMapConfiguration.childName].split(/(?=[A-Z][^A-Z])/g);
         })
         .enter().append("tspan")
         .attr("x", 4)
@@ -733,23 +736,25 @@ trensantGFX.d3ChartsLoaded = function () {
       if (node.children) {
         root = d3.hierarchy(node.data);
         root.eachBefore(function (d) {
-          d.data.id = d.data[configuration.childID]
+          d.data.id = d.data[treeMapConfiguration.childID]
         })
           .sum(function (d) {
-            return d[configuration.value]
+            return d[treeMapConfiguration.value]
           })
           .sort(function (a, b) {
             return b.value - a.value || b.value - a.value;
           });
         treemap(root);
-        d3.selectAll('g').remove()
+        svg.selectAll('g').remove()
         drawit();
         addChildNode(nodeTree, node);
       }
     }
+
     var redraw_parent = function (id) {
-      var mylen = d3.selectAll("a")._groups[0].length;
-      var tickLabels = d3.selectAll("a").filter(function (d, i) {
+      var mylen = d3.selectAll(".parent a")._groups[0].length;
+
+      var tickLabels = d3.selectAll(".parent a").filter(function (d, i) {
         if (mylen == 1) {
           return 1;
         }
@@ -761,22 +766,21 @@ trensantGFX.d3ChartsLoaded = function () {
           }
         }
       }).remove();
-//      tickLabels.last().attr("color", "red");
 
       if (typeof(id) != 'undefined') {
         root = get_node(nodeTree, id);
         root = d3.hierarchy(root);
         root.eachBefore(function (d) {
-          d.data.id = d.data[configuration.childID]
+          d.data.id = d.data[treeMapConfiguration.childID]
         })
           .sum(function (d) {
-            return d[configuration.value]
+            return d[treeMapConfiguration.value]
           })
           .sort(function (a, b) {
             return b.value - a.value || b.value - a.value;
           });
         treemap(root);
-        d3.selectAll('g').remove()
+        svg.selectAll('g').remove()
         drawit();
       }
     }
@@ -895,16 +899,16 @@ trensantGFX.d3ChartsLoaded = function () {
 			diameter: trensantGFX.containerDims(id).wid/2,
 			duration: 750
     }
-    configuration = setOptions(radialTreeDefaultConfiguration, options);
+    radialTreeConfiguration = setOptions(radialTreeDefaultConfiguration, options);
     if (typeof options == "undefined") {
       options = {};
     }
 
-    var width = typeof configuration.svgWidth === "function" ? configuration.svgWidth() : configuration.svgWidth,
-      height = typeof configuration.svgHeight === "function" ? configuration.svgHeight() : configuration.svgHeight;
+    var width = typeof radialTreeConfiguration.svgWidth === "function" ? radialTreeConfiguration.svgWidth() : radialTreeConfiguration.svgWidth,
+      height = typeof radialTreeConfiguration.svgHeight === "function" ? radialTreeConfiguration.svgHeight() : radialTreeConfiguration.svgHeight;
 
-    var diameter = configuration.diameter;
-    var duration = configuration.duration;
+    var diameter = Math.min(width, height) * 0.9 - 10;
+    var duration = radialTreeConfiguration.duration;
 
     var nodes, links;
     var i = 0;
@@ -917,11 +921,11 @@ trensantGFX.d3ChartsLoaded = function () {
     var svg = d3.select("#"+id).append("svg")
       .attr("width", width)
       .attr("height", height);
-    var g = svg.append("g").attr("transform", "translate(" + (width / 2 + 40) + "," + (height / 2 + 90) + ")");
+    var g = svg.append("g").attr("transform", "translate(" + (width / 2) + "," + (height / 2) + ")");
 
-    root = d3.hierarchy(treeData, function (d) {return d[configuration.children] });
+    root = d3.hierarchy(treeData, function (d) {return d[radialTreeConfiguration.children] });
     root.each(function (d) {
-      d.name = d.data[configuration.name]; //transferring name to a name variable
+      d.name = d.data[radialTreeConfiguration.name]; //transferring name to a name variable
       d.id = i; //Assigning numerical Ids
       i += i;
     });
@@ -983,7 +987,7 @@ trensantGFX.d3ChartsLoaded = function () {
         })
         .text(function (d) {
           if (d.parent) {
-            return d[configuration.name];
+            return d[radialTreeConfiguration.name];
           }
           else {
             return null
@@ -1164,10 +1168,10 @@ trensantGFX.d3Chord = function(data, id, options) {
       svgWidth: trensantGFX.containerDims(id).wid,
       svgHeight: trensantGFX.containerDims(id).hgt
     }
-    configuration = setOptions(chordDefaultConfiguration, options);
+    chordConfiguration = setOptions(chordDefaultConfiguration, options);
 
-    var width = typeof configuration.svgWidth === "function" ? configuration.svgWidth() : configuration.svgWidth,
-      height = typeof configuration.svgHeight === "function" ? configuration.svgHeight() : configuration.svgHeight;
+    var width = typeof chordConfiguration.svgWidth === "function" ? chordConfiguration.svgWidth() : chordConfiguration.svgWidth,
+      height = typeof chordConfiguration.svgHeight === "function" ? chordConfiguration.svgHeight() : chordConfiguration.svgHeight;
 
     function fade(opacity) {
       return function(d, i) {
@@ -1182,11 +1186,11 @@ trensantGFX.d3Chord = function(data, id, options) {
 
     var svg = d3.select("#"+id)
 				.append("svg")
-				.attr("width", configuration.svgWidth)
-				.attr("height", configuration.svgHeight),
+				.attr("width", chordConfiguration.svgWidth)
+				.attr("height", chordConfiguration.svgHeight),
       width = +svg.attr("width"),
       height = +svg.attr("height"),
-      outerRadius = Math.min(width, height) * 0.5 - 65,
+      outerRadius = Math.min(width, height) * 0.5,
       innerRadius = outerRadius - 20;
 
     var chord = d3.chord()
@@ -1321,80 +1325,80 @@ trensantGFX.d3Chord = function(data, id, options) {
 	 *
 	 */
 	trensantGFX.d3ZoomableSunburst = function(data, id, options) {
-	    var zoomableSunburstDefaultConfiguration = {
-	      svgWidth: trensantGFX.containerDims(id).wid,
-	      svgHeight: trensantGFX.containerDims(id).hgt
-	    }
-	    configuration = setOptions(zoomableSunburstDefaultConfiguration , options);
+    var zoomableSunburstDefaultConfiguration = {
+      svgWidth: trensantGFX.containerDims(id).wid,
+      svgHeight: trensantGFX.containerDims(id).hgt
+    }
+    sunburstConfiguration = setOptions(zoomableSunburstDefaultConfiguration , options);
 
-	    var width = configuration.svgWidth,
-	      height = configuration.svgHeight,
-	      radius = (Math.min(width, height) / 2) - 10;
+    var width = sunburstConfiguration.svgWidth,
+      height = sunburstConfiguration.svgHeight,
+      radius = (Math.min(width, height) / 2 - 10) ;
 
-	    var formatNumber = d3.format(",d");
+    var formatNumber = d3.format(",d");
 
-	    var x = d3.scaleLinear()
-	      .range([0, 2 * Math.PI]);
+    var x = d3.scaleLinear()
+      .range([0, 2 * Math.PI]);
 
-	    var y = d3.scaleSqrt()
-	      .range([0, radius]);
+    var y = d3.scaleSqrt()
+      .range([0, radius]);
 
-	    var color = d3.scaleOrdinal(d3.schemeCategory20);
+    var color = d3.scaleOrdinal(d3.schemeCategory20);
 
-	    var partition = d3.partition();
+    var partition = d3.partition();
 
-	    var arc = d3.arc()
-	      .startAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x0))); })
-	      .endAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x1))); })
-	      .innerRadius(function(d) { return Math.max(0, y(d.y0)); })
-	      .outerRadius(function(d) { return Math.max(0, y(d.y1)); });
+    var arc = d3.arc()
+      .startAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x0))); })
+      .endAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x1))); })
+      .innerRadius(function(d) { return Math.max(0, y(d.y0)); })
+      .outerRadius(function(d) { return Math.max(0, y(d.y1)); });
 
-	    var svg = d3.select("#"+id).append("svg")
-	      .attr("width", width)
-	      .attr("height", height)
-	      .append("g")
-	      .attr("transform", "translate(" + width / 2 + "," + (height / 2) + ")");
+    var svg = d3.select("#"+id).append("svg")
+      .attr("width", width)
+      .attr("height", height)
+      .append("g")
+      .attr("transform", "translate(" + width / 2 + "," + (height / 2) + ")");
 
-	    root = d3.hierarchy(data);
-	      root.sum(function(d) { return d.size; });
+    root = d3.hierarchy(data);
+      root.sum(function(d) { return d.size; });
 
-	      svg.selectAll("g")
-	        .data(partition(root).descendants())
-	        .enter().append("path")
-	        .attr("d", arc)
-	        .style("fill", function(d) { return color((d.children ? d : d.parent).data.name); })
-	        .on("click", click)
-	        .append("title")
-	        .text(function(d) { return d.data.name + "\n" + formatNumber(d.value); });
+      svg.selectAll("g")
+        .data(partition(root).descendants())
+        .enter().append("path")
+        .attr("d", arc)
+        .style("fill", function(d) { return color((d.children ? d : d.parent).data.name); })
+        .on("click", click)
+        .append("title")
+        .text(function(d) { return d.data.name + "\n" + formatNumber(d.value); });
 
-	    function click(d) {
-	      svg.transition()
-	        .duration(750)
-	        .tween("scale", function() {
-	          var xd = d3.interpolate(x.domain(), [d.x0, d.x1]),
-	            yd = d3.interpolate(y.domain(), [d.y0, 1]),
-	            yr = d3.interpolate(y.range(), [d.y0 ? 20 : 0, radius]);
-	          return function(t) { x.domain(xd(t)); y.domain(yd(t)).range(yr(t)); };
-	        })
-	        .selectAll("path")
-	        .attrTween("d", function(d) { return function() { return arc(d); }; });
-	    }
+    function click(d) {
+      svg.transition()
+        .duration(750)
+        .tween("scale", function() {
+          var xd = d3.interpolate(x.domain(), [d.x0, d.x1]),
+            yd = d3.interpolate(y.domain(), [d.y0, 1]),
+            yr = d3.interpolate(y.range(), [d.y0 ? 20 : 0, radius]);
+          return function(t) { x.domain(xd(t)); y.domain(yd(t)).range(yr(t)); };
+        })
+        .selectAll("path")
+        .attrTween("d", function(d) { return function() { return arc(d); }; });
+    }
 
-	    d3.select(self.frameElement).style("height", height + "px");
+    d3.select(self.frameElement).style("height", height + "px");
 
-	    function setOptions(default_configuration, options) {
-				/*Options.tree_attribute_names: Gets keys from the tree. If not present sets default values.*/
+    function setOptions(default_configuration, options) {
+			/*Options.tree_attribute_names: Gets keys from the tree. If not present sets default values.*/
 
-	      if (options) {
-	        for (var setting in options) {
-	          if (!(Object.keys(default_configuration).indexOf(setting) > -1)) {
-	            console.warn(setting + ' is not a default setting.')
-	          }
-	          default_configuration[setting] = options[setting];
-	        }
-	      }
-	      return default_configuration
-	    }
+      if (options) {
+        for (var setting in options) {
+          if (!(Object.keys(default_configuration).indexOf(setting) > -1)) {
+            console.warn(setting + ' is not a default setting.')
+          }
+          default_configuration[setting] = options[setting];
+        }
+      }
+      return default_configuration
+    }
 	}
 })(typeof trensantGFX === 'undefined'? this['trensantGFX']={}: hf);//(window.hf = window.hf || {});
 
