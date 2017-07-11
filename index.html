@@ -507,7 +507,7 @@ drawBanner=false    				// supress or show the top Trensant Logo
       tgw.tgPrettyPrint(sunburstSampleData, div+"_data");
 
       //render the chart
-      tgw.d3ZoomableSunburst(sunburstSampleData, div+"_chart", {svgHeight: $('#'+div+"_chart").height()-50,svgWidth: $('#'+div+"_chart").width()-50});
+      tgw.d3ZoomableSunburst(sunburstSampleData, div+"_chart", {svgHeight: $('#'+div+"_chart").height()-50,svgWidth: $('#'+div+"_chart").width()-50, value: "size"});
 
 // ===================================================================================================
       div = "d3Bubble";
@@ -554,7 +554,8 @@ drawBanner=false    				// supress or show the top Trensant Logo
       tgw.tgPrettyPrint(bubbleSampleData, div+"_data");
 
       //render the chart
-      tgw.d3Bubble(bubbleSampleData, div+"_chart", {svgHeight: $('#'+div+"_chart").height()-50,svgWidth: $('#'+div+"_chart").width()-50});
+      tgw.d3Bubble(bubbleSampleData, div+"_chart", {svgHeight: $('#'+div+"_chart").height()-50,svgWidth:
+	  $('#'+div+"_chart").width()-50, id: "name", value: "size"});
 
 	// end main area-----------------------------------------------------------------------------------
 	}// mainArea body

@@ -1307,6 +1307,7 @@ tgw.d3Chord = function(data, id, options) {
 
   }
 //  =================================================================
+
 	/*d3zoombaleSunburst draws a sunburst chart of hierarchically related items
 	 * param: data (dict)
 	 	* data schema:
@@ -1319,14 +1320,30 @@ tgw.d3Chord = function(data, id, options) {
 	 * param: id (string) Element to display chart.
 	 * param: options (dict) A dictionary that allows you customize renderings and behaviors.
 	 *
+	 * Tree data options:
+	 	*
+		* name:: type: string, default: "name"
+		* children:: type: string, default: "children"
+		* value:: type: string, default: "value"
+		 * FURTHER DESCRIPTION for Tree data options:
+		 * Frequently trees contain different keys labels. For
+		 * example your tree label for children may be childs instead of children.
+		 * Normally in that case you would either change the all the keys in
+		 * you data prior to passing or specify a custom function in d3.hierarchy call.
+		 * Instead you can specify key lables in options.
+		 * Example: {children: childs}.
+	 *
 	 * Rendering Options:
-	 * svgWidth: type: int or function, default: 600
+	 * svgWidth:: type: int or function, default: 600
 	 * svgHeight:: type: int or function, default: 600
 	 *
 	 */
 	tgw.d3ZoomableSunburst = function(data, id, options) {
     var zoomableSunburstDefaultConfiguration = {
-      svgWidth: tgw.containerDims(id).wid,
+      children: "children",
+			value: "value",
+			name: "name",
+    	svgWidth: tgw.containerDims(id).wid,
       svgHeight: tgw.containerDims(id).hgt
     }
     sunburstConfiguration = setOptions(zoomableSunburstDefaultConfiguration , options);
@@ -1360,16 +1377,20 @@ tgw.d3Chord = function(data, id, options) {
       .attr("transform", "translate(" + width / 2 + "," + (height / 2) + ")");
 
     root = d3.hierarchy(data);
-      root.sum(function(d) { return d.size; });
+      root.sum(function(d) { return d[sunburstConfiguration.value]; });
 
       svg.selectAll("g")
         .data(partition(root).descendants())
         .enter().append("path")
         .attr("d", arc)
-        .style("fill", function(d) { return color((d.children ? d : d.parent).data.name); })
+        .style("fill", function(d) {
+        	return color((d.children ? d : d.parent).data[sunburstConfiguration.name]);
+        })
         .on("click", click)
         .append("title")
-        .text(function(d) { return d.data.name + "\n" + formatNumber(d.value); });
+        .text(function(d) {
+        	return d.data[sunburstConfiguration.name] + "\n" +
+						formatNumber(d.value); });
 
     function click(d) {
       svg.transition()
@@ -1414,13 +1435,27 @@ tgw.d3Chord = function(data, id, options) {
 	 * param: id (string) Element to display chart.
 	 * param: options (dict) A dictionary that allows you customize renderings and behaviors.
 	 *
+	 * Tree data options:
+		 * name:: type: string, default: "name"
+		 * children:: type: string, default: "children"
+		 * value:: type: string, default: "value"
+		 * FURTHER DESCRIPTION for Tree data options:
+		 * Frequently trees contain different keys labels. For
+		 * example your tree label for children may be childs instead of children.
+		 * Normally in that case you would either change the all the keys in
+		 * you data prior to passing or specify a custom function in d3.hierarchy call.
+		 * Instead you can specify key lables in options.
+		 * Example: {children: childs}.
 	 * Rendering Options:
-	 * svgWidth: type: int or function, default: 600
-	 * svgHeight:: type: int or function, default: 600
+		 * svgWidth:: type: int or function, default: containerDims(id).wid
+		 * svgHeight:: type: int or function, default: containerDims(id).hgt
 	 *
 	 */
 	tgw.d3Bubble = function(data, id, options) {
     var bubbleDefaultConfiguration = {
+      children: "children",
+      value: "value",
+			id: "id",
       svgWidth: tgw.containerDims(id).wid,
       svgHeight: tgw.containerDims(id).hgt
 
@@ -1446,9 +1481,9 @@ tgw.d3Chord = function(data, id, options) {
       .padding(1.5);
 
     var root = d3.hierarchy(data)
-      .sum(function(d) { return d.size; })
+      .sum(function(d) { return d[bubbleConfiguration.value]; })
       .each(function(d) {
-        if (id = d.data.name) {
+        if (id = d.data[bubbleConfiguration.id]) {
           var id, i = id.lastIndexOf(".");
           d.id = id;
           d.package = id.slice(0, i);
@@ -1475,14 +1510,14 @@ tgw.d3Chord = function(data, id, options) {
     node.append("text")
       .attr("clip-path", function(d) { return "url(#clip-" + d.id + ")"; })
       .selectAll("tspan")
-      .data(function(d) { return d.data.name.split(/(?=[A-Z][^A-Z])/g); })
+      .data(function(d) { return d.data[bubbleConfiguration.id].split(/(?=[A-Z][^A-Z])/g); })
       .enter().append("tspan")
       .attr("x", 0)
       .attr("y", function(d, i, nodes) { return 13 + (i - nodes.length / 2 - 0.5) * 10; })
       .text(function(d) { return d; });
 
     node.append("title")
-      .text(function(d) { return d.id + "\n" + format(d.value); });
+      .text(function(d) { return d.id + "\n" + format(d[bubbleConfiguration.value]); });
 
     function setOptions(default_configuration, options) {
 			/*Options.tree_attribute_names: Gets keys from the tree. If not present sets default values.*/
