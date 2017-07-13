@@ -1,0 +1,203 @@
+<html>
+<head>
+<!-- HTML header code for trensant-gfx demo. M A Chatterjee 20170525 -->
+
+<!--
+<link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'><meta charset="utf-8"> -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- jquery -->
+<script src="../libs/jquery.3.2.1.min.js"></script>     <!-- jquery is used for DOM stuff  -->
+
+<!-- bootstrap is used for div management on this page -->
+<link rel="stylesheet" href="../style/bootstrap.3.3.7.min.css"  type='text/css'><meta charset="utf-8">
+<script type="text/javascript" src="../libs/bootstrap.3.3.7.min.js"></script>  <!-- not part of graphics library just here for div and layour mgmt -->
+
+
+<script type="text/javascript" src="../libs/helper-fns.js"></script>  <!-- helper-fns is a library for doing generec web work like URL param managment -->
+
+<!--shared css for tgw rendering -->
+<link rel="stylesheet" href="../style/tgw.css">
+
+<!-- tgw wrapper!  -->
+<script type="text/javascript" src="../libs/tgw.js"></script>      <!-- tgw is the main lib for all wrappers!        -->
+
+<!--  code editor -  uses the ace code editor, learn more here: https://ace.c9.io/ 
+<script src="./code_editor/src-min-noconflict/ace.js"></script>
+ -end code editor-
+-->
+
+<title>Trensant Graphics Wrapper Gallery</title>
+
+<style>
+body {
+	background-color : #fefefe;
+}
+/* chartContainerDivCss controls the div holding an entire chart entry */
+.chartContainerDivCss {  
+	padding:				5px;
+	height: 				350px;
+}
+
+/* this is the 'inner' container bix which has the title and the chart */
+.chartSubContainerDivCss {
+	border: 1px solid grey;
+	border-radius: 8px;
+	height: 100%;
+	width: 100%;
+}
+
+/* chartTItleDivCss controls the Title text area above the chart */
+.chartTitleDivCss {
+	padding-left:5%;
+}
+
+/* chartImageDivCss controls the chart display area */
+.chartImageDivCss {	
+	background-size:  		contain;
+	background-position :	center;
+	background-repeat:		no-repeat;
+	height: 80%;
+	width: 100%;
+}
+
+.sectionHeaderCss {
+
+}
+.galleryContainerCss {
+
+}
+/* experimental iframe based thumbnails */
+.thumbnail {
+	position: relative;
+	-ms-zoom: 0.25;
+	-moz-transform: scale(0.25);
+	-moz-transform-origin: 0 0;
+	-o-transform: scale(0.25);
+	-o-transform-origin: 0 0;
+	-webkit-transform: scale(0.25);
+	-webkit-transform-origin: 0 0;
+	border-radius: 5px;
+	border :1px solid black;
+}
+.thumbnail iframe {
+	  width: 1440px;
+	  height: 900px;
+}
+.thumbnail:after {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
+.thumbnail-container {
+	  width:  calc(900px * 0.25);
+	  height: calc(900px * 0.25);
+	  display: inline-block;
+	  overflow: hidden;
+	  position: relative;
+}
+/* end experimental live thumbanils */
+</style>
+</head>
+<!--
+
+Gallery Entries - simple form, inline tiled.
+Title
+[ image frame]
+
+
+-->
+<body>
+<div class="container">
+
+<h1>TGW Gallery</h1>
+<p>Welcome to the TGW (Trensant Graphics Wrapper) gallery page.  tgw.js wraps several different charting and graphics libraries with a common api for quick and dirty access to charts with a relatively common api.  Click on any chart below to open in an interactive editor to play around with the code.</p>
+<br>
+Each chart library is divided according to which core library was used to generate the chart.
+<br>
+<!--
+<div class="thumbnail-container"><div class="thumbnail" onclick="console.log(this.id)" id="1"> <iframe src="./tgRowWords.html"      ></iframe> </div></div>
+<div class="thumbnail-container"><div class="thumbnail" onclick="console.log(this.id)" id="2"> <iframe src="./d3TreeMap.html"       ></iframe> </div></div>
+<div class="thumbnail-container"><div class="thumbnail" onclick="console.log(this.id)" id="3"> <iframe src="./simpleCodeStart.html" ></iframe> </div></div>
+-->
+</div>
+
+<div class='container'>
+<h3  class="sectionHeaderCss    col-md-12">TGW (native charts)</h3>
+<div class="galleryContainerCss col-md-12" id="tgwGalleryDiv"></div>
+<br>
+
+<h3  class="sectionHeaderCss    col-md-12">D3</h3>
+<div class="galleryContainerCss col-md-12" id="d3GalleryDiv"  ></div>
+<br>
+
+<h3 class="sectionHeaderCss     col-md-12">Google Charts</h3>
+<div class="galleryContainerCss col-md-12" id="googleChartsGalleryDiv"  ></div>
+<br>
+
+<h3 class="sectionHeaderCss     col-md-12">jqWordCloud</h3>
+<div class="galleryContainerCss col-md-12" id="jqWordCloudGalleryDiv"  ></div>
+<br>
+</div>
+
+</div>
+
+<script>
+
+	//==========================================================================================
+	/* this function adds an entry to our Table of contents.  
+		The params are used as follow:
+		title  		// this appears on this page as the title (e.g. "gglPieChart")
+		imageURL    // this is a static image of the chart
+
+		urlTitle    // this is the title that is passed in to the chart example stand alone page as a URL param
+		urlDesc    	// this is the description that passed to the chart example stand alone page as a URL param
+		urlSrc		// this is the path to the file that contains the stand-alone chart load.
+	*/
+	function makeGalleryEntry (title,imageURL,urlTitle,urlDesc,urlSrc) {
+		var s = "",j="";
+		//("#imgDiv").css({"background-size":"contain","background-position":"center","background-repeat":"no-repeat","background-image":'url(\"'+imgPath+'\")'})
+		s+= "<div class='col-md-3 chartContainerDivCss' >";
+		j+= "<div class='chartSubContainerDivCss'> <h3  class='chartTitleDivCss' >"+title+"</h3>";
+		j+=	"<div class='chartImageDivCss' style='background-image:url(\""+imageURL+"\")'></div></div>";
+		s+= hf.makeLink( j ,"./live_edit.html?src="+encodeURIComponent(urlSrc)+"&titleText="+encodeURIComponent(urlTitle)+"&descText="+encodeURIComponent(urlDesc), true);
+		s+= "</div>";
+		return s;
+	}
+
+	//==========================================================================================
+	/* this function adds an item to a specific gallery container
+	*/
+	function addEntry(container_id, title, imageURL, urlTitle, urlDesc, urlSrc) {
+		var i = document.getElementById(container_id);
+		var entry = document.createElement("div");
+		entry.innerHTML = makeGalleryEntry(title, imageURL, urlTitle, urlDesc, urlSrc);
+		i.appendChild(entry);
+	}
+	
+	//==========================================================================================
+	// to add charts use addEntry()
+	// addEntry("tgwGalleryDiv", Chart Title", "path-to-img", "live-edit-page-title", "live-edit-page-desription", "live-edit-standalone-code");
+
+
+	// tgw charts
+	addEntry("tgwGalleryDiv","Row Word Cloud","./d3chord.png","d3Chord","d3Chord creates a chord chart using the wrapped d3 graphics lib","tgRowWords.html");
+
+	// d3 charts
+	addEntry("d3GalleryDiv"	,"Chord"		 ,"./d3chord.png","d3Chord","d3Chord creates a chord chart using the wrapped d3 graphics lib","tgRowWords.html");
+	
+	// google charts
+	addEntry("googleChartsGalleryDiv","Google Line Chart", "./d3chord.png","tgw.gglLineChart","Line chart accepts a line series...","googleLineChart.html");
+	addEntry("googleChartsGalleryDiv","Google Bar Chart", "./d3chord.png" ,"tgw.gglBarChart","Bar chart accepts a  series...","googleBarChart.html");
+
+	// plotly charts
+	
+
+
+</script>
+
+</body>

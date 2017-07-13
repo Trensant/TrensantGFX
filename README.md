@@ -1,8 +1,8 @@
-# trensantGFX (multi-lib html chart library wrapper)
+# TGW (multi-lib html chart library wrapper)
 
-trensantGFX is a client-side javascript library for rendering charts.  It wraps components of different charting libraries with a common api and handles loading.
+TGW (Trensant Graphics Wrapper) is a client-side javascript library for rendering charts.  It wraps components of different charting libraries with a common api and handles loading.
 
-The charting library uses charts from several well known libraries, but normalizes their input as noted in the Chart Data section. Not all libraries are fully wrapped, meaning that the trensantGFX libary provides wrappers only for the charts listed here, even if other charts exist in those libaries.   In some cases we wrap the same chart type from different sources.
+The charting library uses charts from several well known libraries, but normalizes their input as noted in the Chart Data section. Not all libraries are fully wrapped, meaning that the tgw libary provides wrappers only for the charts listed here, even if other charts exist in those libaries.   In some cases we wrap the same chart type from different sources.
 
 To use a chart from a particular source family note the prefix (e.g. ggl or d3 etc)
 
@@ -14,14 +14,15 @@ Being a client side rendering library trensantGFX only runs in a browser environ
 ```
 
 <!-- load base chart libraries -->
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> <!-- load google charts -->
 <script src="https://d3js.org/d3.v4.min.js"></script>  <!-- not compatible with d3.v3 or earlier  -->
 <script type="text/javascript" src="./libs/wordcloud2.js"></script>
+<script type="text/javascript" src="./libs/plotly.min.js"
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBwB-0FhqcR0eYbf4utsUNN02i8olM6ork" ></script>  <!-- google maps -->
 <!--- end base lib load -->
 
 <!-- load this library -->
-<script type="text/javascript" src="./trensantGFX.js"></script>      <!-- TrensantGFX is the main lib for all wrappers                                -->
+<script type="text/javascript" src="./tgw.js"></script>      <!-- tgw is the main lib for all wrappers                                -->
 
 
 <body>
@@ -65,23 +66,24 @@ All calls are prefixed with a prefix identifying the library name:
 
 | Base Library | Prefix | Example                        |
 |--------------|--------|--------------------------------|
-| google       | ggl    | trensantGFX.gglDrawPieChart()  |
-| D3           | d3     | trensantGFX.d3DrawTreeMap()    |
-| trensant     | tg     | trensantGFX.tgPrettyPrint()    |
-| jqcloud      | jwc    | trensantGFX.jqWordCloud()      |
+| google       | ggl    | tgw.gglDrawPieChart()  		 |
+| D3           | d3     | tgw.d3DrawTreeMap()    		 |
+| trensant     | tg     | tgw.tgPrettyPrint()     		 |
+| jqcloud      | jwc    | tgw.jqWordCloud()      		 |
+| plotly       | pty    | tgw.ptyPieChart()		 		 |
 
 The following charts are included trensantGFX:
 
 
 | chart type 			| input-form  | source-libraries | notes                                |
 |-----------------------|-------------|------------------|--------------------------------------|  
-| prettyPrint           | json        | trensantGFX      | prints any object as pretty printed  |
-| rowWordCloud          | dict        | trensantGFX      | creates a row-word cloud             |
+| prettyPrint           | json        | tgw      | prints any object as pretty printed  |
+| rowWordCloud          | dict        | tgw      | creates a row-word cloud             |
 | bar		 			| matrix	  | 				 |   |                                  
 | line 		 			| matrix	  | google-charts    |   |
 | pie  		  			| matrix      | google-charts    |   |
 | word cloud 		 	| matrix  	  | jqcloud, D3 	 |   |
-| magic quadrant    	| matrix      | trensantGFX      |   |
+| magic quadrant    	| matrix      | tgw      |   |
 | zoomable treemap 	    | tree        | D3               |   |
 | zoomable sunburst     | tree        | D3               |   |
 | basic treemap     	| matrix      | google-charts    |   |
@@ -107,7 +109,6 @@ This frees the developer from maintaining library load states accross the variou
 
 
 ## License
-
-trensantGFX is a licensed under the BSD 2-clause license.
+tgw.js is a licensed under the BSD 2-clause license.
 See the accompanying License.txt file.
 
