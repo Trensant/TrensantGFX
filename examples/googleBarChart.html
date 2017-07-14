@@ -28,9 +28,10 @@ body {
 <body>
 <div class="chartCSS" id="_chart"></div>
 <script>
+  google.charts.load('current', {'packages':['table','corechart','geochart','line']});
+  google.charts.setOnLoadCallback(function(){gAvail["table"]=true; gAvail["pie"]=true; gAvail["geochart"]=true; });
 
-
-
+  function mainArea() {
   var barChartData =
     [ 
     ['x-axis','series0','series2','series3'],
@@ -43,7 +44,8 @@ body {
 
   //render the chart
   tgw.gglDrawBarChart(barChartData,"_chart",barChartOpts);
-
+}
+  tgw.repeatUntil (tgw.gglChartsLoaded , mainArea,null, 75, 35, function(r,c){if (r==false) console.log('chart load error')});
 </script>
 
 </body>
