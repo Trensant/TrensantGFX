@@ -3,6 +3,7 @@
 <head>
 
 <script src="../libs/jquery.3.2.1.min.js"></script>                <!-- jquery is used for DOM stuff  -->
+<script src="../libs/d3.v4.min.js"></script>
 
 <!-- css for tgw -->
 <link rel="stylesheet"        href="../style/tgw.css">
@@ -26,20 +27,15 @@ body {
 <body>
 <div class="chartCSS" id="_chart"></div>
 <script>
+    var chordSampleData = {matrix : [
+        [0, 0, 1000, 1000],
+        [0, 0, 1000, 1000],
+        [1000, 1000, 0, 1000],
+        [1000, 1000, 1000, 0]
+      ], groups: ["A", "B", "C", "D"]}
 
-
-  var lineChartData =
-    [ 
-    ['x-axis','series0','series2','series3'],
-      [ 0,23,34,45],
-      [ 10,34,45,63],
-      [ 20,16,38,99],
-      [ 30,31,36,32]
-      ];
-    var lineChartOpts = {};
-
-  //render the chart
-  tgw.gglDrawLineChart(lineChartData,"_chart",lineChartOpts);
+      //render the chart
+      tgw.d3Chord(chordSampleData, "_chart", {svgWidth: 500, svgHeight: 500});
 
 </script>
 

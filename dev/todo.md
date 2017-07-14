@@ -17,6 +17,7 @@ Welcome to the TGW todo list.
 ** minimal examples
 ** gallery
 ** live code editor page
+*** support side by side via sideBySide=true  // can use boostrap with divs or hide divs
 
 * Naming conventions across charts
 ** onclick()
