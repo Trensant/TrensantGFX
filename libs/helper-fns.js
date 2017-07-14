@@ -407,7 +407,41 @@
         hf.addHeadStyle( decodeURIComponent(hf.getCookie('hfstyle')));
     }
     
+    //==================================================
+    hf.getFile = function (url, type, callback) {
+        var xhr = new XMLHttpRequest();
+        xhr.onload = function () { callback(this.responseText);};
+        xhr.open(type, url);
+        xhr.send();
+    };
+
+    hf.copyToClipboard = function(data) {
+        /*
+        var temp = document.createElement("input");
+        var b = document.getElementsByTagName("body")[0];
+        b.appendChild(temp);
+        
+        temp.innerText = data;
+        temp.select();
+        document.execCommand("copy");
+        temp.remove();
+        */
+                var temp = $("<input>");
+        $("body").append(temp);
+        temp.val(data).select();
+        
+        //var temp = document.createElement("input");
+        //var b = document.getElementsByTagName("body")[0];
+        //b.appendChild(temp);
+        //temp.innerText = data;
+        temp.select();
+        document.execCommand("copy");
+        temp.remove();
+    }
     
+    hf.version = function() {
+        return [1,1,0];
+    }
     //start timer for simple page timing stats
     hf.startTimer("");
     

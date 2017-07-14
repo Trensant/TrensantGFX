@@ -1,0 +1,52 @@
+<!doctype HTML>
+<html>
+<head>
+
+<script src="../libs/jquery.3.2.1.min.js"></script>                <!-- jquery is used for DOM stuff  -->
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>  <!-- google charts loader, note there is no offline version -->
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>              <!-- as of 20170620 Google says it needs this for maps      -->
+
+<!-- css for tgw -->
+<link rel="stylesheet"        href="../style/tgw.css">
+
+<!-- js  -->
+<script type="text/javascript" src="../libs/tgw.js"></script>      <!-- TrensantGFX is the main lib for all wrappers!                               -->
+
+<style> 
+body {
+  height: 100%;  
+  width : 100%;
+}
+.chartCSS {
+	height : 100%;
+	width  : 100%;
+}
+</style>
+
+</head>
+
+<body>
+<div class="chartCSS" id="_chart"></div>
+<script>
+  google.charts.load('current', {'packages':['table','corechart','geochart','line']});
+  google.charts.setOnLoadCallback(function(){gAvail["table"]=true; gAvail["pie"]=true; gAvail["geochart"]=true; });
+
+  function mainArea() {
+  var barChartData =
+    [ 
+    ['x-axis','series0','series2','series3'],
+      [ 0,23,34,45],
+      [ 10,34,45,63],
+      [ 20,16,38,99],
+      [ 30,31,36,32]
+      ];
+    var barChartOpts = {};
+
+  //render the chart
+  tgw.gglDrawBarChart(barChartData,"_chart",barChartOpts);
+}
+  tgw.repeatUntil (tgw.gglChartsLoaded , mainArea,null, 75, 35, function(r,c){if (r==false) console.log('chart load error')});
+</script>
+
+</body>
+</html>

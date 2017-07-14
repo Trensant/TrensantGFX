@@ -3,76 +3,95 @@
 <!---
 	Simple stand alone code editor for graphics demos.
 
+	Works offline if full repo has been cloned.
 	M A Chatterjee 2017-07-06
  -->
 <head>
-<!-- HTML header code for trensant-gfx demo. M A Chatterjee 20170525 -->
-<link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'><meta charset="utf-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<!-- jquery -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>     <!-- jquery is used for DOM stuff  -->
-
-<!-- bootstrap is used for div management -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>  <!-- not part of graphics library just here for div and layour mgmt -->
-
-
-<script src="../libs/srcdoc-polyfill.js"></script>  <!-- for setting the iframe attributes                        -->
-<script src="../libs/helper-fns.js"></script>	    <!-- misc hacking support like reading cookies, URLs, number scaling -->
-
+<!-- these libaries are for setting up the code editor and loading on this page nothing to do with the tgw.js lib            -->
+<script src="../libs/jquery.3.2.1.min.js"></script>     <!-- jquery is used for DOM stuff                                    -->
+<script src="../libs/srcdoc-polyfill.js"></script>      <!-- for setting the iframe attributes and content                   -->
+<script src="../libs/helper-fns.js"></script>	        <!-- misc hacking support like reading cookies, URLs, number scaling -->
 <script src="../code_editor/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>  <!-- we're using the ace code editor : learn more here: https://ace.c9.io/   -->
 
 <style>
 body {
 	width: 80%;
-	margin-left:  5%;
-	margin-right: 5%;
+	margin: 5% auto;
+	margin-top:20px;
+	font-family : sans-serif;
 }
 
 button {
 	border-radius: 8px;
+	font-size: 13pt;
+}
+
+#editorContainer{
+	padding-top:0px;
+	height: 400px;
+	vertical-align: top;
+}
+#targetFrameContainer {
+	height: 800px;
+	
 }
 /* editor control css */
 #editor { 
+	margin-top: 0px;
 	padding-top: 8px;
     font-size: 11pt;
     font-family: "Courier New", Courier;
-
-    height: 400px;
+    height: 90%;
     width : 100%;
-
-    border-radius: 10px;
+    border-radius: 8;
 }
 /* end of code editor */
 
 /* this controls the size and other parameters of the iframe container where the code is rendered*/
 .targetFrameCss {
 	width: 100%;
-	height: 800px;
+	height: 100%;
 	border: 1px solid gray;
-	border-radius: 10px;
+	border-radius: 8px;
+	overflow-x: none;
+	overflow-y: none;
 }
 
 </style>
 
-<title>TrensantGFX</title>
+<title>Trensant TGW Live Edit</title>
 </head>
 <body>
-<h2>TGFX Demo Pages</h2>
+<h2>TGW Demo Pages</h2>
 <p>Use the code editor to experiment with chart.</p>
+<h2  id="titleId"></h2>  <!-- dynamically loaded title area   -->
+<div id="descId"> </div> <!-- dynamically loaded content area -->
 <br>
-<h2 id="titleId"></h2> <!-- dynamically loaded title area-->
-<div id="descId">
-	Try out the graphics library code in the editor below and hit submit to see the result in the frame below.
+<div id="editorContainer">
+	<div id="editor"></div>  <!-- code editor text area           -->
+	<br>
+	<button id="submitCodeBtn" onclick="submitCode()">Run Code!</button>&nbsp;&nbsp;<button id="copyToClipBoard" onclick="hf.copyToClipboard(editor.getValue())">Copy Code to Clipboard</button>
+	<br>
+</div><br id="mid">
+<div id="targetFrameContainer">
+	<iframe class="targetFrameCss" id="targetFrameId"></iframe> <!-- target frame to run code in -->
 </div>
-<br>
-<div id="editor"></div>
-<button id="submitCodeBtn" onclick="submitCode()">Run Code!</button>&nbsp;<button id="copyToClipBoard" onclick="copyToClipboard(editor.getValue())">Copy Code to Clipboard</button>
-<br><br>
-<iframe class="targetFrameCss" id="targetFrameId"></iframe>
-
 <script type="text/javascript">
+
+    if (hf.getURLParam("sideBySide","false") == "true") {
+    	console.log("sideBySide");
+    	document.getElementById("editorContainer").style.width= "49%";
+    	document.getElementById("targetFrameContainer").style.width = "49%";
+    	document.getElementById("editorContainer").style.height= "700px";
+    	document.getElementById("targetFrameContainer").style.height="700px";
+    	document.getElementById("editorContainer").style.display = "inline-block";
+    	document.getElementById("targetFrameContainer").style.display = "inline-block";
+    	document.getElementById("mid").remove();
+    }
+
 	var gSourceCode = "";
 	gSourceCode = "<!doctype html>\n<html>\n<body>\nDefault <b>world</b>\n<div id='fpp'></div>\n<script>document.getElementById('fpp').innerHTML = new Date();<\/script>\n</body>\n</html>\n";
 
@@ -81,41 +100,23 @@ button {
     editor.getSession().setMode("ace/mode/html");
     editor.setOption("tabSize", 4);
     editor.$blockScrolling = Infinity;
-    editor.setValue(gSourceCode);
+    editor.setValue(gSourceCode); //default source code load if can't load data from file
     editor.clearSelection();
+
     
    	function submitCode() {
-		var s = editor.getValue()//"<html><body>Hello, <b>world</b>. "+String(new Date())+"</body></html>"	
+		var s = editor.getValue();//"<html><body>Hello, <b>world</b>. "+String(new Date())+"</body></html>"	
 		srcDoc.set(document.getElementById("targetFrameId"),s);  // this loads the code from our editor in to the iframe.  The iframe is a complete stand-alone html page.
 	}
-	// =====================================
-	// primitive copy a string to the clipboard function
-	function copyToClipboard(data) {  
-		var $temp = $("<input>");
-		$("body").append($temp);
-		$temp.val(data).select();
-		document.execCommand("copy");
-		$temp.remove();
-	}
+
 	// =======================================
-	// load file 
-	var src = hf.getURLParam("src","./simpleTestLoad.html");
+	// load source file 
+	var src = hf.getURLParam("src","./simpleTestLoad.html");  // default file is used if no src file is passed in as a URL parameter
+	hf.getFile(src, "GET", function(d){editor.setValue(d); editor.clearSelection(); submitCode();}); // load the file in to the editor
 
-	var xhrRequest = function (url, type, callback) {
-		var xhr = new XMLHttpRequest();
-		xhr.onload = function () {
-		callback(this.responseText);
-		};
-		xhr.open(type, url);
-		xhr.send();
-	};
-
-	xhrRequest(src, "GET", function(d){editor.setValue(d); editor.clearSelection(); submitCode();});
 	// set up title and description
-	document.getElementById("titleId").innerHTML = decodeURIComponent(hf.getURLParam("titleText","Trensant Gfx Tester"));
+	document.getElementById("titleId").innerHTML = decodeURIComponent(hf.getURLParam("titleText","Trensant TGW Live Demo Tester"));
 	document.getElementById("descId").innerHTML  = decodeURIComponent(hf.getURLParam("descText","Try out the graphics library code in the editor below and hit submit to see the result in the frame below."));
-
-
 </script>
 
 </body>
