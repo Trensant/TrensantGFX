@@ -1,0 +1,218 @@
+<!doctype HTML>
+<html>
+<head>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>  <!-- google charts loader, note there is no offline version -->
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>              <!-- as of 20170620 Google says it needs this for maps      -->
+<script type="text/javascript" src="../libs/jquery.3.2.1.min.js"></script>                <!-- jquery is used for DOM stuff  -->
+
+<script type="text/javascript" src="../libs/wordcloud2.js"></script>
+
+<!-- css for tgw -->
+<link rel="stylesheet"        href="../style/tgw.css">
+
+<!-- js  -->
+<script type="text/javascript" src="../libs/tgw.js"></script>      <!-- TrensantGFX is the main lib for all wrappers!                               -->
+
+<style> 
+body {
+  height: 100%;  
+  width : 100%;
+}
+.chartCSS {
+	height : 100%;
+	width  : 100%;
+}
+</style>
+
+</head>
+
+<body>
+<div class="chartCSS" id="_chart"></div>
+<script>
+
+ var wordCloudSampleData = [
+  {
+    "word": "giving",
+    "frequency": 1
+  },
+  {
+    "word": "stock",
+    "frequency": 1
+  },
+  {
+    "word": "flynn",
+    "frequency": 1
+  },
+  {
+    "word": "investigation",
+    "frequency": 1
+  },
+  {
+    "word": "day",
+    "frequency": 1
+  },
+  {
+    "word": "biggest",
+    "frequency": 1
+  },
+  {
+    "word": "dow",
+    "frequency": 1
+  },
+  {
+    "word": "crisis",
+    "frequency": 1
+  },
+  {
+    "word": "investors",
+    "frequency": 1
+  },
+  {
+    "word": "trump",
+    "frequency": 1
+  },
+  {
+    "word": "president",
+    "frequency": 1
+  },
+  {
+    "word": "slump",
+    "frequency": 1
+  },
+  {
+    "word": "could",
+    "frequency": 1
+  },
+  {
+    "word": "jones",
+    "frequency": 1
+  },
+  {
+    "word": "donald",
+    "frequency": 1
+  },
+  {
+    "word": "security",
+    "frequency": 1
+  },
+  {
+    "word": "former",
+    "frequency": 1
+  },
+  {
+    "word": "wednesday",
+    "frequency": 1
+  },
+  {
+    "word": "industrial",
+    "frequency": 1
+  },
+  {
+    "word": "average",
+    "frequency": 1
+  },
+  {
+    "word": "business",
+    "frequency": 1
+  },
+  {
+    "word": "asked",
+    "frequency": 1
+  },
+  {
+    "word": "single",
+    "frequency": 1
+  },
+  {
+    "word": "political",
+    "frequency": 1
+  },
+  {
+    "word": "hindered",
+    "frequency": 1
+  },
+  {
+    "word": "worried",
+    "frequency": 1
+  },
+  {
+    "word": "end",
+    "frequency": 1
+  },
+  {
+    "word": "national",
+    "frequency": 1
+  },
+  {
+    "word": "pro",
+    "frequency": 1
+  },
+  {
+    "word": "adviser",
+    "frequency": 1
+  },
+  {
+    "word": "points",
+    "frequency": 1
+  },
+  {
+    "word": "street",
+    "frequency": 1
+  },
+  {
+    "word": "agenda",
+    "frequency": 1
+  },
+  {
+    "word": "eight",
+    "frequency": 1
+  },
+  {
+    "word": "months",
+    "frequency": 1
+  },
+  {
+    "word": "michael",
+    "frequency": 1
+  },
+  {
+    "word": "knocking",
+    "frequency": 1
+  },
+  {
+    "word": "rattled",
+    "frequency": 1
+  },
+  {
+    "word": "wall",
+    "frequency": 1
+  },
+  {
+    "word": "allegations",
+    "frequency": 1
+  },
+  {
+    "word": "370",
+    "frequency": 1
+  },
+  {
+    "word": "fbi",
+    "frequency": 1
+  },
+  {
+    "word": "market",
+    "frequency": 1
+  },
+  {
+    "word": "fallout",
+    "frequency": 1
+  }
+]
+
+
+tgw.wordCloud2js (wordCloudSampleData,"_chart", {});
+
+</script>
+
+</body>
+</html>

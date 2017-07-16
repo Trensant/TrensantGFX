@@ -1,0 +1,73 @@
+<!doctype HTML>
+<html>
+<head>
+
+<script src="../libs/jquery.3.2.1.min.js"></script>                <!-- jquery is used for DOM stuff  -->
+<script src="../libs/d3.v4.min.js"></script>
+
+<!-- css for tgw -->
+<link rel="stylesheet"        href="../style/tgw.css">
+
+<!-- js  -->
+<script type="text/javascript" src="../libs/tgw.js"></script>      <!-- TrensantGFX is the main lib for all wrappers!                               -->
+
+<style> 
+body {
+  height: 100%;  
+  width : 100%;
+}
+.chartCSS {
+	height : 100%;
+	width  : 100%;
+}
+</style>
+
+</head>
+
+<body>
+<div class="chartCSS" id="_chart"></div>
+<script>
+       
+    var bubbleSampleData = {name: "flare",
+      children: [
+        {
+          name: "analytics",
+          children: [
+            {
+              name: "cluster",
+              children: [
+                {name: "AgglomerativeCluster", size: 3938},
+                {name: "CommunityStructure", size: 3812},
+                {name: "HierarchicalCluster", size: 6714},
+                {name: "MergeEdge", size: 743}
+              ]
+            },
+            {
+              name: "graph",
+              children: [
+                {name: "BetweennessCentrality", size: 3534},
+                {name: "LinkDistance", size: 5731},
+                {name: "MaxFlowMinCut", size: 7840},
+                {name: "ShortestPaths", size: 5914},
+                {name: "SpanningTree", size: 3416}
+              ]
+            },
+            {
+              name: "optimization",
+              children: [
+                {name: "AspectRatioBanker", size: 7074}
+              ]
+            }
+          ]
+        }
+      ]
+    }
+
+
+      //render the chart
+      tgw.d3Bubble(bubbleSampleData, "_chart", {svgHeight: 500, svgWidth: 500, id: "name", value: "size"});
+
+</script>
+
+</body>
+</html>

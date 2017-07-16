@@ -36,7 +36,6 @@ button {
 }
 #targetFrameContainer {
 	height: 800px;
-	
 }
 /* editor control css */
 #editor { 
@@ -59,7 +58,6 @@ button {
 	overflow-x: none;
 	overflow-y: none;
 }
-
 </style>
 
 <title>Trensant TGW Live Edit</title>
@@ -75,14 +73,14 @@ button {
 	<br>
 	<button id="submitCodeBtn" onclick="submitCode()">Run Code!</button>&nbsp;&nbsp;<button id="copyToClipBoard" onclick="hf.copyToClipboard(editor.getValue())">Copy Code to Clipboard</button>
 	<br>
-</div><br id="mid">
+</div>
+<br id="mid">
 <div id="targetFrameContainer">
 	<iframe class="targetFrameCss" id="targetFrameId"></iframe> <!-- target frame to run code in -->
 </div>
 <script type="text/javascript">
 
     if (hf.getURLParam("sideBySide","false") == "true") {
-    	console.log("sideBySide");
     	document.getElementById("editorContainer").style.width= "49%";
     	document.getElementById("targetFrameContainer").style.width = "49%";
     	document.getElementById("editorContainer").style.height= "700px";
@@ -102,10 +100,9 @@ button {
     editor.$blockScrolling = Infinity;
     editor.setValue(gSourceCode); //default source code load if can't load data from file
     editor.clearSelection();
-
     
    	function submitCode() {
-		var s = editor.getValue();//"<html><body>Hello, <b>world</b>. "+String(new Date())+"</body></html>"	
+		var s = editor.getValue();
 		srcDoc.set(document.getElementById("targetFrameId"),s);  // this loads the code from our editor in to the iframe.  The iframe is a complete stand-alone html page.
 	}
 

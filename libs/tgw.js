@@ -1533,6 +1533,38 @@ tgw.d3Chord = function(data, id, options) {
       return default_configuration
     }
 
+}
+//=========================================================================
+/* wordcloud2.js  renders a wordcloud to a canvas using the WordCloud2.js library
+*/
+tgw.wordCloud2js = function (data, div_id, opts) {
+	
+	var div 	= document.getElementById(div_id);
+
+	var canvas  = document.createElement("canvas");
+	div.appendChild(canvas);
+	canvas.height = div.offsetHeight;
+	canvas.width  = div.offsetWidth;
+	var wlist 	= data.map(function(a){return [a["word"],a["word"].length*2.2+4/*a["frequency"]*/];}).sort(function(a,b){return b[1]-a[1]}).splice(0,opts.maxWords); 
+
+	//console.log(wlist); //https://github.com/timdream/wordcloud2.js/blob/gh-pages/API.md
+	opts = {
+		"list" : wlist,
+		gridSize: Math.round(  Math.log(30+5-data.length)* canvas.width / 32),
+		//weightFactor: function (size) {	return Math.pow(size, 2.3) * $('#word-tab').width() / 1024;},
+		fontFamily: 'Lato',
+		//color: function (word, weight) {return (weight === 12) ? '#f02222' : '#c09292';	},
+		//rotateRatio: 0.5,
+		//rotationSteps: 2,
+		clearCanvas: true,
+		maxWords : 30,
+		origin: [canvas.width/2,canvas.height/3],
+		backgroundColor: '#fff'
 	}
-})(typeof tgw === 'undefined'? this['tgw']={}: hf);//(window.hf = window.hf || {});
+	
+
+	WordCloud(canvas, opts);//, clearCanvas: true,  );
+}
+
+})(typeof tgw === 'undefined'? this['tgw']={}: tgw);//(window.hf = window.hf || {});
 

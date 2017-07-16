@@ -80,8 +80,8 @@ Each chart library is divided according to which core library was used to genera
 <div class="galleryContainerCss col-md-12" id="googleChartsGalleryDiv"  ></div>
 <br>
 
-<h2 class="sectionHeaderCss     col-md-12">jqWordCloud</h2>
-<div class="galleryContainerCss col-md-12" id="jqWordCloudGalleryDiv"  ></div>
+<h2 class="sectionHeaderCss     col-md-12">WordCloud2.js</h2>
+<div class="galleryContainerCss col-md-12" id="wordCloud2GalleryDiv"  ></div>
 <br>
 </div>
 
@@ -127,18 +127,25 @@ Each chart library is divided according to which core library was used to genera
 
 	// tgw charts
 	addEntry("tgwGalleryDiv","Row Word Cloud","./tgwRowWordCloud.png","tgwRowWordCloud","tgRowWordCloud creates a word cloud as a series of words.  Words can be sorted by alpha, ralpha, or by size (up, down).","tgRowWords.html");
+	addEntry("tgwGalleryDiv","Pretty Print"  ,"./tgwPrettyPrint.png" ,"tgwPrettyPrint" ,"tgwPrettyPrint takes any js (JSON) object and pretty prints it the supplied div.","tgwPrettyPrint.html");
 
 	// d3 charts
-	addEntry("d3GalleryDiv"	,"Chord"		 		,"./d3chord.png","d3Chord","d3Chord creates a chord chart using the wrapped d3 graphics lib","d3Chord.html");
+	addEntry("d3GalleryDiv"	,"Chord Chart"		 	,"./d3chord.png","d3Chord","d3Chord creates a chord chart using the wrapped d3 graphics lib","d3Chord.html");
 	addEntry("d3GalleryDiv"	,"Zoomable Sunburst"	,"./d3ZoomableSunburst.png","d3ZoomableSunburst","d3ZoomableSunburst creates a chart using the wrapped d3 graphics lib","d3ZoomableSunburst.html");
+	addEntry("d3GalleryDiv"	,"Bubble Pack"	        ,"./d3BubbleChart.png","d3BubbleChart","d3BubbbleChart creates a chart using the wrapped d3 graphics lib","d3BubbleChart.html");
 	
 	// google charts
-	addEntry("googleChartsGalleryDiv","Google Line Chart", "./googleLineChart.png","tgw.gglLineChart","Line chart accepts a line series...","googleLineChart.html");
-	addEntry("googleChartsGalleryDiv","Google Bar Chart", "./googleBarChart.png","tgw.gglBarChart","Bar chart accepts a line series...","googleBarChart.html");
+	addEntry("googleChartsGalleryDiv","Line Chart",  "./googleLineChart.png"  ,"tgw.gglLineChart"  ,"Line chart accepts a line series...","googleLineChart.html");
+	addEntry("googleChartsGalleryDiv","Bar Chart",   "./googleBarChart.png"   ,"tgw.gglBarChart"   ,"Bar chart accepts a line series...","googleBarChart.html");
+	addEntry("googleChartsGalleryDiv","Pie Chart",   "./googlePieChart.png"   ,"tgw.gglPieChart"   ,"Pie chart accepts a data series of key - value pairs...","googlePieChart.html");
+	addEntry("googleChartsGalleryDiv","Sortable Table","./googleTableChart.png" ,"tgw.gglTableChart" ,"Table chart accepts a data series of key - value pairs...","googleTableChart.html");
+
 
 	// jqWordCloud
 
 	// wordcloud2.js
+	addEntry("wordCloud2GalleryDiv","WordCloud","./wordCloud2.png" ,"tgw.wordCloud2js" ,"wordCloud2 accepts an array of word - value pairs and renders them in a cloud format where the weight corresponds to word size","wordCloud2js.html");	
+
 
 	// plotly charts
 	
