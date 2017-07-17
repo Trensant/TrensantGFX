@@ -1163,7 +1163,7 @@ tgw.d3ChartsLoaded = function () {
 	 * svgHeight:: type: int or function, default: 600
 	 *
 	 */
-tgw.d3Chord = function(data, id, options) {
+  tgw.d3Chord = function(data, id, options) {
     var chordDefaultConfiguration = {
       svgWidth: tgw.containerDims(id).wid,
       svgHeight: tgw.containerDims(id).hgt
