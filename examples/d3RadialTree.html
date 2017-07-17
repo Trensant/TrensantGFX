@@ -28,11 +28,11 @@
 <div class="chartCSS" id="_chart"></div>
 <script>
 
-  var radialTreeSampleData = {name: "Current Article", children: [{name: "S&P500", children: [{name: "Apple", children: [{name: "MacBook"}, {name: "IPhone"}]}, {name: "Home Depot"}, {name: "Amgen"}, {name: "IBM"}]}]}
+  var radialTreeSampleData = {name: "Current Article", children: [{name: "DJIA", children: [{name: "Apple", children: [{name: "MacBook"}, {name: "IPhone"}]}, {name: "Home Depot"}, {name: "Chevron"}, {name: "IBM", children: [{name: "Watson", children: [{name: "Jeopardy"}, {name: "Trebeck"}]}, {name: "DOS"}]}]}, {name: "S&P500", children: [{name: "Pfizer", children: [{name: "Advil"}, {name: "Lyrica"}]}, {name: "Loews"}, {name: "Amgen"}, {name: "Kellogg", children: [{name: "Froot Loops"}, {name: "Apple Jacks"}, {name: "Pringles"}]}]}]}
 
 
   //render the chart
-  tgw.d3RadialTree(radialTreeSampleData, "_chart", {textClick: "mouseover", onClick: function () {d3.select(this).style("fill", "red")}, svgHeight: 600, svgWidth: 600});
+  tgw.d3RadialTree(radialTreeSampleData, "_chart", {textClick: "mouseover", onClick: function () {d3.select(this).style("fill", "red")}, svgHeight: 800, svgWidth: 800});
 
 </script>
 
