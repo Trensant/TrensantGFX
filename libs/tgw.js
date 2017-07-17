@@ -907,7 +907,7 @@ tgw.d3ChartsLoaded = function () {
     var width = typeof radialTreeConfiguration.svgWidth === "function" ? radialTreeConfiguration.svgWidth() : radialTreeConfiguration.svgWidth,
       height = typeof radialTreeConfiguration.svgHeight === "function" ? radialTreeConfiguration.svgHeight() : radialTreeConfiguration.svgHeight;
 
-    var diameter = Math.min(width, height) * 0.9 - 10;
+    var diameter = Math.min(width, height) * 0.9 - 75;
     var duration = radialTreeConfiguration.duration;
 
     var nodes, links;

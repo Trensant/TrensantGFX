@@ -434,7 +434,7 @@ drawBanner=false    				// supress or show the top Trensant Logo
 	div = "d3RadialTree";
     drawNewSectionDiv(div,{"name":"d3RadialTree", "chartSty": "height:400"});
 
-	var radialTreeSampleData = {name: "Current Article", children: [{name: "Dow Jones Index", children: [{name: "Apple", children: [{name: "MacBook"}, {name: "IPhone"}]},{name: "Home Depot"}, {name: "Amgen"}, {name: "IBM"}, {name: "Average"}]}, {name: "Wall Street", children: [{name: "American Express", children: [{name: "Credit Card"}, {name: "Debt"}, {name: "Freedom"}, {name: "Money"}, {name: "Payments"}, {name: "Freshman"}]},{name: "Bernie Madoff"}, {name: "Greed"}]}]}
+	var radialTreeSampleData = {name: "Current Article", children: [{name: "S&P500", children: [{name: "Apple", children: [{name: "MacBook"}, {name: "IPhone"}]}, {name: "Home Depot"}, {name: "Amgen"}, {name: "IBM"}]}]}
 
 	//emit description info
     $("#"+div+"_desc").html("radiale tree draws a radialtree");
@@ -443,7 +443,7 @@ drawBanner=false    				// supress or show the top Trensant Logo
     tgw.tgPrettyPrint(radialTreeSampleData, div+"_data")
 
     //render the chart
-      tgw.d3RadialTree(radialTreeSampleData, div+"_chart", {textClick: "mouseover", onClick: function () {d3.select(this).style("fill", "red")}, svgHeight: $('#'+div+"_chart").height()-50,svgWidth: $('#'+div+"_chart").width()-50});
+      tgw.d3RadialTree(radialTreeSampleData, div+"_chart", {textClick: "mouseover", onClick: function () {d3.select(this).style("fill", "red")}, svgHeight: $('#'+div+"_chart").height()-50, svgWidth: $('#'+div+"_chart").height()-50});
 
 //  ===================================================================================================
 	  div = "d3Chord";
