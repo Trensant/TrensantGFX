@@ -558,6 +558,21 @@ drawBanner=false    				// supress or show the top Trensant Logo
       tgw.d3Bubble(bubbleSampleData, div+"_chart", {svgHeight: $('#'+div+"_chart").height()-50,svgWidth:
 	  $('#'+div+"_chart").width()-50, id: "name", value: "size"});
 
+// ==============================================================================================
+
+	  div = "d3WordCloud";
+	  drawNewSectionDiv(div, {"name":"d3WordCloud", "chartSty":"height:400"})
+	  var wordCloudSampleData =  data_2 = [{value: "the", count: 64},{ value: "quick", count: 32}];
+
+      //emit description info
+      $("#"+div+"_desc").html("WordCloud");
+
+      //display sample data
+      tgw.tgPrettyPrint(wordCloudSampleData, div+"_data");
+
+      //render the chart
+      tgw.d3WordCloud(wordCloudSampleData, div+"_chart");
+
 	// end main area-----------------------------------------------------------------------------------
 	}// mainArea body
 

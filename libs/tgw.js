@@ -43,293 +43,332 @@
 (function (tgw, undefined) {
 
 //=====================================================================================================
-/* 
-	tgw.typeOf (data) returns a useful type info for any object, including dates etc
+  /*
+    tgw.typeOf (data) returns a useful type info for any object, including dates etc
 
-	examples: 
-		tgw.typeOf(23)  // returns "number"
-		tgw.typeOf({})  // returns "object"
-		tgw.typeOf([])  // returns "array"
-		tgw.typeOf(new Date()) // returns "date"
+    examples:
+      tgw.typeOf(23)  // returns "number"
+      tgw.typeOf({})  // returns "object"
+      tgw.typeOf([])  // returns "array"
+      tgw.typeOf(new Date()) // returns "date"
 
-*/
-tgw.typeOf = function (x)   {
-	return (typeof x == "undefined") ? "undefined" : (({}).toString.call(x).match(/\s([a-zA-Z]+)/)[1].toLowerCase());
-};
-var _to = tgw.typeOf;  //short hand used internally for typeof operations.
+  */
+  tgw.typeOf = function (x) {
+    return (typeof x == "undefined") ? "undefined" : (({}).toString.call(x).match(/\s([a-zA-Z]+)/)[1].toLowerCase());
+  };
+  var _to = tgw.typeOf;  //short hand used internally for typeof operations.
 
 //=====================================================================================================
-/* 
-	tgw.roundNum(x,numDigits)
+  /*
+    tgw.roundNum(x,numDigits)
 
-	round a number to specified sig digits.	 default is 2
-*/
-tgw.roundNum = function (x,numDigits) {
-	numDigits =  (_to(numDigits) == 'number') ? Math.pow(10,Math.round( numDigits)) : 100;
-	return Math.round (x*numDigits) / numDigits ;
-}
-var _round = tgw.roundNum;  // short hand used internally
+    round a number to specified sig digits.	 default is 2
+  */
+  tgw.roundNum = function (x, numDigits) {
+    numDigits = (_to(numDigits) == 'number') ? Math.pow(10, Math.round(numDigits)) : 100;
+    return Math.round(x * numDigits) / numDigits;
+  }
+  var _round = tgw.roundNum;  // short hand used internally
 
 //=====================================================================================================
 //constrain input x in between min, max, expects numeric input
-tgw.constrain = function (x,min,max) {
-    if (max < min) {a=min; min=max; max=a;}
-    if (x<=min)	{x=min;}
-    if (x>=max)	{x=max;}
+  tgw.constrain = function (x, min, max) {
+    if (max < min) {
+      a = min;
+      min = max;
+      max = a;
+    }
+    if (x <= min) {
+      x = min;
+    }
+    if (x >= max) {
+      x = max;
+    }
     return x;
-}
+  }
 //=====================================================================================================
-/*
- Map an input value z in its natural range in0...in1 to the output 
- space out0...out1 with optional clipping
- exp_scale allows sigmoidal warping to stretch input values contrained to a small range. (floating point scale factor)
+  /*
+   Map an input value z in its natural range in0...in1 to the output
+   space out0...out1 with optional clipping
+   exp_scale allows sigmoidal warping to stretch input values contrained to a small range. (floating point scale factor)
 
- example:
-  	trensant.mapScaleEXP(33,0,100,-100,100)  --> maps 33 with input range from 0 .. 100 in to the range -100,100 linearly ==> 
- */
-tgw.mapScaleEXP = function (z, in0, in1, out0, out1, clip, exp_scale) {
-    
-    clip = (typeof clip == 'undefined')?false:clip;
-    exp_scale = (typeof exp_scale !== 'number')?false:exp_scale;
-    if (in0==in1) {return z;}
+   example:
+      trensant.mapScaleEXP(33,0,100,-100,100)  --> maps 33 with input range from 0 .. 100 in to the range -100,100 linearly ==>
+   */
+  tgw.mapScaleEXP = function (z, in0, in1, out0, out1, clip, exp_scale) {
+
+    clip = (typeof clip == 'undefined') ? false : clip;
+    exp_scale = (typeof exp_scale !== 'number') ? false : exp_scale;
+    if (in0 == in1) {
+      return z;
+    }
     if (exp_scale) {
-        var y = ((z-((in1+in0) / 2.0))/(in1-in0))*exp_scale;
-        z = ((out1-out0)*(1/(1+Math.exp(-y))))+out0;
+      var y = ((z - ((in1 + in0) / 2.0)) / (in1 - in0)) * exp_scale;
+      z = ((out1 - out0) * (1 / (1 + Math.exp(-y)))) + out0;
     }
     else
-        z = (((z-in0)/(in1-in0))*(out1-out0))+out0;
-    if (clip!=false) 
-        z=tgw.constrain(z,out0,out1);
+      z = (((z - in0) / (in1 - in0)) * (out1 - out0)) + out0;
+    if (clip != false)
+      z = tgw.constrain(z, out0, out1);
     return z;
-}
-var _mapScale = tgw.mapScaleEXP; //short hand used internally
+  }
+  var _mapScale = tgw.mapScaleEXP; //short hand used internally
 
 
 //======================================
-/* 
-	tgw.containerDims(domID)
-	returns the height and width of a given HTML container 	
-	currently uses Jquery but may change this later.  This fn is used internally for default container widths/heights
-*/
-tgw.containerDims = function (domID) {
-	return { "wid": $('#'+domID).width(), "hgt" : $('#'+domID).height()}
-}
+  /*
+    tgw.containerDims(domID)
+    returns the height and width of a given HTML container
+    currently uses Jquery but may change this later.  This fn is used internally for default container widths/heights
+  */
+  tgw.containerDims = function (domID) {
+    return {"wid": $('#' + domID).width(), "hgt": $('#' + domID).height()}
+  }
 
-var _dims = tgw.containerDims;
+  var _dims = tgw.containerDims;
 
 
 //=====================================================================================================
-/* 	tgw.setIntervalX(callbackFn, delayBtwCalls, repetitions)
- 	set a javascript timer to only run a max of N repetions.  
-	// Note: Only works in browser not server side as it requires access to window object.
-	// also note that callback function is called with the interval number to be used for whatever purposes the callback likes
-*/ 
-tgw.setIntervalX = function(callback, delay, repetitions) {
+  /* 	tgw.setIntervalX(callbackFn, delayBtwCalls, repetitions)
+     set a javascript timer to only run a max of N repetions.
+    // Note: Only works in browser not server side as it requires access to window object.
+    // also note that callback function is called with the interval number to be used for whatever purposes the callback likes
+  */
+  tgw.setIntervalX = function (callback, delay, repetitions) {
     var x = 0;
     var intervalID = window.setInterval(function () {
 
-       callback(x);
+      callback(x);
 
-       if (++x >= repetitions) {
-           window.clearInterval(intervalID);
-       }
+      if (++x >= repetitions) {
+        window.clearInterval(intervalID);
+      }
     }, delay);
-}
+  }
 //=====================================================================================================
-/*
-	tgw.repeatUntil()
-	repeatUntil runs the supplied testFn every delay milliseconds up until a maxReps number of times.
-	if the test function returns true it runs the successFn and stops the iterations.
+  /*
+    tgw.repeatUntil()
+    repeatUntil runs the supplied testFn every delay milliseconds up until a maxReps number of times.
+    if the test function returns true it runs the successFn and stops the iterations.
 
-	After the last rep has been completed the lastFn is called with (with the last testFn result and
-	with the current iteration).  lastFn is optional.  failFn is optional
-	
-	Example:
-	tgw.repeatUntil(myLibsLoaded(), callMyChart(), null, 250, 10, null); // attempts to wait until mylib is loaded 10 times before giving up
-	
-*/ 
-tgw.repeatUntil = function(testFn, successFn, failFn, delay, maxReps, lastFn) {
-	var _count = 0;
-	var _max   = maxReps;
-	if (typeof testFn != "function")
-		return 'err';
-	if (typeof delay != "number")
-		delay = 250;  // 250ms
-	if (typeof maxReps != "number")
-		maxReps = 1; // run 1 time.
+    After the last rep has been completed the lastFn is called with (with the last testFn result and
+    with the current iteration).  lastFn is optional.  failFn is optional
 
-	var _testFn = testFn;
-	var _successFn 	= (typeof successFn == "function") ? successFn 	: function(){};
-	var _failFn 	= (typeof failFn 	== "function") ? failFn 	: function(){};
-	var _lastFn 	= (typeof lastFn 	== "function") ? lastFn 	: function(){};
+    Example:
+    tgw.repeatUntil(myLibsLoaded(), callMyChart(), null, 250, 10, null); // attempts to wait until mylib is loaded 10 times before giving up
 
-	var _f = function() {
-		var success = _testFn();
-		if (true== success) {
-			_successFn();
-			_lastFn(true,_count);
+  */
+  tgw.repeatUntil = function (testFn, successFn, failFn, delay, maxReps, lastFn) {
+    var _count = 0;
+    var _max = maxReps;
+    if (typeof testFn != "function")
+      return 'err';
+    if (typeof delay != "number")
+      delay = 250;  // 250ms
+    if (typeof maxReps != "number")
+      maxReps = 1; // run 1 time.
 
-		}
-		else {
-			_failFn();
-			if ( _count >= maxReps) {
-				_lastFn(success, _count);
-			}
-			else {
-				_count++;
-				window.setTimeout(_f,delay)			
-			}
-		}
+    var _testFn = testFn;
+    var _successFn = (typeof successFn == "function") ? successFn : function () {
+    };
+    var _failFn = (typeof failFn == "function") ? failFn : function () {
+    };
+    var _lastFn = (typeof lastFn == "function") ? lastFn : function () {
+    };
 
-	}
-	_f();
-}
+    var _f = function () {
+      var success = _testFn();
+      if (true == success) {
+        _successFn();
+        _lastFn(true, _count);
+
+      }
+      else {
+        _failFn();
+        if (_count >= maxReps) {
+          _lastFn(success, _count);
+        }
+        else {
+          _count++;
+          window.setTimeout(_f, delay)
+        }
+      }
+
+    }
+    _f();
+  }
 //=====================================================================================================
 //=====================================================================================================
 // BEGIN Graphics Wrapper Functions
 
 //=====================================================================================================
 //=====================================================================================================
-/*
-	tgw.tgPrettyPrint (data, domID, opts)
-		prettyPrint a Javscript object 
-		this is a "native" graphics call in that it doesn't wrap another charting library
+  /*
+    tgw.tgPrettyPrint (data, domID, opts)
+      prettyPrint a Javscript object
+      this is a "native" graphics call in that it doesn't wrap another charting library
 
-	example usage:
-		tgw.tgPrettyPrint({"foo":123,"bar":345,"that":[1,2,3,4,5]}, "myDomId");
- */
-tgw.tgPrettyPrint = function (data, domID, opts) {
-	var i,h, json = data;
+    example usage:
+      tgw.tgPrettyPrint({"foo":123,"bar":345,"that":[1,2,3,4,5]}, "myDomId");
+   */
+  tgw.tgPrettyPrint = function (data, domID, opts) {
+    var i, h, json = data;
 
-	var dopts = {	   		// default options
-		"tag"   : "pre",  	// tag is the html element type to pretty print into
-		"class" : "",     	// css class(es)  e.g. "class1 class2" to be applied to the whole container
-		"style" : "border:none"  		// style as line string e.g. "color:red; font-size:#fe1" to be applied to whole container
-	};
+    var dopts = {	   		// default options
+      "tag": "pre",  	// tag is the html element type to pretty print into
+      "class": "",     	// css class(es)  e.g. "class1 class2" to be applied to the whole container
+      "style": "border:none"  		// style as line string e.g. "color:red; font-size:#fe1" to be applied to whole container
+    };
 
-	if (_to(opts) == "object")
-		for (i in opts)
-			dopts[i] = opts[i];
+    if (_to(opts) == "object")
+      for (i in opts)
+        dopts[i] = opts[i];
 
     var f = function (json) {
+      json = JSON.stringify(json, undefined, 2);
+      if (typeof json != 'string') {
         json = JSON.stringify(json, undefined, 2);
-        if (typeof json != 'string') {
-             json = JSON.stringify(json, undefined, 2);
+      }
+      json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+        var sty = 'color:red';
+        if (/^"/.test(match)) {
+          if (/:$/.test(match)) {
+            sty = 'color:blue';
+          } else {
+            sty = 'color:green';
+          }
+        } else if (/true|false/.test(match)) {
+          sty = 'magenta';
+        } else if (/null/.test(match)) {
+          sty = 'darkgrey';
         }
-        json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
-            var sty = 'color:red';
-            if (/^"/.test(match)) {
-                if (/:$/.test(match)) {
-                    sty = 'color:blue';
-                } else {
-                    sty = 'color:green';
-                }
-            } else if (/true|false/.test(match)) {
-                sty = 'magenta';
-            } else if (/null/.test(match)) {
-                sty = 'darkgrey';
-            }
-            return '<span style="' + sty + '">' + match + '</span>';
-        });
+        return '<span style="' + sty + '">' + match + '</span>';
+      });
     }
-    var c = dopts["class"] == "" ? "" : ' class="'+dopts["class"]+'" ';
-    var s = dopts["style"] == "" ? "" : ' style="'+dopts["style"]+'" ';
-    h = "<"+dopts["tag"]+c+s+" >"+f(json)+"</"+dopts["tag"]+">";
+    var c = dopts["class"] == "" ? "" : ' class="' + dopts["class"] + '" ';
+    var s = dopts["style"] == "" ? "" : ' style="' + dopts["style"] + '" ';
+    h = "<" + dopts["tag"] + c + s + " >" + f(json) + "</" + dopts["tag"] + ">";
     document.getElementById(domID).innerHTML = h;
-	return document.getElementById(domID);
-}
+    return document.getElementById(domID);
+  }
 
 //=====================================================================================================
 // drawRowWordCloudBase draws a word cloud with words in rows.  It is the base renderer.  see tgDrawRowWordCloud for direct calls
 // words must be of form : [["word", value, optional-color, optional-id], [] ]
-tgw.tgDrawRowWordCloudBase = function(words,domID,opts) {
-	var i, dopts = { 							// default options
-		"maxSize" 	: 55,  						// any valid number for max font size 
-		"minSize" 	: 9, 	  					// any valid number for min font size
-		"sizeUnits" : "px",	 					// css units  for maxSize, minSize : px em % 
-		"sort"    	: "none", 					// "up", "down", "alpha", "ralpha", "none"
-		"spacer"    : "&nbsp; &nbsp;", 			// spacer to put bewteen words (string) -- can be "" or html
-		"wclass"    : "",  						// optional style class for each word's span	
-		"sortIgnore1stChars" : ['@','#','$'],  	//if a string begins with one of these ignore for purposes of sorting.
-		"scale"		: 1.0,
-		"onClick"   : function(){}				// not implemented yet
-	};
+  tgw.tgDrawRowWordCloudBase = function (words, domID, opts) {
+    var i, dopts = { 							// default options
+      "maxSize": 55,  						// any valid number for max font size
+      "minSize": 9, 	  					// any valid number for min font size
+      "sizeUnits": "px",	 					// css units  for maxSize, minSize : px em %
+      "sort": "none", 					// "up", "down", "alpha", "ralpha", "none"
+      "spacer": "&nbsp; &nbsp;", 			// spacer to put bewteen words (string) -- can be "" or html
+      "wclass": "",  						// optional style class for each word's span
+      "sortIgnore1stChars": ['@', '#', '$'],  	//if a string begins with one of these ignore for purposes of sorting.
+      "scale": 1.0,
+      "onClick": function () {
+      }				// not implemented yet
+    };
 
-	if (typeof opts == "object") {
-		for (i in opts) {
-			dopts[i] = opts[i];
-		}
-	}
+    if (typeof opts == "object") {
+      for (i in opts) {
+        dopts[i] = opts[i];
+      }
+    }
 
-	if (words.length <1 )
-		return;
-	var w = words.map(function(x){var c='inherit'; c = (typeof x[2] == "string") ?  x[2] :c ; return [x[0],x[1],c];});
-	var max = w[0][1];	var min = w[0][1];
+    if (words.length < 1)
+      return;
+    var w = words.map(function (x) {
+      var c = 'inherit';
+      c = (typeof x[2] == "string") ? x[2] : c;
+      return [x[0], x[1], c];
+    });
+    var max = w[0][1];
+    var min = w[0][1];
 
-	for (i=0; i< w.length; i++) {
-		max = ( w[i][1] > max ) ? w[i][1] : max; 
-		min = ( w[i][1] < min ) ? w[i][1] : min;
-	}
-	if ((max-min)<2) {  // if all the words are the same size then we want to pick a place in the middle to make them not appear super tiny
-		min--;
-		max++;
-	}
+    for (i = 0; i < w.length; i++) {
+      max = ( w[i][1] > max ) ? w[i][1] : max;
+      min = ( w[i][1] < min ) ? w[i][1] : min;
+    }
+    if ((max - min) < 2) {  // if all the words are the same size then we want to pick a place in the middle to make them not appear super tiny
+      min--;
+      max++;
+    }
 
-	var sort_fn = function (a,b){ return true}; // do nothing if default
-	var _f = function(s) {return (dopts["sortIgnore1stChars"].indexOf(s[0]) == -1) ? s: s.substr(1,s.length);} // handle 1st character
+    var sort_fn = function (a, b) {
+      return true
+    }; // do nothing if default
+    var _f = function (s) {
+      return (dopts["sortIgnore1stChars"].indexOf(s[0]) == -1) ? s : s.substr(1, s.length);
+    } // handle 1st character
 
-	switch( dopts["sort"]) {
-		case "alpha"  : sort_fn = function(a,b)  {return (_f(a[0])==_f(b[0])) ? 0 : (_f(a[0]) > _f(b[0])) ? 1 : -1;}; break;
-		case "ralpha" : sort_fn = function(a,b)  {return (_f(a[0])==_f(b[0])) ? 0 : (_f(a[0]) < _f(b[0])) ? 1 : -1;}; break;
-		case "up"     : sort_fn = function(a,b)  {return b[1] - a[1];}; break;
-		case "down"   : sort_fn = function(a,b)  {return a[1] - b[1];}; break;
-	}
+    switch (dopts["sort"]) {
+      case "alpha"  :
+        sort_fn = function (a, b) {
+          return (_f(a[0]) == _f(b[0])) ? 0 : (_f(a[0]) > _f(b[0])) ? 1 : -1;
+        };
+        break;
+      case "ralpha" :
+        sort_fn = function (a, b) {
+          return (_f(a[0]) == _f(b[0])) ? 0 : (_f(a[0]) < _f(b[0])) ? 1 : -1;
+        };
+        break;
+      case "up"     :
+        sort_fn = function (a, b) {
+          return b[1] - a[1];
+        };
+        break;
+      case "down"   :
+        sort_fn = function (a, b) {
+          return a[1] - b[1];
+        };
+        break;
+    }
 
-	w.sort(sort_fn);
+    w.sort(sort_fn);
 
-	var h = w.map(function(x){
-			var cls = (dopts["wclass"] == "") ? "" : "class='" + dopts["wclass"]+"'";
-			var a= "<span "+cls+"style='color:"+x[2]+"; font-size:"+_mapScale(x[1],min,max,dopts["minSize"],dopts["maxSize"],dopts["scale"])+dopts["sizeUnits"]+"'>"+x[0]+"</span>"; 
-			return a;
-		}).join(dopts["spacer"]);
+    var h = w.map(function (x) {
+      var cls = (dopts["wclass"] == "") ? "" : "class='" + dopts["wclass"] + "'";
+      var a = "<span " + cls + "style='color:" + x[2] + "; font-size:" + _mapScale(x[1], min, max, dopts["minSize"], dopts["maxSize"], dopts["scale"]) + dopts["sizeUnits"] + "'>" + x[0] + "</span>";
+      return a;
+    }).join(dopts["spacer"]);
 
-	if (typeof domID == "string") {
-		document.getElementById(domID).innerHTML=h; //attempt to render to supplied HTML eleme
-		return document.getElementById(domID);
-	}
-	
-	return h; // return HTML string if domID is not valid 
-}
+    if (typeof domID == "string") {
+      document.getElementById(domID).innerHTML = h; //attempt to render to supplied HTML eleme
+      return document.getElementById(domID);
+    }
+
+    return h; // return HTML string if domID is not valid
+  }
 
 //=====================================================================================================
 // drawRowWordCloudBase draws a word cloud with words in rows.  
 // words must be of form : [["word", value, optional-color, optional-id], [] ]
-tgw.tgDrawRowWordCloud = function (words, domID, opts) {
+  tgw.tgDrawRowWordCloud = function (words, domID, opts) {
 
-	tgw.tgDrawRowWordCloudBase( words,domID,opts);  // working version with bounds issues
+    tgw.tgDrawRowWordCloudBase(words, domID, opts);  // working version with bounds issues
 
-    var n=9,m=20;
-    var rs = $("#" +domID+ " > span")[0].getClientRects()[0];
-    var re = $("#" +domID+ " > span")[$("#" +domID+ " > span").length-1].getClientRects()[0];
-    var box = $("#"+domID)[0].getClientRects()[0];
+    var n = 9, m = 20;
+    var rs = $("#" + domID + " > span")[0].getClientRects()[0];
+    var re = $("#" + domID + " > span")[$("#" + domID + " > span").length - 1].getClientRects()[0];
+    var box = $("#" + domID)[0].getClientRects()[0];
 
-    while (re.bottom <=  (box["bottom"]-(box["height"]*0.085))) { 
-      rs = $("#" +domID+ " > span")[0].getClientRects()[0];
-      re = $("#" +domID+ " > span")[$("#" +domID+ " > span").length-1].getClientRects()[0];
-      gTemp = {"rs":rs, "re" :re};
-      m+= 0.33;
-      tgw.tgDrawRowWordCloudBase( words,domID,opts);  // working version with bounds issues
+    while (re.bottom <= (box["bottom"] - (box["height"] * 0.085))) {
+      rs = $("#" + domID + " > span")[0].getClientRects()[0];
+      re = $("#" + domID + " > span")[$("#" + domID + " > span").length - 1].getClientRects()[0];
+      gTemp = {"rs": rs, "re": re};
+      m += 0.33;
+      tgw.tgDrawRowWordCloudBase(words, domID, opts);  // working version with bounds issues
 
-      
+
       if (m > 100)
         break;
     }
 
-    m-=0.67;
-    tgw.tgDrawRowWordCloudBase( words,domID,opts);  // working version with bounds issues
+    m -= 0.67;
+    tgw.tgDrawRowWordCloudBase(words, domID, opts);  // working version with bounds issues
 
-}
+  }
 
 
 //=====================================================================================================
@@ -337,218 +376,216 @@ tgw.tgDrawRowWordCloud = function (words, domID, opts) {
 // Beging Google chart wrappers
 
 //=====================================================================================================
-/* gglChartsLoaded()   // function returns whether google chart functions have been loaded
-	-- since google charts loads asynchornously its easy to have situations where data is available before
-	the charts libs are (a race condition).  
+  /* gglChartsLoaded()   // function returns whether google chart functions have been loaded
+    -- since google charts loads asynchornously its easy to have situations where data is available before
+    the charts libs are (a race condition).
 
- */
-tgw.gglChartsLoaded  = function()
-{
-    if ((typeof google === 'undefined') || (typeof google.visualization === 'undefined') ) {
+   */
+  tgw.gglChartsLoaded = function () {
+    if ((typeof google === 'undefined') || (typeof google.visualization === 'undefined')) {
 
-       return false;
+      return false;
     }
     else {
-    	if (tgw.typeOf(google.visualization.arrayToDataTable) != "function")
-    		return false;
-    	if (tgw.typeOf(google.visualization.PieChart) != "function")
-    		return false;
-    	if (tgw.typeOf(google.visualization.LineChart) != "function")
-    		return false;
+      if (tgw.typeOf(google.visualization.arrayToDataTable) != "function")
+        return false;
+      if (tgw.typeOf(google.visualization.PieChart) != "function")
+        return false;
+      if (tgw.typeOf(google.visualization.LineChart) != "function")
+        return false;
     }
     return true;
-}
+  }
 
 //=====================================================================================================
-/* gglDrawTable(data,cols,id,opts)
+  /* gglDrawTable(data,cols,id,opts)
 
-	draw sortable table using google charts.
-	data = [
-		[row1data, row2data, row3data],
-		[row1data, row2data, row3data],
-		..
-		]
+    draw sortable table using google charts.
+    data = [
+      [row1data, row2data, row3data],
+      [row1data, row2data, row3data],
+      ..
+      ]
 
-	cols must be array of types, labels e.g. 
-		[ ["string", "this column label"], ["boolean", "another label"],	["number", "label for this colum"] ]
+    cols must be array of types, labels e.g.
+      [ ["string", "this column label"], ["boolean", "another label"],	["number", "label for this colum"] ]
 
-	id must be a valid unqiue HTML DOM id
-	opts for google charts (see Google charts docs)
-	
-// example: gglDrawTable([['a',23,34],['b',23,12],['c',34,64]],[["string","labelx"],["number","this"],["number","that"]],"table-x");
+    id must be a valid unqiue HTML DOM id
+    opts for google charts (see Google charts docs)
 
-*/
+  // example: gglDrawTable([['a',23,34],['b',23,12],['c',34,64]],[["string","labelx"],["number","this"],["number","that"]],"table-x");
 
-tgw.gglDrawTable = function (data,cols,domID,opts) {
-	if (typeof google.visualization.Table == "function") {
-		var i;
-		var dopts = {  // default options
-			showRowNumber: true, 
-			width: '80%', 
-			height: 30*4 + 'px',
-			allowHTML:true
-		}
-		if (_to(opts) == "object") // override default options
-			for (i in opts)
-				dopts[i]=opts[i];
+  */
 
-		if(data == "")
-			$("#"+domID).html("");
-		else {
-			var tdata = new google.visualization.DataTable();
-			var x;
+  tgw.gglDrawTable = function (data, cols, domID, opts) {
+    if (typeof google.visualization.Table == "function") {
+      var i;
+      var dopts = {  // default options
+        showRowNumber: true,
+        width: '80%',
+        height: 30 * 4 + 'px',
+        allowHTML: true
+      }
+      if (_to(opts) == "object") // override default options
+        for (i in opts)
+          dopts[i] = opts[i];
 
-			for (x=0; x<cols.length; x++) // google charts table requires the column headers to be set up for sorting
-				tdata.addColumn(cols[x][0],cols[x][1]);
-					
-			tdata.addRows(data);		
-			var table = new google.visualization.Table(document.getElementById(domID));
+      if (data == "")
+        $("#" + domID).html("");
+      else {
+        var tdata = new google.visualization.DataTable();
+        var x;
 
-				
-			table.draw(tdata, dopts);
-			return table;
-		}
-	}
-	return false;
-}
+        for (x = 0; x < cols.length; x++) // google charts table requires the column headers to be set up for sorting
+          tdata.addColumn(cols[x][0], cols[x][1]);
+
+        tdata.addRows(data);
+        var table = new google.visualization.Table(document.getElementById(domID));
 
 
-//=====================================================================================================
-/*
-  gglDrawPieChart(data,domID,opts)
-
-  draw a pie chart using google charts.  
-
-  coreLibrary: Google Charts
-
-  this thin wrapper as it mostly calls gglCharts but keeps the API consistent with the other chart libs called.
-
-  data must be of form:
-  [["item1",value], ["item2", value], ["item3", value]]
-
- */
-tgw.gglDrawPieChart = function (data,domID,opts){
-
-	if (typeof google.visualization.PieChart == "function") {
-		var i;
-		var cdata = google.visualization.arrayToDataTable(data); 
-	    var dopts = {
-	          titleTextStyle: {fontSize: 16},
-	          height: "100%",
-	          width: "100%",
-	          chartArea: {  width: "75%", height: "75%" }
-	          //legend: { position: 'none' }
-	    };
-	    if (typeof opts == 'object')
-	        for (var i in opts)
-	            dopts[i] = opts[i];
-
-	    var cp = new google.visualization.PieChart(document.getElementById(domID),dopts);
-	    cp.draw(cdata, dopts);		   
-		return cp;
-	}
-	else
-		return false; // couldn't access google visualizations (perhaps not loaded at all just or not loaded yet)
-
-}
-
-//=====================================================================================================
-/*  gglDrawLineChart(data,domID,opts)
-
-requires:
-	google.load("visualization", "1", {packages:['corechart','table']});
-
-data must be of this form:
-  	[
-  		['lablel for x axis','label for y1series','label for y2series',...],
-   		[ 12,23,34,45],
-   		[ 23,34,45,63],
-  	]
-*/
-tgw.gglDrawLineChart = function (data,domID,opts) {
-    if (typeof google.visualization.LineChart == "function") {
-	    var cdata = google.visualization.arrayToDataTable(data);
-	    var dopts = { //default options
-	      titleTextStyle: {fontSize: 16},
-	      hAxis: {maxAlternation:2},
-	      chartArea: {  width: "65%", height: "65%" }
-	    };
-	    
-	    if ( _to(opts) == 'object')
-	        for (var i in opts)
-	            dopts[i] = opts[i];
-
-	    var c2 = new google.visualization.LineChart(document.getElementById(domID));
-		c2.draw(cdata, dopts);
-		return c2; //return chart context..
-	}
-	return false;
-}
-//=====================================================================================================
-/*	gglDrawBarChart
-
- */
-tgw.gglDrawBarChart = function(data,domID,options) {
-	if (typeof google.visualization.BarChart == "function") {
-	    var cdata = google.visualization.arrayToDataTable(data);
-	    var doptions = {
-	          titleTextStyle: {fontSize: 16},
-	          hAxis: {maxAlternation:2},
-	          bar: {groupWidth: '80%'},
-	          height: data.length * 32,
-	          width:  _dims(domID)["wid"]
-	          //legend: { position: 'none' }
-	    };
-	    if (typeof options == 'object')
-	        for (var i in options)
-	            doptions[i] = options[i];
-
-	    var cbar = new google.visualization.BarChart(document.getElementById(domID));
-	    cbar.draw(cdata, doptions);
-	    return cbar;
+        table.draw(tdata, dopts);
+        return table;
+      }
     }
     return false;
-}
+  }
+
 
 //=====================================================================================================
-/*  gglDrawHistogram(data,domID,opts)
-	draw a histogram (binned chart) using Google Charts.
+  /*
+    gglDrawPieChart(data,domID,opts)
 
-    data must be a 2D array of this form 
-	[['name','value-heading'],['foo',234],['bar',455]]
-*/
-tgw.gglDrawHistogram = function (data,domID,options) {
+    draw a pie chart using google charts.
+
+    coreLibrary: Google Charts
+
+    this thin wrapper as it mostly calls gglCharts but keeps the API consistent with the other chart libs called.
+
+    data must be of form:
+    [["item1",value], ["item2", value], ["item3", value]]
+
+   */
+  tgw.gglDrawPieChart = function (data, domID, opts) {
+
+    if (typeof google.visualization.PieChart == "function") {
+      var i;
+      var cdata = google.visualization.arrayToDataTable(data);
+      var dopts = {
+        titleTextStyle: {fontSize: 16},
+        height: "100%",
+        width: "100%",
+        chartArea: {width: "75%", height: "75%"}
+        //legend: { position: 'none' }
+      };
+      if (typeof opts == 'object')
+        for (var i in opts)
+          dopts[i] = opts[i];
+
+      var cp = new google.visualization.PieChart(document.getElementById(domID), dopts);
+      cp.draw(cdata, dopts);
+      return cp;
+    }
+    else
+      return false; // couldn't access google visualizations (perhaps not loaded at all just or not loaded yet)
+
+  }
+
+//=====================================================================================================
+  /*  gglDrawLineChart(data,domID,opts)
+
+  requires:
+    google.load("visualization", "1", {packages:['corechart','table']});
+
+  data must be of this form:
+      [
+        ['lablel for x axis','label for y1series','label for y2series',...],
+         [ 12,23,34,45],
+         [ 23,34,45,63],
+      ]
+  */
+  tgw.gglDrawLineChart = function (data, domID, opts) {
+    if (typeof google.visualization.LineChart == "function") {
+      var cdata = google.visualization.arrayToDataTable(data);
+      var dopts = { //default options
+        titleTextStyle: {fontSize: 16},
+        hAxis: {maxAlternation: 2},
+        chartArea: {width: "65%", height: "65%"}
+      };
+
+      if (_to(opts) == 'object')
+        for (var i in opts)
+          dopts[i] = opts[i];
+
+      var c2 = new google.visualization.LineChart(document.getElementById(domID));
+      c2.draw(cdata, dopts);
+      return c2; //return chart context..
+    }
+    return false;
+  }
+//=====================================================================================================
+  /*	gglDrawBarChart
+
+   */
+  tgw.gglDrawBarChart = function (data, domID, options) {
+    if (typeof google.visualization.BarChart == "function") {
+      var cdata = google.visualization.arrayToDataTable(data);
+      var doptions = {
+        titleTextStyle: {fontSize: 16},
+        hAxis: {maxAlternation: 2},
+        bar: {groupWidth: '80%'},
+        height: data.length * 32,
+        width: _dims(domID)["wid"]
+        //legend: { position: 'none' }
+      };
+      if (typeof options == 'object')
+        for (var i in options)
+          doptions[i] = options[i];
+
+      var cbar = new google.visualization.BarChart(document.getElementById(domID));
+      cbar.draw(cdata, doptions);
+      return cbar;
+    }
+    return false;
+  }
+
+//=====================================================================================================
+  /*  gglDrawHistogram(data,domID,opts)
+    draw a histogram (binned chart) using Google Charts.
+
+      data must be a 2D array of this form
+    [['name','value-heading'],['foo',234],['bar',455]]
+  */
+  tgw.gglDrawHistogram = function (data, domID, options) {
 
     if (typeof google.visualization.Histogram == "function") {
-	    var dopts = {
+      var dopts = {
 
-	          titleTextStyle: {fontSize: 16},
-	          hAxis: {maxAlternation:2},
-	          legend: { position: 'none' }
-	          //histogram: { bucketSize: 1000 }
-	    };
-	    
-	    var cdata = google.visualization.arrayToDataTable(data);
+        titleTextStyle: {fontSize: 16},
+        hAxis: {maxAlternation: 2},
+        legend: {position: 'none'}
+        //histogram: { bucketSize: 1000 }
+      };
 
-	    if (_to (opts) == 'object')
-	        for (var i in opts)
-	            dopts[i] = opts[i];
+      var cdata = google.visualization.arrayToDataTable(data);
 
-	    var ch = new google.visualization.Histogram(document.getElementById(domID));
-	    ch.draw(cdata, dopts);
-	    return ch;
-	}
+      if (_to(opts) == 'object')
+        for (var i in opts)
+          dopts[i] = opts[i];
+
+      var ch = new google.visualization.Histogram(document.getElementById(domID));
+      ch.draw(cdata, dopts);
+      return ch;
+    }
     return false;
-}
-
+  }
 
 
 //======================================================================================================
-tgw.d3ChartsLoaded = function () {
-	if (typeof d3 != "undefined")
-		return true;
-	return false;
-}
+  tgw.d3ChartsLoaded = function () {
+    if (typeof d3 != "undefined")
+      return true;
+    return false;
+  }
 
 //======================================================================================================
   /*
@@ -590,18 +627,18 @@ tgw.d3ChartsLoaded = function () {
   */
   tgw.d3TreeMap = function (tree, id, options) {
     var treemapDefaultConfiguration = {
-		parentID: 'parentID',
-		childID: "childID",
-		childName: "childName",
-		children: "children",
-		value: "value",
-		svgWidth: tgw.containerDims(id).wid ,
-		svgHeight: tgw.containerDims(id).hgt,
-		fader: 0.5,
-		rectangleBehavior: null,
-		rectangleBehaviorOptions: null,
-		svgBehavior: null,
-		svgBehaviorOptions: null
+      parentID: 'parentID',
+      childID: "childID",
+      childName: "childName",
+      children: "children",
+      value: "value",
+      svgWidth: tgw.containerDims(id).wid,
+      svgHeight: tgw.containerDims(id).hgt,
+      fader: 0.5,
+      rectangleBehavior: null,
+      rectangleBehaviorOptions: null,
+      svgBehavior: null,
+      svgBehaviorOptions: null
     }
     treeMapConfiguration = setOptions(treemapDefaultConfiguration, options);
 
@@ -614,10 +651,10 @@ tgw.d3ChartsLoaded = function () {
     var width = typeof treeMapConfiguration.svgWidth === "function" ? treeMapConfiguration.svgWidth() : treeMapConfiguration.svgWidth,
       height = typeof treeMapConfiguration.svgHeight === "function" ? treeMapConfiguration.svgHeight() : treeMapConfiguration.svgHeight;
 
-    d3.select('#'+id).append("p").classed("parent", true)
-    d3.select('#'+id)
+    d3.select('#' + id).append("p").classed("parent", true)
+    d3.select('#' + id)
       .append("svg")
-    var svg = d3.select('#'+id)
+    var svg = d3.select('#' + id)
       .select("svg")
       .attr("width", width)
       .attr("height", height)
@@ -892,12 +929,12 @@ tgw.d3ChartsLoaded = function () {
 		*/
   tgw.d3RadialTree = function (treeData, id, options) {
     var radialTreeDefaultConfiguration = {
-			name: "name",
-			children: "children",
-			svgWidth: tgw.containerDims(id).wid,
-			svgHeight: tgw.containerDims(id).hgt,
-			diameter: tgw.containerDims(id).wid/2,
-			duration: 750
+      name: "name",
+      children: "children",
+      svgWidth: tgw.containerDims(id).wid,
+      svgHeight: tgw.containerDims(id).hgt,
+      diameter: tgw.containerDims(id).wid / 2,
+      duration: 750
     }
     radialTreeConfiguration = setOptions(radialTreeDefaultConfiguration, options);
     if (typeof options == "undefined") {
@@ -913,17 +950,21 @@ tgw.d3ChartsLoaded = function () {
     var nodes, links;
     var i = 0;
 
-    var treeLayout = d3.tree().size([360, diameter/2]).separation(
-    	function (a,b){return (a.parent == b.parent ? 1 : 2) / a.depth;}), root;
+    var treeLayout = d3.tree().size([360, diameter / 2]).separation(
+      function (a, b) {
+        return (a.parent == b.parent ? 1 : 2) / a.depth;
+      }), root;
 
     var nodeSvg, linkSvg, nodeEnter, linkEnter;
 
-    var svg = d3.select("#"+id).append("svg")
+    var svg = d3.select("#" + id).append("svg")
       .attr("width", width)
       .attr("height", height);
     var g = svg.append("g").attr("transform", "translate(" + (width / 2) + "," + (height / 2) + ")");
 
-    root = d3.hierarchy(treeData, function (d) {return d[radialTreeConfiguration.children] });
+    root = d3.hierarchy(treeData, function (d) {
+      return d[radialTreeConfiguration.children]
+    });
     root.each(function (d) {
       d.name = d.data[radialTreeConfiguration.name]; //transferring name to a name variable
       d.id = i; //Assigning numerical Ids
@@ -954,7 +995,7 @@ tgw.d3ChartsLoaded = function () {
 
       // Normalize for fixed-depth.
       nodes.forEach(function (d) {
-        d.y = d.depth * diameter/6;
+        d.y = d.depth * diameter / 6;
       });
       nodeSvg = g.selectAll(".d3RadialTreeNode")
         .data(nodes, function (d) {
@@ -1130,7 +1171,7 @@ tgw.d3ChartsLoaded = function () {
     }
 
     function setOptions(default_configuration, options) {
-			/*Options.tree_attribute_names: Gets keys from the tree. If not present sets default values.*/
+      /*Options.tree_attribute_names: Gets keys from the tree. If not present sets default values.*/
 
       if (options) {
         for (var setting in options) {
@@ -1146,24 +1187,24 @@ tgw.d3ChartsLoaded = function () {
 
 //  ====================================================================================================
 
-	/*d3 chord draws a chord chart of related items
-	 * param: data (dict)
-	 	* data schema:
-	 		* {matrix : [
-	 			[0, 0, 1000, 1000],
-	 			[0, 0, 1000, 1000],
-			 	[1000, 1000, 0, 1000],
-	 			[1000, 1000, 1000, 0]
-	 			], groups: ["A", "B", "C", "D"]}
-	 * param: id (string) Element to display chart.
-	 * param: options (dict) A dictionary that allows you customize renderings and behaviors.
-	 *
-	 * Rendering Options:
-	 * svgWidth: type: int or function, default: 600
-	 * svgHeight:: type: int or function, default: 600
-	 *
-	 */
-  tgw.d3Chord = function(data, id, options) {
+  /*d3 chord draws a chord chart of related items
+   * param: data (dict)
+     * data schema:
+       * {matrix : [
+         [0, 0, 1000, 1000],
+         [0, 0, 1000, 1000],
+         [1000, 1000, 0, 1000],
+         [1000, 1000, 1000, 0]
+         ], groups: ["A", "B", "C", "D"]}
+   * param: id (string) Element to display chart.
+   * param: options (dict) A dictionary that allows you customize renderings and behaviors.
+   *
+   * Rendering Options:
+   * svgWidth: type: int or function, default: 600
+   * svgHeight:: type: int or function, default: 600
+   *
+   */
+  tgw.d3Chord = function (data, id, options) {
     var chordDefaultConfiguration = {
       svgWidth: tgw.containerDims(id).wid,
       svgHeight: tgw.containerDims(id).hgt
@@ -1174,9 +1215,9 @@ tgw.d3ChartsLoaded = function () {
       height = typeof chordConfiguration.svgHeight === "function" ? chordConfiguration.svgHeight() : chordConfiguration.svgHeight;
 
     function fade(opacity) {
-      return function(d, i) {
+      return function (d, i) {
         ribbons
-          .filter(function(d) {
+          .filter(function (d) {
             return d.source.index != i && d.target.index != i;
           })
           .transition()
@@ -1184,10 +1225,10 @@ tgw.d3ChartsLoaded = function () {
       };
     }
 
-    var svg = d3.select("#"+id)
-				.append("svg")
-				.attr("width", chordConfiguration.svgWidth)
-				.attr("height", chordConfiguration.svgHeight),
+    var svg = d3.select("#" + id)
+        .append("svg")
+        .attr("width", chordConfiguration.svgWidth)
+        .attr("height", chordConfiguration.svgHeight),
       width = +svg.attr("width"),
       height = +svg.attr("height"),
       outerRadius = Math.min(width, height) * 0.5,
@@ -1213,73 +1254,98 @@ tgw.d3ChartsLoaded = function () {
     var group = g.append("g")
       .attr("class", "groups")
       .selectAll("g")
-      .data(function(chords) { return chords.groups; })
+      .data(function (chords) {
+        return chords.groups;
+      })
       .enter().append("g");
 
     group.append("path")
-      .style("fill", function(d) { return color(d.index); })
-      .style("stroke", function(d) { return d3.rgb(color(d.index)).darker(); })
+      .style("fill", function (d) {
+        return color(d.index);
+      })
+      .style("stroke", function (d) {
+        return d3.rgb(color(d.index)).darker();
+      })
       .attr("d", arc)
       .on("mouseover", fade(.1))         /* Where attempt at mouseover is made */
       .on("mouseout", fade(1))
 
 
-    group.append("title").text(function(d) {
+    group.append("title").text(function (d) {
       return groupTip(d);
     });
 
     group.append("text")
       .attr("dy", ".35em")
       .attr("class", "d3ChordOfficeLabel")
-      .attr("transform", function(d,i) {
+      .attr("transform", function (d, i) {
         d.angle = (d.startAngle + d.endAngle) / 2;
         d.name = data.groups[i];
         return "rotate(" + (d.angle * 180 / Math.PI) + ")" +
           "translate(0," + -1.1 * (outerRadius + 10) + ")" +
           ((d.angle > Math.PI * 3 / 4 && d.angle < Math.PI * 5 / 4) ? "rotate(180)" : "");
       })
-      .text(function(d) {
+      .text(function (d) {
         return d.name;
       });
 
-    var ribbons =   g.append("g")
+    var ribbons = g.append("g")
       .attr("class", "d3ChordRibbons")
       .selectAll("path")
-      .data(function(chords) { return chords; })
+      .data(function (chords) {
+        return chords;
+      })
       .enter().append("path")
       .attr("d", ribbon)
-      .style("fill", function(d) { return color(d.target.index); })
-      .style("stroke", function(d) { return d3.rgb(color(d.target.index)).darker(); });
+      .style("fill", function (d) {
+        return color(d.target.index);
+      })
+      .style("stroke", function (d) {
+        return d3.rgb(color(d.target.index)).darker();
+      });
 
-    ribbons.append("title").
-    text(function(d){return chordTip(d);});
+    ribbons.append("title").text(function (d) {
+      return chordTip(d);
+    });
 
     var groupTick = group.selectAll(".d3ChordGroupTick")
-      .data(function(d) { return groupTicks(d, 1e3); })
+      .data(function (d) {
+        return groupTicks(d, 1e3);
+      })
       .enter().append("g")
       .attr("class", "group-tick")
-      .attr("transform", function(d) { return "rotate(" + (d.angle * 180 / Math.PI - 90) + ") translate(" + outerRadius + ",0)"; });
+      .attr("transform", function (d) {
+        return "rotate(" + (d.angle * 180 / Math.PI - 90) + ") translate(" + outerRadius + ",0)";
+      });
 
     groupTick.append("line")
       .attr("x2", 6);
 
     groupTick
-      .filter(function(d) { return d.value % 2e3 === 0; })
+      .filter(function (d) {
+        return d.value % 2e3 === 0;
+      })
       .append("text")
       .attr("x", 8)
       .attr("dy", ".35em")
-      .attr("transform", function(d) { return d.angle > Math.PI ? "rotate(180) translate(-16)" : null; })
-      .style("text-anchor", function(d) { return d.angle > Math.PI ? "end" : null; })
-      .text(function(d) { return d.value; });
+      .attr("transform", function (d) {
+        return d.angle > Math.PI ? "rotate(180) translate(-16)" : null;
+      })
+      .style("text-anchor", function (d) {
+        return d.angle > Math.PI ? "end" : null;
+      })
+      .text(function (d) {
+        return d.value;
+      });
 
     function groupTicks(d, step) {
       var k = (d.endAngle - d.startAngle) / d.value;
-      return d3.range(0, d.value, step).map(function(value) {
+      return d3.range(0, d.value, step).map(function (value) {
         return {value: value, angle: value * k + d.startAngle};
       });
     }
 
-    function chordTip(d){
+    function chordTip(d) {
       var p = d3.format(".2%"), q = d3.formatPrefix("$,.2", 1e3)
       return "Flow Info:\n"
         + data.groups[d.source.index] + " → " + data.groups[d.target.index] + ": " + q(d.target.value) + "\n"
@@ -1292,7 +1358,7 @@ tgw.d3ChartsLoaded = function () {
     }
 
     function setOptions(default_configuration, options) {
-			/*Options.tree_attribute_names: Gets keys from the tree. If not present sets default values.*/
+      /*Options.tree_attribute_names: Gets keys from the tree. If not present sets default values.*/
 
       if (options) {
         for (var setting in options) {
@@ -1308,49 +1374,49 @@ tgw.d3ChartsLoaded = function () {
   }
 //  =================================================================
 
-	/*d3zoombaleSunburst draws a sunburst chart of hierarchically related items
-	 * param: data (dict)
-	 	* data schema:
-	 	* {name: "string",
-			 children: [
-	 			{
-	 			name: "string",
-	 			children: [{name: "string", size: value}
-	 			]}
-	 * param: id (string) Element to display chart.
-	 * param: options (dict) A dictionary that allows you customize renderings and behaviors.
-	 *
-	 * Tree data options:
-	 	*
-		* name:: type: string, default: "name"
-		* children:: type: string, default: "children"
-		* value:: type: string, default: "value"
-		 * FURTHER DESCRIPTION for Tree data options:
-		 * Frequently trees contain different keys labels. For
-		 * example your tree label for children may be childs instead of children.
-		 * Normally in that case you would either change the all the keys in
-		 * you data prior to passing or specify a custom function in d3.hierarchy call.
-		 * Instead you can specify key lables in options.
-		 * Example: {children: childs}.
-	 *
-	 * Rendering Options:
-	 * svgWidth:: type: int or function, default: 600
-	 * svgHeight:: type: int or function, default: 600
-	 *
-	 */
-	tgw.d3ZoomableSunburst = function(data, id, options) {
+  /*d3zoombaleSunburst draws a sunburst chart of hierarchically related items
+   * param: data (dict)
+     * data schema:
+     * {name: "string",
+       children: [
+         {
+         name: "string",
+         children: [{name: "string", size: value}
+         ]}
+   * param: id (string) Element to display chart.
+   * param: options (dict) A dictionary that allows you customize renderings and behaviors.
+   *
+   * Tree data options:
+     *
+    * name:: type: string, default: "name"
+    * children:: type: string, default: "children"
+    * value:: type: string, default: "value"
+     * FURTHER DESCRIPTION for Tree data options:
+     * Frequently trees contain different keys labels. For
+     * example your tree label for children may be childs instead of children.
+     * Normally in that case you would either change the all the keys in
+     * you data prior to passing or specify a custom function in d3.hierarchy call.
+     * Instead you can specify key lables in options.
+     * Example: {children: childs}.
+   *
+   * Rendering Options:
+   * svgWidth:: type: int or function, default: 600
+   * svgHeight:: type: int or function, default: 600
+   *
+   */
+  tgw.d3ZoomableSunburst = function (data, id, options) {
     var zoomableSunburstDefaultConfiguration = {
       children: "children",
-			value: "value",
-			name: "name",
-    	svgWidth: tgw.containerDims(id).wid,
+      value: "value",
+      name: "name",
+      svgWidth: tgw.containerDims(id).wid,
       svgHeight: tgw.containerDims(id).hgt
     }
-    sunburstConfiguration = setOptions(zoomableSunburstDefaultConfiguration , options);
+    sunburstConfiguration = setOptions(zoomableSunburstDefaultConfiguration, options);
 
     var width = sunburstConfiguration.svgWidth,
       height = sunburstConfiguration.svgHeight,
-      radius = (Math.min(width, height) / 2 - 10) ;
+      radius = (Math.min(width, height) / 2 - 10);
 
     var formatNumber = d3.format(",d");
 
@@ -1365,50 +1431,68 @@ tgw.d3ChartsLoaded = function () {
     var partition = d3.partition();
 
     var arc = d3.arc()
-      .startAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x0))); })
-      .endAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x1))); })
-      .innerRadius(function(d) { return Math.max(0, y(d.y0)); })
-      .outerRadius(function(d) { return Math.max(0, y(d.y1)); });
+      .startAngle(function (d) {
+        return Math.max(0, Math.min(2 * Math.PI, x(d.x0)));
+      })
+      .endAngle(function (d) {
+        return Math.max(0, Math.min(2 * Math.PI, x(d.x1)));
+      })
+      .innerRadius(function (d) {
+        return Math.max(0, y(d.y0));
+      })
+      .outerRadius(function (d) {
+        return Math.max(0, y(d.y1));
+      });
 
-    var svg = d3.select("#"+id).append("svg")
+    var svg = d3.select("#" + id).append("svg")
       .attr("width", width)
       .attr("height", height)
       .append("g")
       .attr("transform", "translate(" + width / 2 + "," + (height / 2) + ")");
 
     root = d3.hierarchy(data);
-      root.sum(function(d) { return d[sunburstConfiguration.value]; });
+    root.sum(function (d) {
+      return d[sunburstConfiguration.value];
+    });
 
-      svg.selectAll("g")
-        .data(partition(root).descendants())
-        .enter().append("path")
-        .attr("d", arc)
-        .style("fill", function(d) {
-        	return color((d.children ? d : d.parent).data[sunburstConfiguration.name]);
-        })
-        .on("click", click)
-        .append("title")
-        .text(function(d) {
-        	return d.data[sunburstConfiguration.name] + "\n" +
-						formatNumber(d.value); });
+    svg.selectAll("g")
+      .data(partition(root).descendants())
+      .enter().append("path")
+      .attr("d", arc)
+      .style("fill", function (d) {
+        return color((d.children ? d : d.parent).data[sunburstConfiguration.name]);
+      })
+      .on("click", click)
+      .append("title")
+      .text(function (d) {
+        return d.data[sunburstConfiguration.name] + "\n" +
+          formatNumber(d.value);
+      });
 
     function click(d) {
       svg.transition()
         .duration(750)
-        .tween("scale", function() {
+        .tween("scale", function () {
           var xd = d3.interpolate(x.domain(), [d.x0, d.x1]),
             yd = d3.interpolate(y.domain(), [d.y0, 1]),
             yr = d3.interpolate(y.range(), [d.y0 ? 20 : 0, radius]);
-          return function(t) { x.domain(xd(t)); y.domain(yd(t)).range(yr(t)); };
+          return function (t) {
+            x.domain(xd(t));
+            y.domain(yd(t)).range(yr(t));
+          };
         })
         .selectAll("path")
-        .attrTween("d", function(d) { return function() { return arc(d); }; });
+        .attrTween("d", function (d) {
+          return function () {
+            return arc(d);
+          };
+        });
     }
 
     d3.select(self.frameElement).style("height", height + "px");
 
     function setOptions(default_configuration, options) {
-			/*Options.tree_attribute_names: Gets keys from the tree. If not present sets default values.*/
+      /*Options.tree_attribute_names: Gets keys from the tree. If not present sets default values.*/
 
       if (options) {
         for (var setting in options) {
@@ -1420,57 +1504,57 @@ tgw.d3ChartsLoaded = function () {
       }
       return default_configuration
     }
-	}
+  }
 
 //	========================================================================
-	/*d3Bubble draws a Bubble chart
-	 * param: data (dict)
-	 * data schema:
-	 * {name: "string",
-	 children: [
-	 {
-	 name: "string",
-	 children: [{name: "string", size: value}
-	 ]}
-	 * param: id (string) Element to display chart.
-	 * param: options (dict) A dictionary that allows you customize renderings and behaviors.
-	 *
-	 * Tree data options:
-		 * name:: type: string, default: "name"
-		 * children:: type: string, default: "children"
-		 * value:: type: string, default: "value"
-		 * FURTHER DESCRIPTION for Tree data options:
-		 * Frequently trees contain different keys labels. For
-		 * example your tree label for children may be childs instead of children.
-		 * Normally in that case you would either change the all the keys in
-		 * you data prior to passing or specify a custom function in d3.hierarchy call.
-		 * Instead you can specify key lables in options.
-		 * Example: {children: childs}.
-	 * Rendering Options:
-		 * svgWidth:: type: int or function, default: containerDims(id).wid
-		 * svgHeight:: type: int or function, default: containerDims(id).hgt
-	 *
-	 */
-	tgw.d3Bubble = function(data, id, options) {
+  /*d3Bubble draws a Bubble chart
+   * param: data (dict)
+   * data schema:
+   * {name: "string",
+   children: [
+   {
+   name: "string",
+   children: [{name: "string", size: value}
+   ]}
+   * param: id (string) Element to display chart.
+   * param: options (dict) A dictionary that allows you customize renderings and behaviors.
+   *
+   * Tree data options:
+     * name:: type: string, default: "name"
+     * children:: type: string, default: "children"
+     * value:: type: string, default: "value"
+     * FURTHER DESCRIPTION for Tree data options:
+     * Frequently trees contain different keys labels. For
+     * example your tree label for children may be childs instead of children.
+     * Normally in that case you would either change the all the keys in
+     * you data prior to passing or specify a custom function in d3.hierarchy call.
+     * Instead you can specify key lables in options.
+     * Example: {children: childs}.
+   * Rendering Options:
+     * svgWidth:: type: int or function, default: containerDims(id).wid
+     * svgHeight:: type: int or function, default: containerDims(id).hgt
+   *
+   */
+  tgw.d3Bubble = function (data, id, options) {
     var bubbleDefaultConfiguration = {
       children: "children",
       value: "value",
-			id: "id",
+      id: "id",
       svgWidth: tgw.containerDims(id).wid,
       svgHeight: tgw.containerDims(id).hgt
 
     }
 
-    bubbleConfiguration = setOptions(bubbleDefaultConfiguration , options);
+    bubbleConfiguration = setOptions(bubbleDefaultConfiguration, options);
 
     var width = bubbleConfiguration.svgWidth,
       height = bubbleConfiguration.svgHeight;
 
-    var svg = d3.select("#"+id).append("svg")
+    var svg = d3.select("#" + id).append("svg")
       .attr("width", width)
       .attr("height", height)
-			.attr("text-anchor", "middle")
-			.attr("font-size", 10);
+      .attr("text-anchor", "middle")
+      .attr("font-size", 10);
 
     var format = d3.format(",d");
 
@@ -1481,8 +1565,10 @@ tgw.d3ChartsLoaded = function () {
       .padding(1.5);
 
     var root = d3.hierarchy(data)
-      .sum(function(d) { return d[bubbleConfiguration.value]; })
-      .each(function(d) {
+      .sum(function (d) {
+        return d[bubbleConfiguration.value];
+      })
+      .each(function (d) {
         if (id = d.data[bubbleConfiguration.id]) {
           var id, i = id.lastIndexOf(".");
           d.id = id;
@@ -1495,32 +1581,54 @@ tgw.d3ChartsLoaded = function () {
       .data(pack(root).leaves())
       .enter().append("g")
       .attr("class", "node")
-      .attr("transform", function(d) {  return "translate(" + d.x + "," + d.y + ")"; });
+      .attr("transform", function (d) {
+        return "translate(" + d.x + "," + d.y + ")";
+      });
 
     node.append("circle")
-      .attr("id", function(d) { return d.id; })
-      .attr("r", function(d) { return d.r; })
-      .style("fill", function(d) { return color(d.package); });
+      .attr("id", function (d) {
+        return d.id;
+      })
+      .attr("r", function (d) {
+        return d.r;
+      })
+      .style("fill", function (d) {
+        return color(d.package);
+      });
 
     node.append("clipPath")
-      .attr("id", function(d) { return "clip-" + d.id; })
+      .attr("id", function (d) {
+        return "clip-" + d.id;
+      })
       .append("use")
-      .attr("xlink:href", function(d) { return "#" + d.id; });
+      .attr("xlink:href", function (d) {
+        return "#" + d.id;
+      });
 
     node.append("text")
-      .attr("clip-path", function(d) { return "url(#clip-" + d.id + ")"; })
+      .attr("clip-path", function (d) {
+        return "url(#clip-" + d.id + ")";
+      })
       .selectAll("tspan")
-      .data(function(d) { return d.data[bubbleConfiguration.id].split(/(?=[A-Z][^A-Z])/g); })
+      .data(function (d) {
+        return d.data[bubbleConfiguration.id].split(/(?=[A-Z][^A-Z])/g);
+      })
       .enter().append("tspan")
       .attr("x", 0)
-      .attr("y", function(d, i, nodes) { return 13 + (i - nodes.length / 2 - 0.5) * 10; })
-      .text(function(d) { return d; });
+      .attr("y", function (d, i, nodes) {
+        return 13 + (i - nodes.length / 2 - 0.5) * 10;
+      })
+      .text(function (d) {
+        return d;
+      });
 
     node.append("title")
-      .text(function(d) { return d.id + "\n" + format(d[bubbleConfiguration.value]); });
+      .text(function (d) {
+        return d.id + "\n" + format(d[bubbleConfiguration.value]);
+      });
 
     function setOptions(default_configuration, options) {
-			/*Options.tree_attribute_names: Gets keys from the tree. If not present sets default values.*/
+      /*Options.tree_attribute_names: Gets keys from the tree. If not present sets default values.*/
 
       if (options) {
         for (var setting in options) {
@@ -1533,43 +1641,503 @@ tgw.d3ChartsLoaded = function () {
       return default_configuration
     }
 
-}
+  }
 //=========================================================================
-/* wordcloud2.js  renders a wordcloud to a canvas using the WordCloud2.js library
-*/
-tgw.wordCloud2js = function (data, div_id, opts) {
-	
-	var div 	= document.getElementById(div_id);
+  /* wordcloud2.js  renders a wordcloud to a canvas using the WordCloud2.js library
+  */
+  tgw.wordCloud2js = function (data, div_id, opts) {
 
-	var canvas  = document.createElement("canvas");
-	div.appendChild(canvas);
-	canvas.height = div.offsetHeight;
-	canvas.width  = div.offsetWidth;
-	var wlist 	= data.map(function(a){return [a["word"],a["word"].length*2.2+4/*a["frequency"]*/];}).sort(function(a,b){return b[1]-a[1]}).splice(0,opts.maxWords); 
+    var div = document.getElementById(div_id);
 
-	//console.log(wlist); //https://github.com/timdream/wordcloud2.js/blob/gh-pages/API.md
-	opts = {
-		"list" : wlist,
-		gridSize: Math.round(  Math.log(30+5-data.length)* canvas.width / 32),
-		//weightFactor: function (size) {	return Math.pow(size, 2.3) * $('#word-tab').width() / 1024;},
-		fontFamily: 'Lato',
-		//color: function (word, weight) {return (weight === 12) ? '#f02222' : '#c09292';	},
-		//rotateRatio: 0.5,
-		//rotationSteps: 2,
-		clearCanvas: true,
-		maxWords : 30,
-		origin: [canvas.width/2,canvas.height/3],
-		backgroundColor: '#fff'
-	}
-	
+    var canvas = document.createElement("canvas");
+    div.appendChild(canvas);
+    canvas.height = div.offsetHeight;
+    canvas.width = div.offsetWidth;
+    var wlist = data.map(function (a) {
+      return [a["word"], a["word"].length * 2.2 + 4/*a["frequency"]*/];
+    }).sort(function (a, b) {
+      return b[1] - a[1]
+    }).splice(0, opts.maxWords);
 
-	WordCloud(canvas, opts);//, clearCanvas: true,  );
-}
+    //console.log(wlist); //https://github.com/timdream/wordcloud2.js/blob/gh-pages/API.md
+    opts = {
+      "list": wlist,
+      gridSize: Math.round(Math.log(30 + 5 - data.length) * canvas.width / 32),
+      //weightFactor: function (size) {	return Math.pow(size, 2.3) * $('#word-tab').width() / 1024;},
+      fontFamily: 'Lato',
+      //color: function (word, weight) {return (weight === 12) ? '#f02222' : '#c09292';	},
+      //rotateRatio: 0.5,
+      //rotationSteps: 2,
+      clearCanvas: true,
+      maxWords: 30,
+      origin: [canvas.width / 2, canvas.height / 3],
+      backgroundColor: '#fff'
+    }
+
+
+    WordCloud(canvas, opts);//, clearCanvas: true,  );
+  }
 //=====================================================================================
   /* d3WordCloud renders a wordcloud to a canvas using the d3 library
   */
+  tgw.d3WordCloud = function(data, div_id, opts)
+  {
+    // Word cloud layout by Jason Davies, https://www.jasondavies.com/wordcloud/
+    // Algorithm due to Jonathan Feinberg, http://static.mrfeinberg.com/bv_ch03.pdf
+    var dispatch = d3.dispatch;
 
+    var cloudRadians = Math.PI / 180,
+      cw = 1 << 11 >> 5,
+      ch = 1 << 11;
 
+    cloud = function () {
+      var size = [256, 256],
+        text = cloudText,
+        font = cloudFont,
+        fontSize = cloudFontSize,
+        fontStyle = cloudFontNormal,
+        fontWeight = cloudFontNormal,
+        rotate = cloudRotate,
+        padding = cloudPadding,
+        spiral = archimedeanSpiral,
+        words = [],
+        timeInterval = Infinity,
+        event = dispatch("word", "end"),
+        timer = null,
+        random = Math.random,
+        cloud = {},
+        canvas = cloudCanvas;
 
-})(typeof tgw === 'undefined'? this['tgw']={}: tgw);//(window.hf = window.hf || {});
+      cloud.canvas = function (_) {
+        return arguments.length ? (canvas = functor(_), cloud) : canvas;
+      };
+
+      cloud.start = function () {
+        var contextAndRatio = getContext(canvas()),
+          board = zeroArray((size[0] >> 5) * size[1]),
+          bounds = null,
+          n = words.length,
+          i = -1,
+          tags = [],
+          data = words.map(function (d, i) {
+            d.text = text.call(this, d, i);
+            d.font = font.call(this, d, i);
+            d.style = fontStyle.call(this, d, i);
+            d.weight = fontWeight.call(this, d, i);
+            d.rotate = rotate.call(this, d, i);
+            d.size = ~~fontSize.call(this, d, i);
+            d.padding = padding.call(this, d, i);
+            return d;
+          }).sort(function (a, b) {
+            return b.size - a.size;
+          });
+
+        if (timer) clearInterval(timer);
+        timer = setInterval(step, 0);
+        step();
+        return cloud;
+
+        function step() {
+          var start = Date.now();
+          while (Date.now() - start < timeInterval && ++i < n && timer) {
+            var d = data[i];
+            d.x = (size[0] * (random() + .5)) >> 1;
+            d.y = (size[1] * (random() + .5)) >> 1;
+            cloudSprite(contextAndRatio, d, data, i);
+            if (d.hasText && place(board, d, bounds)) {
+              tags.push(d);
+              event.call("word", cloud, d);
+              if (bounds) cloudBounds(bounds, d);
+              else bounds = [{x: d.x + d.x0, y: d.y + d.y0}, {x: d.x + d.x1, y: d.y + d.y1}];
+              // Temporary hack
+              d.x -= size[0] >> 1;
+              d.y -= size[1] >> 1;
+            }
+          }
+          if (i >= n) {
+            cloud.stop();
+            event.call("end", cloud, tags, bounds);
+          }
+        }
+      }
+
+      cloud.stop = function () {
+        if (timer) {
+          clearInterval(timer);
+          timer = null;
+        }
+        return cloud;
+      };
+
+      function getContext(canvas) {
+        canvas.width = canvas.height = 1;
+        var ratio = Math.sqrt(canvas.getContext("2d").getImageData(0, 0, 1, 1).data.length >> 2);
+        canvas.width = (cw << 5) / ratio;
+        canvas.height = ch / ratio;
+
+        var context = canvas.getContext("2d");
+        context.fillStyle = context.strokeStyle = "red";
+        context.textAlign = "center";
+
+        return {context: context, ratio: ratio};
+      }
+
+      function place(board, tag, bounds) {
+        var perimeter = [{x: 0, y: 0}, {x: size[0], y: size[1]}],
+          startX = tag.x,
+          startY = tag.y,
+          maxDelta = Math.sqrt(size[0] * size[0] + size[1] * size[1]),
+          s = spiral(size),
+          dt = random() < .5 ? 1 : -1,
+          t = -dt,
+          dxdy,
+          dx,
+          dy;
+
+        while (dxdy = s(t += dt)) {
+          dx = ~~dxdy[0];
+          dy = ~~dxdy[1];
+
+          if (Math.min(Math.abs(dx), Math.abs(dy)) >= maxDelta) break;
+
+          tag.x = startX + dx;
+          tag.y = startY + dy;
+
+          if (tag.x + tag.x0 < 0 || tag.y + tag.y0 < 0 ||
+            tag.x + tag.x1 > size[0] || tag.y + tag.y1 > size[1]) continue;
+          // TODO only check for collisions within current bounds.
+          if (!bounds || !cloudCollide(tag, board, size[0])) {
+            if (!bounds || collideRects(tag, bounds)) {
+              var sprite = tag.sprite,
+                w = tag.width >> 5,
+                sw = size[0] >> 5,
+                lx = tag.x - (w << 4),
+                sx = lx & 0x7f,
+                msx = 32 - sx,
+                h = tag.y1 - tag.y0,
+                x = (tag.y + tag.y0) * sw + (lx >> 5),
+                last;
+              for (var j = 0; j < h; j++) {
+                last = 0;
+                for (var i = 0; i <= w; i++) {
+                  board[x + i] |= (last << msx) | (i < w ? (last = sprite[j * w + i]) >>> sx : 0);
+                }
+                x += sw;
+              }
+              delete tag.sprite;
+              return true;
+            }
+          }
+        }
+        return false;
+      }
+
+      cloud.timeInterval = function (_) {
+        return arguments.length ? (timeInterval = _ == null ? Infinity : _, cloud) : timeInterval;
+      };
+
+      cloud.words = function (_) {
+        return arguments.length ? (words = _, cloud) : words;
+      };
+
+      cloud.size = function (_) {
+        return arguments.length ? (size = [+_[0], +_[1]], cloud) : size;
+      };
+
+      cloud.font = function (_) {
+        return arguments.length ? (font = functor(_), cloud) : font;
+      };
+
+      cloud.fontStyle = function (_) {
+        return arguments.length ? (fontStyle = functor(_), cloud) : fontStyle;
+      };
+
+      cloud.fontWeight = function (_) {
+        return arguments.length ? (fontWeight = functor(_), cloud) : fontWeight;
+      };
+
+      cloud.rotate = function (_) {
+        return arguments.length ? (rotate = functor(_), cloud) : rotate;
+      };
+
+      cloud.text = function (_) {
+        return arguments.length ? (text = functor(_), cloud) : text;
+      };
+
+      cloud.spiral = function (_) {
+        return arguments.length ? (spiral = spirals[_] || _, cloud) : spiral;
+      };
+
+      cloud.fontSize = function (_) {
+        return arguments.length ? (fontSize = functor(_), cloud) : fontSize;
+      };
+
+      cloud.padding = function (_) {
+        return arguments.length ? (padding = functor(_), cloud) : padding;
+      };
+
+      cloud.random = function (_) {
+        return arguments.length ? (random = _, cloud) : random;
+      };
+
+      cloud.on = function () {
+        var value = event.on.apply(event, arguments);
+        return value === event ? cloud : value;
+      };
+
+      return cloud;
+    };
+
+    function cloudText(d) {
+      return d.text;
+    }
+
+    function cloudFont() {
+      return "serif";
+    }
+
+    function cloudFontNormal() {
+      return "normal";
+    }
+
+    function cloudFontSize(d) {
+      return Math.sqrt(d.value);
+    }
+
+    function cloudRotate() {
+      return (~~(Math.random() * 6) - 3) * 30;
+    }
+
+    function cloudPadding() {
+      return 1;
+    }
+
+    // Fetches a monochrome sprite bitmap for the specified text.
+    // Load in batches for speed.
+    function cloudSprite(contextAndRatio, d, data, di) {
+      if (d.sprite) return;
+      var c = contextAndRatio.context,
+        ratio = contextAndRatio.ratio;
+
+      c.clearRect(0, 0, (cw << 5) / ratio, ch / ratio);
+      var x = 0,
+        y = 0,
+        maxh = 0,
+        n = data.length;
+      --di;
+      while (++di < n) {
+        d = data[di];
+        c.save();
+        c.font = d.style + " " + d.weight + " " + ~~((d.size + 1) / ratio) + "px " + d.font;
+        var w = c.measureText(d.text + "m").width * ratio,
+          h = d.size << 1;
+        if (d.rotate) {
+          var sr = Math.sin(d.rotate * cloudRadians),
+            cr = Math.cos(d.rotate * cloudRadians),
+            wcr = w * cr,
+            wsr = w * sr,
+            hcr = h * cr,
+            hsr = h * sr;
+          w = (Math.max(Math.abs(wcr + hsr), Math.abs(wcr - hsr)) + 0x1f) >> 5 << 5;
+          h = ~~Math.max(Math.abs(wsr + hcr), Math.abs(wsr - hcr));
+        } else {
+          w = (w + 0x1f) >> 5 << 5;
+        }
+        if (h > maxh) maxh = h;
+        if (x + w >= (cw << 5)) {
+          x = 0;
+          y += maxh;
+          maxh = 0;
+        }
+        if (y + h >= ch) break;
+        c.translate((x + (w >> 1)) / ratio, (y + (h >> 1)) / ratio);
+        if (d.rotate) c.rotate(d.rotate * cloudRadians);
+        c.fillText(d.text, 0, 0);
+        if (d.padding) c.lineWidth = 2 * d.padding, c.strokeText(d.text, 0, 0);
+        c.restore();
+        d.width = w;
+        d.height = h;
+        d.xoff = x;
+        d.yoff = y;
+        d.x1 = w >> 1;
+        d.y1 = h >> 1;
+        d.x0 = -d.x1;
+        d.y0 = -d.y1;
+        d.hasText = true;
+        x += w;
+      }
+      var pixels = c.getImageData(0, 0, (cw << 5) / ratio, ch / ratio).data,
+        sprite = [];
+      while (--di >= 0) {
+        d = data[di];
+        if (!d.hasText) continue;
+        var w = d.width,
+          w32 = w >> 5,
+          h = d.y1 - d.y0;
+        // Zero the buffer
+        for (var i = 0; i < h * w32; i++) sprite[i] = 0;
+        x = d.xoff;
+        if (x == null) return;
+        y = d.yoff;
+        var seen = 0,
+          seenRow = -1;
+        for (var j = 0; j < h; j++) {
+          for (var i = 0; i < w; i++) {
+            var k = w32 * j + (i >> 5),
+              m = pixels[((y + j) * (cw << 5) + (x + i)) << 2] ? 1 << (31 - (i % 32)) : 0;
+            sprite[k] |= m;
+            seen |= m;
+          }
+          if (seen) seenRow = j;
+          else {
+            d.y0++;
+            h--;
+            j--;
+            y++;
+          }
+        }
+        d.y1 = d.y0 + seenRow;
+        d.sprite = sprite.slice(0, (d.y1 - d.y0) * w32);
+      }
+    }
+
+    // Use mask-based collision detection.
+    function cloudCollide(tag, board, sw) {
+      sw >>= 5;
+      var sprite = tag.sprite,
+        w = tag.width >> 5,
+        lx = tag.x - (w << 4),
+        sx = lx & 0x7f,
+        msx = 32 - sx,
+        h = tag.y1 - tag.y0,
+        x = (tag.y + tag.y0) * sw + (lx >> 5),
+        last;
+      for (var j = 0; j < h; j++) {
+        last = 0;
+        for (var i = 0; i <= w; i++) {
+          if (((last << msx) | (i < w ? (last = sprite[j * w + i]) >>> sx : 0))
+            & board[x + i]) return true;
+        }
+        x += sw;
+      }
+      return false;
+    }
+
+    function cloudBounds(bounds, d) {
+      var b0 = bounds[0],
+        b1 = bounds[1];
+      if (d.x + d.x0 < b0.x) b0.x = d.x + d.x0;
+      if (d.y + d.y0 < b0.y) b0.y = d.y + d.y0;
+      if (d.x + d.x1 > b1.x) b1.x = d.x + d.x1;
+      if (d.y + d.y1 > b1.y) b1.y = d.y + d.y1;
+    }
+
+    function collideRects(a, b) {
+      return a.x + a.x1 > b[0].x && a.x + a.x0 < b[1].x && a.y + a.y1 > b[0].y && a.y + a.y0 < b[1].y;
+    }
+
+    function archimedeanSpiral(size) {
+      var e = size[0] / size[1];
+      return function (t) {
+        return [e * (t *= .1) * Math.cos(t), t * Math.sin(t)];
+      };
+    }
+
+    function rectangularSpiral(size) {
+      var dy = 4,
+        dx = dy * size[0] / size[1],
+        x = 0,
+        y = 0;
+      return function (t) {
+        var sign = t < 0 ? -1 : 1;
+        // See triangular numbers: T_n = n * (n + 1) / 2.
+        switch ((Math.sqrt(1 + 4 * sign * t) - sign) & 3) {
+          case 0:
+            x += dx;
+            break;
+          case 1:
+            y += dy;
+            break;
+          case 2:
+            x -= dx;
+            break;
+          default:
+            y -= dy;
+            break;
+        }
+        return [x, y];
+      };
+    }
+
+    // TODO reuse arrays?
+    function zeroArray(n) {
+      var a = [],
+        i = -1;
+      while (++i < n) a[i] = 0;
+      return a;
+    }
+
+    function cloudCanvas() {
+      return document.createElement("canvas");
+    }
+
+    function functor(d) {
+      return typeof d === "function" ? d : function () {
+        return d;
+      };
+    }
+
+    var spirals = {
+      archimedean: archimedeanSpiral,
+      rectangular: rectangularSpiral
+    };
+
+//  ========================================================================
+//  Below is an example of implementing the above code.
+    var fill = d3.scaleOrdinal(d3.schemeCategory20);
+
+    function draw(words) {
+      d3.select("#" + div_id).append("svg")
+        .attr("width", layout.size()[0])
+        .attr("height", layout.size()[1])
+        .append("g")
+        .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
+        .selectAll("text")
+        .data(words)
+        .enter().append("text")
+        .style("font-size", function (d) {
+          return d.size + "px";
+        })
+        .style("font-family", "Impact")
+        .style("fill", function (d, i) {
+          return fill(i);
+        })
+        .attr("text-anchor", "middle")
+        .attr("transform", function (d) {
+          return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+        })
+        .text(function (d) {
+          return d.text;
+        });
+    }
+
+    var layout = cloud()
+      .size([500, 500])
+      .words(data.map(function (d) {
+        return {text: d.value, size: d.count, test: "haha"};
+      }))
+      .padding(5)
+      .rotate(function () {
+        return ~~(Math.random() * 2) * 90;
+      })
+      .font("Impact")
+      .fontSize(function (d) {
+        return d.size;
+      })
+      .on("end", draw);
+
+    layout.start();
+  }
+
+})(typeof tgw === 'undefined' ? this['tgw'] = {} : tgw);//(window.hf = window.hf || {});
 
