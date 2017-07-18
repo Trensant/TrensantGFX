@@ -1565,6 +1565,11 @@ tgw.wordCloud2js = function (data, div_id, opts) {
 
 	WordCloud(canvas, opts);//, clearCanvas: true,  );
 }
+//=====================================================================================
+  /* d3WordCloud renders a wordcloud to a canvas using the d3 library
+  */
+
+
 
 })(typeof tgw === 'undefined'? this['tgw']={}: tgw);//(window.hf = window.hf || {});
 
