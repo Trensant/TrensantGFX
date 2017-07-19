@@ -1545,7 +1545,7 @@
 
     }
 
-    bubbleConfiguration = setOptions(bubbleDefaultConfiguration, options);
+    var bubbleConfiguration = setOptions(bubbleDefaultConfiguration, options);
 
     var width = bubbleConfiguration.svgWidth,
       height = bubbleConfiguration.svgHeight;
@@ -1680,8 +1680,7 @@
 //=====================================================================================
   /* d3WordCloud renders a wordcloud to a canvas using the d3 library
   */
-  tgw.d3WordCloud = function(data, div_id, opts)
-  {
+  tgw.d3WordCloud = function (data, div_id, options) {
     // Word cloud layout by Jason Davies, https://www.jasondavies.com/wordcloud/
     // Algorithm due to Jonathan Feinberg, http://static.mrfeinberg.com/bv_ch03.pdf
     var dispatch = d3.dispatch;
@@ -2093,7 +2092,31 @@
     };
 
 //  ========================================================================
-//  Below is an example of implementing the above code.
+//  Implementation of the cloud visualization.
+    function setOptions(default_configuration, options) {
+      /*Options.tree_attribute_names: Gets keys from the tree. If not present sets default values.*/
+
+      if (options) {
+        for (var setting in options) {
+          if (!(Object.keys(default_configuration).indexOf(setting) > -1)) {
+            console.warn(setting + ' is not a default setting.')
+          }
+          default_configuration[setting] = options[setting];
+        }
+      }
+      return default_configuration
+    }
+
+    var d3wordCloudDefaultConfiguration = {
+      svgWidth: tgw.containerDims(div_id).wid,
+      svgHeight: tgw.containerDims(div_id).hgt,
+      font: "Impact",
+      padding: 5,
+      fontWeight: "normal"
+    }
+
+    var d3wordCloudConfiguration = setOptions(d3wordCloudDefaultConfiguration, options);
+
     var fill = d3.scaleOrdinal(d3.schemeCategory20);
 
     function draw(words) {
@@ -2122,19 +2145,23 @@
     }
 
     var layout = cloud()
-      .size([500, 500])
+      .size([d3wordCloudConfiguration.svgWidth, d3wordCloudConfiguration.svgHeight])
       .words(data.map(function (d) {
-        return {text: d.value, size: d.count, test: "haha"};
+        return {text: d.value, size: d.count};
       }))
-      .padding(5)
-      .rotate(function () {
-        return ~~(Math.random() * 2) * 90;
-      })
-      .font("Impact")
+      .padding(d3wordCloudConfiguration.padding)
+      // .rotate(function () {
+      //   return ~~(Math.random() * 2) * 90;
+      // })
+      .font(d3wordCloudConfiguration.font)
       .fontSize(function (d) {
         return d.size;
       })
+      .fontWeight(d3wordCloudConfiguration.fontWeight)
       .on("end", draw);
+    if (options && "rotate" in options) {
+      layout.rotate(options.rotate);
+    }
 
     layout.start();
   }

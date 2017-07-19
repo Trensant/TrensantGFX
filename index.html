@@ -513,34 +513,34 @@ drawBanner=false    				// supress or show the top Trensant Logo
 // ===================================================================================================
       div = "d3Bubble";
       drawNewSectionDiv(div,{"name":"d3Bubble", "chartSty": "height:400"});
-      var bubbleSampleData = {name: "flare",
+      var bubbleSampleData = {id: "flare",
         children: [
           {
-            name: "analytics",
+            id: "analytics",
             children: [
               {
-                name: "cluster",
+                id: "cluster",
                 children: [
-                  {name: "AgglomerativeCluster", size: 3938},
-                  {name: "CommunityStructure", size: 3812},
-                  {name: "HierarchicalCluster", size: 6714},
-                  {name: "MergeEdge", size: 743}
+                  {id: "AgglomerativeCluster", value: 3938},
+                  {id: "CommunityStructure", value: 3812},
+                  {id: "HierarchicalCluster", value: 6714},
+                  {id: "MergeEdge", value: 743}
                 ]
               },
               {
-                name: "graph",
+                id: "graph",
                 children: [
-                  {name: "BetweennessCentrality", size: 3534},
-                  {name: "LinkDistance", size: 5731},
-                  {name: "MaxFlowMinCut", size: 7840},
-                  {name: "ShortestPaths", size: 5914},
-                  {name: "SpanningTree", size: 3416}
+                  {id: "BetweennessCentrality", value: 3534},
+                  {id: "LinkDistance", value: 5731},
+                  {id: "MaxFlowMinCut", value: 7840},
+                  {id: "ShortestPaths", value: 5914},
+                  {id: "SpanningTree", value: 3416}
                 ]
               },
               {
-                name: "optimization",
+                id: "optimization",
                 children: [
-                  {name: "AspectRatioBanker", size: 7074}
+                  {id: "AspectRatioBanker", value: 7074}
                 ]
               }
             ]
@@ -555,14 +555,13 @@ drawBanner=false    				// supress or show the top Trensant Logo
       tgw.tgPrettyPrint(bubbleSampleData, div+"_data");
 
       //render the chart
-      tgw.d3Bubble(bubbleSampleData, div+"_chart", {svgHeight: $('#'+div+"_chart").height()-50,svgWidth:
-	  $('#'+div+"_chart").width()-50, id: "name", value: "size"});
+      tgw.d3Bubble(bubbleSampleData, div+"_chart");
 
 // ==============================================================================================
 
 	  div = "d3WordCloud";
 	  drawNewSectionDiv(div, {"name":"d3WordCloud", "chartSty":"height:400"})
-	  var wordCloudSampleData =  data_2 = [{value: "the", count: 64},{ value: "quick", count: 32}];
+	  var wordCloudSampleData =[{value: "the", count: 64},{ value: "quick", count: 32}];
 
       //emit description info
       $("#"+div+"_desc").html("WordCloud");
