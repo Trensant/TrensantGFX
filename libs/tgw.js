@@ -1549,7 +1549,7 @@
 
     var width = bubbleConfiguration.svgWidth,
       height = bubbleConfiguration.svgHeight;
-
+    console.log(width, height)
     var svg = d3.select("#" + id).append("svg")
       .attr("width", width)
       .attr("height", height)
