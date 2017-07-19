@@ -427,7 +427,7 @@ drawBanner=false    				// supress or show the top Trensant Logo
 
 	//render the chart
     tgw.d3TreeMap(treeMapSampleData, div+"_chart", {parentID: "parent_id", childID: "child_id",
-      childName: "child_name", value: "child_buzz", svgHeight: 300,svgWidth: 300});
+      childName: "child_name", value: "child_buzz"});
 
 	//===================================================================================================
 	//trensant.d3radialTree
@@ -443,7 +443,7 @@ drawBanner=false    				// supress or show the top Trensant Logo
     tgw.tgPrettyPrint(radialTreeSampleData, div+"_data")
 
     //render the chart
-      tgw.d3RadialTree(radialTreeSampleData, div+"_chart", {textClick: "mouseover", onClick: function () {d3.select(this).style("fill", "red")}, svgHeight: 400, svgWidth: 400});
+      tgw.d3RadialTree(radialTreeSampleData, div+"_chart", {textClick: "mouseover", onClick: function () {d3.select(this).style("fill", "red")}});
 
 //  ===================================================================================================
 	  div = "d3Chord";
@@ -461,7 +461,7 @@ drawBanner=false    				// supress or show the top Trensant Logo
       //display sample data
       tgw.tgPrettyPrint(chordSampleData, div+"_data");
       //render the chart
-      tgw.d3Chord(chordSampleData, div+"_chart", {svgHeight: $('#'+div+"_chart").height()-50, svgWidth: $('#'+div+"_chart").width()-50});
+      tgw.d3Chord(chordSampleData, div+"_chart");
 
 // ===================================================================================================
 	  div = "d3ZoomableSunburst";
@@ -508,7 +508,7 @@ drawBanner=false    				// supress or show the top Trensant Logo
       tgw.tgPrettyPrint(sunburstSampleData, div+"_data");
 
       //render the chart
-      tgw.d3ZoomableSunburst(sunburstSampleData, div+"_chart", {svgHeight: $('#'+div+"_chart").height()-50,svgWidth: $('#'+div+"_chart").width()-50, value: "size"});
+      tgw.d3ZoomableSunburst(sunburstSampleData, div+"_chart", {value: "size"});
 
 // ===================================================================================================
       div = "d3Bubble";
@@ -561,7 +561,7 @@ drawBanner=false    				// supress or show the top Trensant Logo
 
 	  div = "d3WordCloud";
 	  drawNewSectionDiv(div, {"name":"d3WordCloud", "chartSty":"height:400"})
-	  var wordCloudSampleData =[{value: "the", count: 64},{ value: "quick", count: 32}];
+	  var wordCloudSampleData = [{value: "A", count: 64},{ value: "quick", count: 32},{ value: "red", count: 32},{ value: "fox", count: 96},{ value: "jumped", count: 16},{ value: "over", count: 32},{ value: "the", count: 128},{ value: "lazy", count: 32},{ value: "foo", count: 48},{ value: "bar", count: 12},{ value: "dog", count: 32}];
 
       //emit description info
       $("#"+div+"_desc").html("WordCloud");
