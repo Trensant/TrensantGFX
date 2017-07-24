@@ -16,9 +16,15 @@
     <!-- not compatible with d3.v3 or earlier  -->
 
     <!-- trensantGFX wrapper  -->
-    <script type="text/javascript" src="../libs/tgw.js"></script>      <!-- TrensantGFX is the main lib for all wrappers!                               -->
+    <script type="text/javascript" src="../libs/tgw.js"></script>
+    <!-- TrensantGFX is the main lib for all wrappers!                               -->
 
     <style>
+        body {
+            height: 98vh;
+            width: 98vw;
+        }
+
         .chartCSS {
             height: 100%;
             width: 100%;
@@ -30,9 +36,33 @@
 <body>
 <div class="chartCSS" id="_chart"></div>
 <script>
-  var wordCloudSampleData = [{value: "A", count: 64},{ value: "quick", count: 32},{ value: "red", count: 32},{ value: "fox", count: 96},{ value: "jumped", count: 16},{ value: "over", count: 32},{ value: "the", count: 128},{ value: "lazy", count: 32},{ value: "foo", count: 48},{ value: "bar", count: 12},{ value: "dog", count: 32},{ value: "eclipse", count: 4},{ value: "totality", count: 8},{ value: "narrow", count: 16},{ value: "ultimate", count: 32},{ value: "miles", count: 64},{ value: "astronomy", count: 128},{ value: "experience", count: 4},{ value: "Alaska", count: 8},{ value: "sniff", count: 16},{ value: "jackpot", count: 32},{ value: "common", count: 64},{ value: "nothing", count: 128},{ value: "first", count: 4},{ value: "moon", count: 8},{ value: "hidden", count: 16},{ value: "partial", count: 24},{ value: "darker", count: 32},{ value: "dramatic", count: 40},{ value: "red", count: 64},{ value: "streak", count: 96}];
+  var wordCloudSampleData = [{value: "A", count: 64}, {value: "quick", count: 32}, {
+    value: "red",
+    count: 32
+  }, {value: "fox", count: 96}, {value: "jumped", count: 16}, {value: "over", count: 32}, {
+    value: "the",
+    count: 128
+  }, {value: "lazy", count: 32}, {value: "foo", count: 48}, {value: "bar", count: 12}, {
+    value: "dog",
+    count: 32
+  }, {value: "eclipse", count: 4}, {value: "totality", count: 8}, {value: "narrow", count: 16}, {
+    value: "ultimate",
+    count: 32
+  }, {value: "miles", count: 64}, {value: "astronomy", count: 128}, {value: "experience", count: 4}, {
+    value: "Alaska",
+    count: 8
+  }, {value: "sniff", count: 16}, {value: "jackpot", count: 32}, {value: "common", count: 64}, {
+    value: "nothing",
+    count: 128
+  }, {value: "first", count: 4}, {value: "moon", count: 8}, {value: "hidden", count: 16}, {
+    value: "partial",
+    count: 24
+  }, {value: "darker", count: 32}, {value: "dramatic", count: 40}, {value: "red", count: 64}, {
+    value: "streak",
+    count: 96
+  }];
 
-  tgw.d3WordCloud(wordCloudSampleData, "_chart", {svgHeight: 400, svgWidth: 400});
+  tgw.d3WordCloud(wordCloudSampleData, "_chart");
 </script>
 
 </body>

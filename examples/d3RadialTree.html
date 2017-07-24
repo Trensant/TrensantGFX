@@ -2,23 +2,31 @@
 <html>
 <head>
     <!-- jquery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>     <!-- jquery is used for DOM stuff  -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- jquery is used for DOM stuff  -->
 
     <!--css for d3 rendering -->
     <link rel="stylesheet" href="../style/tgw.css">
 
-    <script type="text/javascript" src="../libs/helper-fns.js"></script>  <!-- helper-fns is a library for doing generec web work like URL param managment -->
+    <script type="text/javascript" src="../libs/helper-fns.js"></script>
+    <!-- helper-fns is a library for doing generec web work like URL param managment -->
 
 
-    <script src="https://d3js.org/d3.v4.min.js"></script>  				     <!-- not compatible with d3.v3 or earlier  -->
+    <script src="https://d3js.org/d3.v4.min.js"></script><!-- not compatible with d3.v3 or earlier  -->
 
     <!-- trensantGFX wrapper  -->
-    <script type="text/javascript" src="../libs/tgw.js"></script>      <!-- TrensantGFX is the main lib for all wrappers!                               -->
+    <script type="text/javascript" src="../libs/tgw.js"></script>
+    <!-- TrensantGFX is the main lib for all wrappers!                               -->
 
     <style>
+        body {
+            height: 98vh;
+            width: 98vw;
+        }
+
         .chartCSS {
-            height : 100%;
-            width  : 100%;
+            height: 100%;
+            width: 100%;
         }
     </style>
 
@@ -28,11 +36,36 @@
 <div class="chartCSS" id="_chart"></div>
 <script>
 
-  var radialTreeSampleData = {name: "Current Article", children: [{name: "DJIA", children: [{name: "Apple", children: [{name: "MacBook"}, {name: "IPhone"}]}, {name: "Home Depot"}, {name: "Chevron"}, {name: "IBM", children: [{name: "Watson", children: [{name: "Jeopardy"}, {name: "Trebeck"}]}, {name: "DOS"}]}]}, {name: "S&P500", children: [{name: "Pfizer", children: [{name: "Advil"}, {name: "Lyrica"}]}, {name: "Loews"}, {name: "Amgen"}, {name: "Kellogg", children: [{name: "Froot Loops"}, {name: "Apple Jacks"}, {name: "Pringles"}]}]}]}
+  var radialTreeSampleData = {
+    name: "Current Article",
+    children: [{
+      name: "DJIA",
+      children: [{
+        name: "Apple",
+        children: [{name: "MacBook"}, {name: "IPhone"}]
+      }, {name: "Home Depot"}, {name: "Chevron"}, {
+        name: "IBM",
+        children: [{name: "Watson", children: [{name: "Jeopardy"}, {name: "Trebeck"}]}, {name: "DOS"}]
+      }]
+    }, {
+      name: "S&P500",
+      children: [{
+        name: "Pfizer",
+        children: [{name: "Advil"}, {name: "Lyrica"}]
+      }, {name: "Loews"}, {name: "Amgen"}, {
+        name: "Kellogg",
+        children: [{name: "Froot Loops"}, {name: "Apple Jacks"}, {name: "Pringles"}]
+      }]
+    }]
+  }
 
 
   //render the chart
-  tgw.d3RadialTree(radialTreeSampleData, "_chart", {textClick: "mouseover", onClick: function () {d3.select(this).style("fill", "red")}, svgHeight: 800, svgWidth: 800});
+  tgw.d3RadialTree(radialTreeSampleData, "_chart", {
+    textClick: "mouseover", onClick: function () {
+      d3.select(this).style("fill", "red")
+    }
+  });
 
 </script>
 

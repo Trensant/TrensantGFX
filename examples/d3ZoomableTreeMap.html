@@ -1,26 +1,35 @@
 <!doctype HTML>
 <html>
 <head>
-<!-- jquery -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>     <!-- jquery is used for DOM stuff  -->
+    <!-- jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- jquery is used for DOM stuff  -->
 
-<!--css for d3 rendering -->
-<link rel="stylesheet" href="../style/tgw.css">
+    <!--css for d3 rendering -->
+    <link rel="stylesheet" href="../style/tgw.css">
 
-<script type="text/javascript" src="../libs/helper-fns.js"></script>  <!-- helper-fns is a library for doing generec web work like URL param managment -->
+    <script type="text/javascript" src="../libs/helper-fns.js"></script>
+    <!-- helper-fns is a library for doing generec web work like URL param managment -->
 
 
-<script src="https://d3js.org/d3.v4.min.js"></script>  				     <!-- not compatible with d3.v3 or earlier  -->
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <!-- not compatible with d3.v3 or earlier  -->
 
-<!-- trensantGFX wrapper  -->
-<script type="text/javascript" src="../libs/tgw.js"></script>      <!-- TrensantGFX is the main lib for all wrappers!                               -->
+    <!-- trensantGFX wrapper  -->
+    <script type="text/javascript" src="../libs/tgw.js"></script>
+    <!-- TrensantGFX is the main lib for all wrappers!                               -->
 
-<style> 
-.chartCSS {
-	height : 100%;
-	width  : 100%;
-}
-</style>
+    <style>
+        body {
+            height: 98vh;
+            width: 98vw;
+        }
+
+        .chartCSS {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
 
 </head>
 
@@ -28,7 +37,8 @@
 <div class="chartCSS" id="_chart"></div>
 <script>
 
- var treeMapSampleData =  { node: {
+  var treeMapSampleData = {
+    node: {
       child_name: "Anheuser-Busch",
       child_id: "565ec0939b72473c7ec9e1ad",
       children:
@@ -129,11 +139,14 @@
 
           }
         ]
-    } }
+    }
+  }
 
-	//render the chart
-    tgw.d3TreeMap(treeMapSampleData, "_chart", {parentID: "parent_id", childID: "child_id",
-      childName: "child_name", value: "child_buzz", svgHeight: 400, svgWidth: 400});
+  //render the chart
+  tgw.d3TreeMap(treeMapSampleData, "_chart", {
+    parentID: "parent_id", childID: "child_id",
+    childName: "child_name", value: "child_buzz"
+  });
 </script>
 
 </body>

@@ -2,107 +2,112 @@
 <html>
 <head>
 
-<script src="../libs/jquery.3.2.1.min.js"></script>                <!-- jquery is used for DOM stuff  -->
-<script src="../libs/d3.v4.min.js"></script>
+    <script src="../libs/jquery.3.2.1.min.js"></script>                <!-- jquery is used for DOM stuff  -->
+    <script src="../libs/d3.v4.min.js"></script>
 
-<!-- css for tgw -->
-<link rel="stylesheet"        href="../style/tgw.css">
+    <!-- css for tgw -->
+    <link rel="stylesheet" href="../style/tgw.css">
 
-<!-- js  -->
-<script type="text/javascript" src="../libs/tgw.js"></script>      <!-- TrensantGFX is the main lib for all wrappers!                               -->
+    <!-- js  -->
+    <script type="text/javascript" src="../libs/tgw.js"></script>
+    <!-- TrensantGFX is the main lib for all wrappers!                               -->
 
-<style> 
-body {
-  height: 100%;  
-  width : 100%;
-}
-.chartCSS {
-	height : 100%;
-	width  : 100%;
-}
-</style>
+    <style>
+        body {
+            height: 98vh;
+            width: 98vw;
+        }
+
+        .chartCSS {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
 
 </head>
 
 <body>
 <div class="chartCSS" id="_chart"></div>
 <script>
-     var sunburstSampleData = {id: "automobiles",
-       children: [
-         {
-           id: "cars",
-           children: [
-             {
-               id: "midsize",
-               children: [
-                 {id: "Camry", value: 35884},
-                 {id: "Accord", value: 38474},
-                 {id: "Optima", value: 27899},
-                 {id: "Malibu", value: 32000},
-                 {id: "Sonata", value: 26574}
-               ]
-             },
-             {
-               id: "luxury",
-               children: [
-                 {id: "MKZ", value: 56000},
-                 {id: "ES 300", value: 49000},
-                 {id: "Q70", value: 52000},
-                 {id: "LaCrosse", value: 39000},
-                 {id: "Avalon", value: 42000}
-               ]
-             },
-             {
-               id: "compact",
-               children: [
-                 {id: "Elantra", value: 19500},
-                 {id: "Civic", value: 22530},
-                 {id: "Sentra", value: 17000},
-                 {id: "Focus", value: 16900},
-                 {id: "Cruze", value: 14000}
-               ]
-             }
-           ]
-         },
-         {id: "trucks",
-           children: [
-             {
-               id: "pickups",
-               children: [
-                 {id: "Colorado", value: 39000},
-                 {id: "Big Horn", value: 42000},
-                 {id: "Ridgline", value: 80000},
-                 {id: "Tacoma", value: 65000},
-                 {id: "F-150", value: 50000}
-               ]
-             },
-             {
-               id: "minivans",
-               children: [
-                 {id: "Transit", value: 28000},
-                 {id: "Pacifica", value: 29000},
-                 {id: "Odyssey", value: 34000},
-                 {id: "Sienna", value: 35000},
-                 {id: "Sedona", value: 31000}
-               ]
-             },
-             {
-               id: "suvs",
-               children: [
-                 {id: "Model X", value: 90000},
-                 {id: "RX", value: 60000},
-                 {id: "Highlander", value: 55000},
-                 {id: "Cherokee", value: 42000},
-                 {id: "Santa Fe", value: 31000}
-               ]
-             }
-           ]}
-       ]
-     }
+  var sunburstSampleData = {
+    id: "automobiles",
+    children: [
+      {
+        id: "cars",
+        children: [
+          {
+            id: "midsize",
+            children: [
+              {id: "Camry", value: 35884},
+              {id: "Accord", value: 38474},
+              {id: "Optima", value: 27899},
+              {id: "Malibu", value: 32000},
+              {id: "Sonata", value: 26574}
+            ]
+          },
+          {
+            id: "luxury",
+            children: [
+              {id: "MKZ", value: 56000},
+              {id: "ES 300", value: 49000},
+              {id: "Q70", value: 52000},
+              {id: "LaCrosse", value: 39000},
+              {id: "Avalon", value: 42000}
+            ]
+          },
+          {
+            id: "compact",
+            children: [
+              {id: "Elantra", value: 19500},
+              {id: "Civic", value: 22530},
+              {id: "Sentra", value: 17000},
+              {id: "Focus", value: 16900},
+              {id: "Cruze", value: 14000}
+            ]
+          }
+        ]
+      },
+      {
+        id: "trucks",
+        children: [
+          {
+            id: "pickups",
+            children: [
+              {id: "Colorado", value: 39000},
+              {id: "Big Horn", value: 42000},
+              {id: "Ridgline", value: 80000},
+              {id: "Tacoma", value: 65000},
+              {id: "F-150", value: 50000}
+            ]
+          },
+          {
+            id: "minivans",
+            children: [
+              {id: "Transit", value: 28000},
+              {id: "Pacifica", value: 29000},
+              {id: "Odyssey", value: 34000},
+              {id: "Sienna", value: 35000},
+              {id: "Sedona", value: 31000}
+            ]
+          },
+          {
+            id: "suvs",
+            children: [
+              {id: "Model X", value: 90000},
+              {id: "RX", value: 60000},
+              {id: "Highlander", value: 55000},
+              {id: "Cherokee", value: 42000},
+              {id: "Santa Fe", value: 31000}
+            ]
+          }
+        ]
+      }
+    ]
+  }
 
 
-      //render the chart
-      tgw.d3ZoomableSunburst(sunburstSampleData, "_chart", {name: "id", svgHeight: 500, svgWidth: 500});
+  //render the chart
+  tgw.d3ZoomableSunburst(sunburstSampleData, "_chart", {name: "id"});
 
 </script>
 
