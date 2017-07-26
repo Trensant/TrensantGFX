@@ -1549,7 +1549,6 @@
 
     var width = bubbleConfiguration.svgWidth,
       height = bubbleConfiguration.svgHeight;
-    console.log(width, height)
     var svg = d3.select("#" + id).append("svg")
       .attr("width", width)
       .attr("height", height)
@@ -2164,6 +2163,10 @@
     }
 
     layout.start();
+  }
+//  =================================================================================
+  tgw.d3Choropleth = function (data, div_id, options) {
+    console.log(ca.type)
   }
 
 })(typeof tgw === 'undefined' ? this['tgw'] = {} : tgw);//(window.hf = window.hf || {});

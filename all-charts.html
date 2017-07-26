@@ -20,6 +20,7 @@
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>              <!-- as of 20170620 Google says it needs this for maps      -->
 
 <script src="https://d3js.org/d3.v4.min.js"></script>  				 <!-- not compatible with d3.v3 or earlier  -->
+<script type="text/javascript"  src="./dev/ca.json"></script>
 <script type="text/javascript" src="./libs/wordcloud2.js"></script>  <!-- wordcloud2.js is a wordcloud library -->
 
 <script type="text/javascript" src="./libs/plotly.min.js"></script>  <!-- loads the excellent plot.ly lib.  see more at plot.ly -->
@@ -649,6 +650,9 @@ drawBanner=false    				// supress or show the top Trensant Logo
       tgw.d3WordCloud(wordCloudSampleData, div+"_chart");
 
 	// end main area-----------------------------------------------------------------------------------
+
+//	=====================================================================================
+	  tgw.d3Choropleth()
 	}// mainArea body
 
 	tgw.repeatUntil (tgw.gglChartsLoaded , mainArea,null, 75, 35, function(r,c){if (r==false) console.log('chart load error')}); // this waits for gglcharts to load by checking every 75ms up to 35 times...
