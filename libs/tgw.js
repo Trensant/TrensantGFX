@@ -2232,12 +2232,12 @@
       svg.append("g")
         .attr("class", "d3Counties")
         .selectAll("path")
-        .data(topojson.feature(us, us.objects.tracts).features)
+        .data(topojson.feature(us, us.objects.states).features)
         .enter().append("path")
-        // .attr("fill", function(d) { console.log(d); return color(d.rate = unemployment.get(d.id)); })
-        // .attr("d", path)
-        // .append("title")
-        // .text(function(d) { return d.rate + "%"; });
+        .attr("fill", function(d) { return color(d.properties.density); })
+        .attr("d", path)
+        .append("title")
+        .text(function(d) { return d.rate + "%"; });
 
       // svg.append("path")
         // .datum(topojson.mesh(us, us.objects.tracts, function(a, b) { return a !== b; }))
