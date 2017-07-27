@@ -2236,25 +2236,27 @@
       svg.append("g")
         .attr("class", "d3Counties")
         .selectAll("path")
-        .data(function () {
-          var _features = topojson.feature(us, us.objects.states).features
-          for (var a in _features) {
-                for (var b in _features[a].geometry.coordinates) {
-                  for (var c in _features[a].geometry.coordinates[b]){
-                    for (var d in _features[a].geometry.coordinates[b][c]) {
-                      if (typeof(_features[a].geometry.coordinates[b][c][d]) =='number') {
-                        _features[a].geometry.coordinates[b][c][d] =_features[a].geometry.coordinates[b][c][d]/2
-                      }
-                      else {
-                        for (var e in _features[a].geometry.coordinates[b][c][d]) {
-                          _features[a].geometry.coordinates[b][c][d][e] =
-                            _features[a].geometry.coordinates[b][c][d][e]/2
-                        }
-                      }
-                    }
-                  }
-                }
+        .data(
+          function () {
+            var _features = topojson.feature(us, us.objects.states).features
 
+            function scaleCoordinates(feat) {
+              for (var b in feat) {
+                if (typeof(feat[b]) == "number") {
+                  feat[b] = feat[b]
+                }
+                else {
+                  scaleCoordinates(feat[b])
+                }
+              }
+
+            }
+
+
+          for (var a in _features) {
+            for (var b in _features[a].geometry.coordinates) {
+              scaleCoordinates(_features[a].geometry.coordinates[b])
+                }
           }
           return _features})
         .enter().append("path")
