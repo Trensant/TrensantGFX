@@ -661,10 +661,10 @@ drawBanner=false    				// supress or show the top Trensant Logo
       $("#"+div+"_desc").html("Choropleth");
 
 //      //display sample data
-//      tgw.tgPrettyPrint(choroplethSampleData, div+"_data");
+      tgw.tgPrettyPrint(choroplethSampleData, div+"_data");
 
       //render the chart
-	  tgw.d3Choropleth(choroplethSampleData, div+"_chart")
+	  tgw.d3Choropleth(choroplethSampleData, div+"_chart", {thresholds: [1, 10, 50, 100, 500, 1000, 5000, 10000], colorScheme: d3.schemeBlues[9], coordinateScale: 0.75})
 	}
 	// mainArea body
 // end main area-----------------------------------------------------------------------------------

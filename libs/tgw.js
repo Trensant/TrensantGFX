@@ -2166,10 +2166,19 @@
   }
 //  =================================================================================
   tgw.d3Choropleth = function (data, div_id, options) {
-    
-	var svg = d3.select("#" + div_id).append("svg"),
-      width = 960; //+svg.attr("width"),
-      height = 600; //+svg.attr("height");
+
+    var choroplethDefaultConfiguration = {
+      children: "children",
+      value: "value",
+      name: "name",
+      svgWidth: tgw.containerDims(div_id).wid,
+      svgHeight: tgw.containerDims(div_id).hgt
+    }
+    choroplethConfiguration = setOptions(choroplethDefaultConfiguration, options);
+
+    var svg = d3.select("#" + div_id).append("svg"),
+      width = sunburstConfiguration.svgWidth,
+      height = sunburstConfiguration.svgHeight;
 
 	  svg.attr("width", width).attr("height", height)
 	  
@@ -2181,12 +2190,13 @@
       .domain([1, 10])
       .rangeRound([600, 860]);
 
+    var color_values = d3.scaleThreshold()
+      .domain(options.thresholds)
+      .range(options.colorScheme);
+
+    /*Code for adding a legend
     var color = d3.scaleQuantize()
       .domain(d3.range(0, 20, 5))
-      .range(d3.schemeBlues[9]);
-
-    var color_values = d3.scaleThreshold()
-      .domain([1, 10, 50, 100, 500, 1000, 5000, 10000])
       .range(d3.schemeBlues[9]);
 
     var g = svg.append("g")
@@ -2222,21 +2232,26 @@
       .select(".domain")
       .remove();
 
-    // d3.queue()
-    //   .defer(d3.json, "https://d3js.org/us-10m.v1.json")
-    //   .defer(d3.tsv, "unemployment.tsv", function(d) { unemployment.set(d.id, +d.rate); })
-    //   .await(ready);
-
-    data = scaleCoordinates(data)
+    d3.queue()
+      .defer(d3.json, "https://d3js.org/us-10m.v1.json")
+      .defer(d3.tsv, "unemployment.tsv", function(d) { unemployment.set(d.id, +d.rate); })
+      .await(ready);*/
+	
     ready(data)
 	
     function ready(us) {
-      // if (error) throw error;
       svg.append("g")
         .attr("class", "d3Counties")
         .selectAll("path")
         .data(
-          function () { return us;})
+          function () {
+            var _features = topojson.feature(us, us.objects.states).features
+          for (var a in _features) {
+            for (var b in _features[a].geometry.coordinates) {
+              scaleCoordinates(_features[a].geometry.coordinates[b])
+                }
+          }
+          return _features})
         .enter().append("path")
         .attr("fill", function(d) {
           d.name = d.properties.name;
@@ -2247,31 +2262,47 @@
         .text(function(d) { return d.name + "," + d.value; });
 
       svg.append("path")
-        .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
+        .datum(function() {
+          var _mesh = topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; })
+          for (var a in _mesh.coordinates) {
+            for (var b in _mesh.coordinates[a]) {
+              scaleCoordinates(_mesh.coordinates[a][b])
+            }
+          }
+          return _mesh
+        })
         .attr("class", "d3States")
         .attr("d", path);
     }
 
-    function scaleCoordinates(featureCoordinates) {
-      var _features = topojson.feature(featureCoordinates, featureCoordinates.objects.states).features
+    function scaleCoordinates(feat) {
+      var scale = options.coordinateScale ? options.coordinateScale : 1
 
-      function scaleCoordinates(feat) {
-        for (var b in feat) {
-          if (typeof(feat[b]) == "number") {
-            feat[b] = feat[b]/2
-          }
-          else {
-            scaleCoordinates(feat[b])
-          }
+
+      for (var b in feat) {
+        if (typeof(feat[b]) == "number") {
+          feat[b] = feat[b] * scale;
+        }
+        else {
+          scaleCoordinates(feat[b])
         }
       }
-      for (var a in _features) { console.log(_features[a].geometry.coordinates)
-        for (var b in _features[a].geometry.coordinates) {
-          scaleCoordinates(_features[a].geometry.coordinates[b])
-        }
-      }
-    return _features
     }
+
+    function setOptions(default_configuration, options) {
+      /*Options.tree_attribute_names: Gets keys from the tree. If not present sets default values.*/
+
+      if (options) {
+        for (var setting in options) {
+          if (!(Object.keys(default_configuration).indexOf(setting) > -1)) {
+            console.warn(setting + ' is not a default setting.')
+          }
+          default_configuration[setting] = options[setting];
+        }
+      }
+      return default_configuration
+    }
+
   }
 
 })(typeof tgw === 'undefined' ? this['tgw'] = {} : tgw);//(window.hf = window.hf || {});
