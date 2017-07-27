@@ -2234,10 +2234,13 @@
         .selectAll("path")
         .data(topojson.feature(us, us.objects.states).features)
         .enter().append("path")
-        .attr("fill", function(d) { return color(d.properties.density); })
+        .attr("fill", function(d) {
+          d.name = d.properties.name;
+          d.value = d.properties.density
+          return color(d.properties.density); })
         .attr("d", path)
         .append("title")
-        .text(function(d) { return d.rate + "%"; });
+        .text(function(d) { return d.name + "," + d.value; });
 
       // svg.append("path")
         // .datum(topojson.mesh(us, us.objects.tracts, function(a, b) { return a !== b; }))
