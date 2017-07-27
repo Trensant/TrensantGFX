@@ -2226,39 +2226,17 @@
     //   .defer(d3.json, "https://d3js.org/us-10m.v1.json")
     //   .defer(d3.tsv, "unemployment.tsv", function(d) { unemployment.set(d.id, +d.rate); })
     //   .await(ready);
-	
+
+    data = scaleCoordinates(data)
     ready(data)
 	
     function ready(us) {
-		
       // if (error) throw error;
-		
       svg.append("g")
         .attr("class", "d3Counties")
         .selectAll("path")
         .data(
-          function () {
-            var _features = topojson.feature(us, us.objects.states).features
-
-            function scaleCoordinates(feat) {
-              for (var b in feat) {
-                if (typeof(feat[b]) == "number") {
-                  feat[b] = feat[b]
-                }
-                else {
-                  scaleCoordinates(feat[b])
-                }
-              }
-
-            }
-
-
-          for (var a in _features) {
-            for (var b in _features[a].geometry.coordinates) {
-              scaleCoordinates(_features[a].geometry.coordinates[b])
-                }
-          }
-          return _features})
+          function () { return us;})
         .enter().append("path")
         .attr("fill", function(d) {
           d.name = d.properties.name;
@@ -2274,6 +2252,26 @@
         .attr("d", path);
     }
 
+    function scaleCoordinates(featureCoordinates) {
+      var _features = topojson.feature(featureCoordinates, featureCoordinates.objects.states).features
+
+      function scaleCoordinates(feat) {
+        for (var b in feat) {
+          if (typeof(feat[b]) == "number") {
+            feat[b] = feat[b]/2
+          }
+          else {
+            scaleCoordinates(feat[b])
+          }
+        }
+      }
+      for (var a in _features) { console.log(_features[a].geometry.coordinates)
+        for (var b in _features[a].geometry.coordinates) {
+          scaleCoordinates(_features[a].geometry.coordinates[b])
+        }
+      }
+    return _features
+    }
   }
 
 })(typeof tgw === 'undefined' ? this['tgw'] = {} : tgw);//(window.hf = window.hf || {});
