@@ -2194,9 +2194,8 @@
       .attr("transform", "translate(0,40)");
 
     g.selectAll("rect")
-      .data(color.range().map(function(d) { console.log(d);
+      .data(color.range().map(function(d) {
         d = color.invertExtent(d);
-        console.log(d);
         if (d[0] == null) d[0] = x.domain()[0];
         if (d[1] == null) d[1] = x.domain()[1];
         return d;
@@ -2237,7 +2236,27 @@
       svg.append("g")
         .attr("class", "d3Counties")
         .selectAll("path")
-        .data(topojson.feature(us, us.objects.states).features)
+        .data(function () {
+          var _features = topojson.feature(us, us.objects.states).features
+          for (var a in _features) {
+                for (var b in _features[a].geometry.coordinates) {
+                  for (var c in _features[a].geometry.coordinates[b]){
+                    for (var d in _features[a].geometry.coordinates[b][c]) {
+                      if (typeof(_features[a].geometry.coordinates[b][c][d]) =='number') {
+                        _features[a].geometry.coordinates[b][c][d] =_features[a].geometry.coordinates[b][c][d]/2
+                      }
+                      else {
+                        for (var e in _features[a].geometry.coordinates[b][c][d]) {
+                          _features[a].geometry.coordinates[b][c][d][e] =
+                            _features[a].geometry.coordinates[b][c][d][e]/2
+                        }
+                      }
+                    }
+                  }
+                }
+
+          }
+          return _features})
         .enter().append("path")
         .attr("fill", function(d) {
           d.name = d.properties.name;
