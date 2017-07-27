@@ -2181,8 +2181,12 @@
       .domain([1, 10])
       .rangeRound([600, 860]);
 
-    var color = d3.scaleThreshold()
-      .domain(d3.range(2, 10))
+    var color = d3.scaleQuantize()
+      .domain(d3.range(0, 20, 5))
+      .range(d3.schemeBlues[9]);
+
+    var color_values = d3.scaleThreshold()
+      .domain([1, 10, 50, 100, 500, 1000, 5000, 10000])
       .range(d3.schemeBlues[9]);
 
     var g = svg.append("g")
@@ -2190,8 +2194,9 @@
       .attr("transform", "translate(0,40)");
 
     g.selectAll("rect")
-      .data(color.range().map(function(d) {
+      .data(color.range().map(function(d) { console.log(d);
         d = color.invertExtent(d);
+        console.log(d);
         if (d[0] == null) d[0] = x.domain()[0];
         if (d[1] == null) d[1] = x.domain()[1];
         return d;
@@ -2237,15 +2242,15 @@
         .attr("fill", function(d) {
           d.name = d.properties.name;
           d.value = d.properties.density
-          return color(d.properties.density); })
+          return color_values(d.properties.density); })
         .attr("d", path)
         .append("title")
         .text(function(d) { return d.name + "," + d.value; });
 
-      // svg.append("path")
-        // .datum(topojson.mesh(us, us.objects.tracts, function(a, b) { return a !== b; }))
-        // .attr("class", "d3States")
-        // .attr("d", path);
+      svg.append("path")
+        .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
+        .attr("class", "d3States")
+        .attr("d", path);
     }
 
   }
