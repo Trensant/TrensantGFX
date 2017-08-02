@@ -2190,12 +2190,15 @@
     var path = d3.geoPath();
 
     var x = d3.scaleLinear()
-      .domain([1, 10])
-      .rangeRound([680, 1000]);
+      .domain([1, 9])
+      .rangeRound([1, 9]);
 
     var color = d3.scaleThreshold()
       .domain(options.thresholds)
       .range(options.colorScheme);
+
+    var colorLegend = d3.scaleThreshold()
+      .domain([20,40,80,160,320,640,1000,2000]).range(options.colorScheme)
 
     var svgLegend = d3.select("#" + div_id).append("svg")
       .attr("width", width / 2).attr("height", height / 2)
@@ -2205,46 +2208,37 @@
       .attr("transform", "translate(0,40)");
 
     g.selectAll("rect")
-      .data(color.range().map(function (d) {
-        d = color.invertExtent(d);
-        if (d[0] == null) d[0] = color.domain()[0];
-        if (d[1] == null) d[1] = color.domain()[1];
+      .data(colorLegend.range().map(function (d) {         d = colorLegend.invertExtent(d);
+        if (d[0] == null) d[0] = x.domain()[0];
+        if (d[1] == null) d[1] = x.domain()[1];
         return d;
       }))
       .enter().append("rect")
       .attr("height", 8)
-      .attr("x", function (d, i) {
-        return i * 25;
+      .attr("x", function(d) { return x(d[0]);
       })
-      .attr("width", function () {
-        return 25;
+      .attr("width", function(d) { return (x(d[1]-x(d[0])));
       })
       .attr("fill", function (d) {
-        return color(d[0]);
+        return colorLegend(d[0]);
       });
 
     g.append("text")
       .attr("class", "caption")
-      .attr("x", function (d, i) {
-        return i * 25;
-      })
+      .attr("x", x.range()[0])
       .attr("y", -6)
       .attr("fill", "#000")
       .attr("text-anchor", "start")
       .attr("font-weight", "bold")
       .text(choroplethConfiguration.legendTitle);
 
-    /*g.call(d3.axisBottom(x)
+    g.call(d3.axisBottom(x)
       .tickSize(13)
-      .tickFormat(function(x, i) { return i ? x : x + "%"; })
-      .tickValues(color.domain()))
+      .tickFormat(function(x, i) { console.log(x,i); return i ? x : x; })
+      .tickValues(colorLegend.domain()))
       .select(".domain")
       .remove();
 
-    d3.queue()
-      .defer(d3.json, "https://d3js.org/us-10m.v1.json")
-      .defer(d3.tsv, "unemployment.tsv", function(d) { unemployment.set(d.id, +d.rate); })
-      .await(ready);*/
 
     var height_width = {
       height_min: 100000,
