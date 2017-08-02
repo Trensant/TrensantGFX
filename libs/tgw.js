@@ -2165,7 +2165,12 @@
     layout.start();
   }
 //  =================================================================================
+  /*
+  * options:
+  * svgHeight, svgWidth*/
   tgw.d3Choropleth = function (data, div_id, options) {
+
+
 
     var choroplethDefaultConfiguration = {
       children: "children",
@@ -2241,6 +2246,7 @@
       height_max: 0,
       width_min: 10000,
       width_max: 0}
+    var scaleFactors;
     ready(data)
 
 
@@ -2253,15 +2259,16 @@
             var _features = topojson.feature(us, us.objects.states).features
             for (var a in _features) {
               for (var b in _features[a].geometry.coordinates) {
-                get_height_width(_features[a].geometry.coordinates[b])
+                get_height_width(_features[a].geometry.coordinates[b]);
               }
             }
-            height_width.height = Math.round(height_width.height_max - height_width.height_min)
-            height_width.width = Math.round(height_width.width_max - height_width.width_min)
-            console.log(height/height_width.height, width/height_width.width)
+
+            console.log(height_width);
+            scaleFactors = get_scale_factors(height_width);
+            console.log(scaleFactors)
             for (var a in _features) {
               for (var b in _features[a].geometry.coordinates) {
-                scaleCoordinates(_features[a].geometry.coordinates[b])
+                scaleCoordinates(_features[a].geometry.coordinates[b], scaleFactors)
               }
             }
 
@@ -2280,13 +2287,22 @@
           var _mesh = topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; })
           for (var a in _mesh.coordinates) {
             for (var b in _mesh.coordinates[a]) {
-              scaleCoordinates(_mesh.coordinates[a][b])
+              scaleCoordinates(_mesh.coordinates[a][b], scaleFactors)
             }
           }
           return _mesh
         })
         .attr("class", "d3States")
         .attr("d", path);
+    }
+
+    function get_scale_factors(height_width) {
+      scaleFactors = {};
+      height_width.height = Math.round(height_width.height_max /*- height_width.height_min*/);
+      height_width.width = Math.round(height_width.width_max /*- height_width.width_min*/);
+      scaleFactors.height = height_width.height > height ? height/height_width.height : height_width.height/height;
+      scaleFactors.width = height_width.width > width ? width/height_width.width : height_width.width/width;
+      return scaleFactors;
     }
 
 
@@ -2304,20 +2320,17 @@
       }
     }
 
-    function scaleDown(feat) {
 
-    }
-
-    function scaleCoordinates(feat) {
+    function scaleCoordinates(feat, scaleFactors) {
       var scale = options.coordinateScale ? options.coordinateScale : 1
       for (var b in feat) {
         if (typeof(feat[b]) == "number") {
-        
-          feat[0] = feat[0] * (height/height_width.height);
-          feat[1] = feat[1] * (width/height_width.width);
+          feat[0] = feat[0] * scaleFactors.width;
+          feat[1] = feat[1] * scaleFactors.height;
+          break
         }
         else {
-          scaleCoordinates(feat[b])
+          scaleCoordinates(feat[b], scaleFactors)
         }
       }
     }
