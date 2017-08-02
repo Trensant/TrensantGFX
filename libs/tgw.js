@@ -2167,66 +2167,74 @@
 //  =================================================================================
   /*
   * options:
-  * svgHeight, svgWidth*/
+  * svgHeight, svgWidth, legend*/
   tgw.d3Choropleth = function (data, div_id, options) {
-
-
-
     var choroplethDefaultConfiguration = {
       children: "children",
       value: "value",
       name: "name",
       svgWidth: tgw.containerDims(div_id).wid,
-      svgHeight: tgw.containerDims(div_id).hgt
+      svgHeight: tgw.containerDims(div_id).hgt,
+      legendTitle: "scale"
     }
-    choroplethConfiguration = setOptions(choroplethDefaultConfiguration, options);
+    var choroplethConfiguration = setOptions(choroplethDefaultConfiguration, options);
 
     var svg = d3.select("#" + div_id).append("svg"),
       width = choroplethConfiguration.svgWidth,
       height = choroplethConfiguration.svgHeight;
 
-	  svg.attr("width", width).attr("height", height)
-	  
+    svg.attr("width", width).attr("height", height)
+
     var unemployment = d3.map();
 
     var path = d3.geoPath();
 
     var x = d3.scaleLinear()
       .domain([1, 10])
-      .rangeRound([600, 860]);
+      .rangeRound([680, 1000]);
 
     var color = d3.scaleThreshold()
       .domain(options.thresholds)
       .range(options.colorScheme);
 
+    var svgLegend = d3.select("#" + div_id).append("svg")
+      .attr("width", width / 2).attr("height", height / 2)
 
-    /*var g = svg.append("g")
+    var g = svgLegend.append("g")
       .attr("class", "key")
       .attr("transform", "translate(0,40)");
 
-    /*g.selectAll("rect")
-      .data(color.range().map(function(d) {
+    g.selectAll("rect")
+      .data(color.range().map(function (d) {
         d = color.invertExtent(d);
-        if (d[0] == null) d[0] = x.domain()[0];
-        if (d[1] == null) d[1] = x.domain()[1];
+        if (d[0] == null) d[0] = color.domain()[0];
+        if (d[1] == null) d[1] = color.domain()[1];
         return d;
       }))
       .enter().append("rect")
       .attr("height", 8)
-      .attr("x", function(d) { return x(d[0]); })
-      .attr("width", function(d) { return x(d[1]) - x(d[0]); })
-      .attr("fill", function(d) { return color(d[0]); });
+      .attr("x", function (d, i) {
+        return i * 25;
+      })
+      .attr("width", function () {
+        return 25;
+      })
+      .attr("fill", function (d) {
+        return color(d[0]);
+      });
 
     g.append("text")
       .attr("class", "caption")
-      .attr("x", x.range()[0])
+      .attr("x", function (d, i) {
+        return i * 25;
+      })
       .attr("y", -6)
       .attr("fill", "#000")
       .attr("text-anchor", "start")
       .attr("font-weight", "bold")
-      .text("Unemployment rate");
+      .text(choroplethConfiguration.legendTitle);
 
-    g.call(d3.axisBottom(x)
+    /*g.call(d3.axisBottom(x)
       .tickSize(13)
       .tickFormat(function(x, i) { return i ? x : x + "%"; })
       .tickValues(color.domain()))
@@ -2237,11 +2245,13 @@
       .defer(d3.json, "https://d3js.org/us-10m.v1.json")
       .defer(d3.tsv, "unemployment.tsv", function(d) { unemployment.set(d.id, +d.rate); })
       .await(ready);*/
+
     var height_width = {
       height_min: 100000,
       height_max: 0,
       width_min: 10000,
-      width_max: 0}
+      width_max: 0
+    }
     var scaleFactors;
     ready(data)
 
@@ -2259,28 +2269,34 @@
               }
             }
 
-            console.log(height_width);
+
             scaleFactors = get_scale_factors(height_width);
-            console.log(scaleFactors)
+
             for (var a in _features) {
               for (var b in _features[a].geometry.coordinates) {
                 scaleCoordinates(_features[a].geometry.coordinates[b], scaleFactors)
               }
             }
 
-            return _features})
+            return _features
+          })
         .enter().append("path")
-        .attr("fill", function(d) {
+        .attr("fill", function (d) {
           d.name = d.properties.name;
           d.value = d.properties.density
-          return color(d.properties.density); })
+          return color(d.properties.density);
+        })
         .attr("d", path)
         .append("title")
-        .text(function(d) { return d.name + "," + d.value; });
+        .text(function (d) {
+          return d.name + "," + d.value;
+        });
 
       svg.append("path")
-        .datum(function() {
-          var _mesh = topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; })
+        .datum(function () {
+          var _mesh = topojson.mesh(us, us.objects.states, function (a, b) {
+            return a !== b;
+          })
           for (var a in _mesh.coordinates) {
             for (var b in _mesh.coordinates[a]) {
               scaleCoordinates(_mesh.coordinates[a][b], scaleFactors)
@@ -2296,8 +2312,8 @@
       scaleFactors = {};
       height_width.height = Math.round(height_width.height_max);
       height_width.width = Math.round(height_width.width_max);
-      scaleFactors.height = height_width.height > height ? height/height_width.height : height_width.height/height;
-      scaleFactors.width = height_width.width > width ? width/height_width.width : height_width.width/width;
+      scaleFactors.height = height_width.height > height ? height / height_width.height : height_width.height / height;
+      scaleFactors.width = height_width.width > width ? width / height_width.width : height_width.width / width;
       return scaleFactors;
     }
 
@@ -2321,8 +2337,8 @@
       var scale = options.coordinateScale ? options.coordinateScale : 1
       for (var b in feat) {
         if (typeof(feat[b]) == "number") {
-          feat[0] = (feat[0] - height_width.width_min) * scaleFactors.width ;
-          feat[1] = (feat[1] - height_width.height_min) * scaleFactors.height ;
+          feat[0] = (feat[0] - height_width.width_min) * scaleFactors.width;
+          feat[1] = (feat[1] - height_width.height_min) * scaleFactors.height;
           break
         }
         else {
