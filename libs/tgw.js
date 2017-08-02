@@ -2195,20 +2195,16 @@
       .domain([1, 10])
       .rangeRound([600, 860]);
 
-    var color_values = d3.scaleThreshold()
+    var color = d3.scaleThreshold()
       .domain(options.thresholds)
       .range(options.colorScheme);
 
-    /*Code for adding a legend
-    var color = d3.scaleQuantize()
-      .domain(d3.range(0, 20, 5))
-      .range(d3.schemeBlues[9]);
 
-    var g = svg.append("g")
+    /*var g = svg.append("g")
       .attr("class", "key")
       .attr("transform", "translate(0,40)");
 
-    g.selectAll("rect")
+    /*g.selectAll("rect")
       .data(color.range().map(function(d) {
         d = color.invertExtent(d);
         if (d[0] == null) d[0] = x.domain()[0];
@@ -2277,7 +2273,7 @@
         .attr("fill", function(d) {
           d.name = d.properties.name;
           d.value = d.properties.density
-          return color_values(d.properties.density); })
+          return color(d.properties.density); })
         .attr("d", path)
         .append("title")
         .text(function(d) { return d.name + "," + d.value; });
@@ -2298,8 +2294,8 @@
 
     function get_scale_factors(height_width) {
       scaleFactors = {};
-      height_width.height = Math.round(height_width.height_max /*- height_width.height_min*/);
-      height_width.width = Math.round(height_width.width_max /*- height_width.width_min*/);
+      height_width.height = Math.round(height_width.height_max);
+      height_width.width = Math.round(height_width.width_max);
       scaleFactors.height = height_width.height > height ? height/height_width.height : height_width.height/height;
       scaleFactors.width = height_width.width > width ? width/height_width.width : height_width.width/width;
       return scaleFactors;
@@ -2325,8 +2321,8 @@
       var scale = options.coordinateScale ? options.coordinateScale : 1
       for (var b in feat) {
         if (typeof(feat[b]) == "number") {
-          feat[0] = feat[0] * scaleFactors.width;
-          feat[1] = feat[1] * scaleFactors.height;
+          feat[0] = (feat[0] - height_width.width_min) * scaleFactors.width ;
+          feat[1] = (feat[1] - height_width.height_min) * scaleFactors.height ;
           break
         }
         else {
