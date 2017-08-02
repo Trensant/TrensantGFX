@@ -2177,8 +2177,8 @@
     choroplethConfiguration = setOptions(choroplethDefaultConfiguration, options);
 
     var svg = d3.select("#" + div_id).append("svg"),
-      width = sunburstConfiguration.svgWidth,
-      height = sunburstConfiguration.svgHeight;
+      width = choroplethConfiguration.svgWidth,
+      height = choroplethConfiguration.svgHeight;
 
 	  svg.attr("width", width).attr("height", height)
 	  
@@ -2236,9 +2236,14 @@
       .defer(d3.json, "https://d3js.org/us-10m.v1.json")
       .defer(d3.tsv, "unemployment.tsv", function(d) { unemployment.set(d.id, +d.rate); })
       .await(ready);*/
-	
+    var height_width = {
+      height_min: 100000,
+      height_max: 0,
+      width_min: 10000,
+      width_max: 0}
     ready(data)
-	
+
+
     function ready(us) {
       svg.append("g")
         .attr("class", "d3Counties")
@@ -2246,12 +2251,21 @@
         .data(
           function () {
             var _features = topojson.feature(us, us.objects.states).features
-          for (var a in _features) {
-            for (var b in _features[a].geometry.coordinates) {
-              scaleCoordinates(_features[a].geometry.coordinates[b])
-                }
-          }
-          return _features})
+            for (var a in _features) {
+              for (var b in _features[a].geometry.coordinates) {
+                get_height_width(_features[a].geometry.coordinates[b])
+              }
+            }
+            height_width.height = Math.round(height_width.height_max - height_width.height_min)
+            height_width.width = Math.round(height_width.width_max - height_width.width_min)
+            console.log(height/height_width.height, width/height_width.width)
+            for (var a in _features) {
+              for (var b in _features[a].geometry.coordinates) {
+                scaleCoordinates(_features[a].geometry.coordinates[b])
+              }
+            }
+
+            return _features})
         .enter().append("path")
         .attr("fill", function(d) {
           d.name = d.properties.name;
@@ -2275,13 +2289,32 @@
         .attr("d", path);
     }
 
-    function scaleCoordinates(feat) {
-      var scale = options.coordinateScale ? options.coordinateScale : 1
 
-
+    function get_height_width(feat) {
       for (var b in feat) {
         if (typeof(feat[b]) == "number") {
-          feat[b] = feat[b] * scale;
+          height_width.height_min = (feat[1] < height_width.height_min ? feat[1] : height_width.height_min)
+          height_width.height_max = (feat[1] > height_width.height_max ? feat[1] : height_width.height_max)
+          height_width.width_min = (feat[0] < height_width.width_min ? feat[0] : height_width.width_min)
+          height_width.width_max = (feat[0] > height_width.width_max ? feat[0] : height_width.width_max)
+        }
+        else {
+          get_height_width(feat[b])
+        }
+      }
+    }
+
+    function scaleDown(feat) {
+
+    }
+
+    function scaleCoordinates(feat) {
+      var scale = options.coordinateScale ? options.coordinateScale : 1
+      for (var b in feat) {
+        if (typeof(feat[b]) == "number") {
+        
+          feat[0] = feat[0] * (height/height_width.height);
+          feat[1] = feat[1] * (width/height_width.width);
         }
         else {
           scaleCoordinates(feat[b])
@@ -2302,7 +2335,6 @@
       }
       return default_configuration
     }
-
   }
 
 })(typeof tgw === 'undefined' ? this['tgw'] = {} : tgw);//(window.hf = window.hf || {});
