@@ -2198,14 +2198,13 @@
       .range(options.colorScheme);
 
     var quantile = d3.scaleQuantile()
-      .range(d3.range(2, width, width/choroplethConfiguration.thresholds.length)).domain(Math.min.apply(Math, choroplethConfiguration.thresholds.min), Math.min.apply(Math, choroplethConfiguration.thresholds.max))
-
-
+      .domain(Math.min.apply(Math, choroplethConfiguration.thresholds), Math.min.apply(Math, choroplethConfiguration.thresholds))
+      .range(d3.range(2, width, width/choroplethConfiguration.thresholds.length))
 
     var quantile_inverse = d3.scaleQuantile()
-      .range(d3.range(Math.min.apply(Math, choroplethConfiguration.thresholds.min), Math.min.apply(Math, choroplethConfiguration.thresholds.max), 9))
-      .domain(2, width)
-    console.log(quantile(30))
+      .domain([2, width])
+      .range(d3.range(Math.min.apply(Math, choroplethConfiguration.thresholds), Math.max.apply(Math, choroplethConfiguration.thresholds), Math.max.apply(Math, choroplethConfiguration.thresholds)/choroplethConfiguration.thresholds.length))
+
 
 
     var colorLegend = d3.scaleThreshold()
@@ -2246,7 +2245,8 @@
 
     g.call(d3.axisBottom(x)
       .tickSize(13)
-      .tickFormat(function(x, i) { return i ? quantile_inverse(x) : quantile_inverse(x); })
+      .tickFormat(function(x, i) { return i ? Math.round(quantile_inverse(x)) :
+        Math.round(quantile_inverse(x)); })
       .tickValues(colorLegend.domain()))
       .select(".domain")
       .remove();
