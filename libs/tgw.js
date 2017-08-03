@@ -2195,8 +2195,8 @@
     var path = d3.geoPath();
 
     var x = d3.scaleLinear()
-      .domain([1, 9])
-      .rangeRound([1, 9]);
+      .domain([1, 100])
+      .rangeRound([1, 100]);
 
     var quantile = d3.scaleQuantile()
       .domain(Math.min.apply(Math, choroplethConfiguration.thresholds),
@@ -2215,6 +2215,44 @@
 
     var colorLegend = d3.scaleThreshold()
       .domain(quantile.range()).range(choroplethConfiguration.colorScheme)
+
+    var height_width = {
+      height_min: 1000000000000,
+      height_max: -1000000000000,
+      width_min: 1000000000000,
+      width_max: -1000000000000
+    }
+    var scaleFactors;
+    ready(data)
+
+    //==============================
+    var ext_color_domain = [0, 50, 150, 350, 750, 1500];
+    var legend_labels = ["< 50", "50+", "150+", "350+", "750+", "> 1500"]
+
+    var legend = svg.selectAll("g.legend")
+
+      .data(ext_color_domain)
+      .enter().append("g")
+      .attr("transform", "translate("+choroplethConfiguration.legendxPosition+","+choroplethConfiguration.legendyPosition+")")
+      .attr("class", "legend");
+
+    var ls_w = 20, ls_h = 20;
+
+    legend.append("rect")
+      .attr("x", 20)
+      .attr("y", function(d, i){ return height - (i*ls_h) - 2*ls_h;})
+      .attr("width", ls_w)
+      .attr("height", ls_h)
+      .style("fill", function(d, i) { return color(d); })
+      .style("opacity", 0.8);
+
+    legend.append("text")
+      .attr("x", 50)
+      .attr("y", function(d, i){ return height - (i*ls_h) - ls_h - 4;})
+      .text(function(d, i){ return legend_labels[i]; });
+
+    // ============================================
+
 
     if (choroplethConfiguration.legendOn) {
       var svgLegend = d3.select("#" + div_id).append("svg")
@@ -2262,14 +2300,7 @@
         .select(".domain")
         .remove();
     }
-    var height_width = {
-      height_min: 1000000000000,
-      height_max: -1000000000000,
-      width_min: 1000000000000,
-      width_max: -1000000000000
-    }
-    var scaleFactors;
-    ready(data)
+
 
     function ready(us) {
       svg.append("g")
