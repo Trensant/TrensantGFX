@@ -2178,7 +2178,7 @@
       svgWidth: tgw.containerDims(div_id).wid,
       svgHeight: tgw.containerDims(div_id).hgt,
       legendWidth: tgw.containerDims(div_id).wid,
-      legendHeight: 30,
+      legendHeight: 100,
       legendOn: true,
       legendTitle: "scale",
       thresholds: [1, 2, 3, 4, 5, 6, 7, 8, 9],
@@ -2188,7 +2188,7 @@
 
     var svg = d3.select("#" + div_id).append("svg"),
       width = choroplethConfiguration.svgWidth,
-      height = choroplethConfiguration.svgHeight;
+      height = choroplethConfiguration.legendOn ? (choroplethConfiguration.svgHeight - choroplethConfiguration.legendHeight) : choroplethConfiguration.svgHeight;
 
     svg.attr("width", width).attr("height", height)
 
@@ -2218,7 +2218,7 @@
 
     if (choroplethConfiguration.legendOn) {
       var svgLegend = d3.select("#" + div_id).append("svg")
-        .attr("width", width).attr("height", height)
+        .attr("width", width).attr("height", choroplethConfiguration.legendHeight)
 
       var g = svgLegend.append("g")
         .attr("class", "key")
@@ -2263,10 +2263,10 @@
         .remove();
     }
     var height_width = {
-      height_min: 100000,
-      height_max: 0,
-      width_min: 10000,
-      width_max: 0
+      height_min: 1000000000000,
+      height_max: -1000000000000,
+      width_min: 1000000000000,
+      width_max: -1000000000000
     }
     var scaleFactors;
     ready(data)
