@@ -664,9 +664,11 @@ drawBanner=false    				// supress or show the top Trensant Logo
       tgw.tgPrettyPrint(choroplethSampleData, div+"_data");
 
       //render the chart
-	  tgw.d3Choropleth(choroplethSampleData, div+"_chart", {thresholds: [1, 5, 25, 50, 100, 250, 500, 1000], colorScheme: d3.schemeReds[8], value: 'density', legendOn: false})
+	  tgw.d3Choropleth(choroplethSampleData, div+"_chart", {colorThresholds: [10, 20, 50, 75, 100, 250, 500, 1000], colorScheme: d3.schemeReds[8], value: 'density', verticalLegendDomain: [0, 50, 150, 350, 750, 1500],
+        verticalLegendLabels: ["< 50", "50+", "150+", "350+", "750+", "> 1500"], verticalLegendxPosition: 475, verticalLegendOn: true})
 	}
-	// mainArea body
+
+    // mainArea body
 // end main area-----------------------------------------------------------------------------------
 
 	tgw.repeatUntil (tgw.gglChartsLoaded , mainArea,null, 75, 35, function(r,c){if (r==false) console.log('chart load error')}); // this waits for gglcharts to load by checking every 75ms up to 35 times...

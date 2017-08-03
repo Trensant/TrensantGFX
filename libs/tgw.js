@@ -2177,11 +2177,16 @@
       name: "name",
       svgWidth: tgw.containerDims(div_id).wid,
       svgHeight: tgw.containerDims(div_id).hgt,
-      legendWidth: tgw.containerDims(div_id).wid,
-      legendHeight: 100,
-      legendOn: true,
-      legendTitle: "scale",
-      thresholds: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      horizontalLegendOn: false,
+      horizontalLegendWidth: tgw.containerDims(div_id).wid,
+      horizontalLegendHeight: 100,
+      horizontalLegendTitle: "scale",
+      colorThresholds: null,
+      verticalLegendOn: false,
+      verticalLegendxPosition: 0,
+      verticalLegendyPosition: 0,
+      verticalLegendLabels: null,
+      verticalLegendDomain: null,
       colorScheme: d3.schemeReds
     }
     var choroplethConfiguration = setOptions(choroplethDefaultConfiguration, options);
@@ -2199,18 +2204,18 @@
       .rangeRound([1, 100]);
 
     var quantile = d3.scaleQuantile()
-      .domain(Math.min.apply(Math, choroplethConfiguration.thresholds),
-        Math.min.apply(Math, choroplethConfiguration.thresholds))
-      .range(d3.range(2, width, width / choroplethConfiguration.thresholds.length))
+      .domain(Math.min.apply(Math, choroplethConfiguration.colorThresholds),
+        Math.min.apply(Math, choroplethConfiguration.colorThresholds))
+      .range(d3.range(2, width, width / choroplethConfiguration.colorThresholds.length))
 
     var quantile_inverse = d3.scaleQuantile()
       .domain([2, width])
-      .range(d3.range(Math.min.apply(Math, choroplethConfiguration.thresholds),
-        Math.max.apply(Math, choroplethConfiguration.thresholds),
-        Math.max.apply(Math, choroplethConfiguration.thresholds) / choroplethConfiguration.thresholds.length))
+      .range(d3.range(Math.min.apply(Math, choroplethConfiguration.colorThresholds),
+        Math.max.apply(Math, choroplethConfiguration.colorThresholds),
+        Math.max.apply(Math, choroplethConfiguration.colorThresholds) / choroplethConfiguration.colorThresholds.length))
 
     var color = d3.scaleThreshold()
-      .domain(choroplethConfiguration.thresholds)
+      .domain(choroplethConfiguration.colorThresholds)
       .range(choroplethConfiguration.colorScheme);
 
     var colorLegend = d3.scaleThreshold()
@@ -2226,15 +2231,15 @@
     ready(data)
 
     //==============================
-    var ext_color_domain = [0, 50, 150, 350, 750, 1500];
-    var legend_labels = ["< 50", "50+", "150+", "350+", "750+", "> 1500"]
+    var ext_color_domain = choroplethConfiguration.verticalLegendDomain;
+    var legend_labels = choroplethConfiguration.verticalLegendLabels;
 
-    var legend = svg.selectAll("g.legend")
-
+    if (choroplethConfiguration.verticalLegendOn) {
+    var legend = svg.selectAll("g.d3ChoroplethLegend")
       .data(ext_color_domain)
       .enter().append("g")
-      .attr("transform", "translate("+choroplethConfiguration.legendxPosition+","+choroplethConfiguration.legendyPosition+")")
-      .attr("class", "legend");
+      .attr("transform", "translate("+choroplethConfiguration.verticalLegendxPosition+","+choroplethConfiguration.verticalLegendyPosition+")")
+      .attr("class", "d3ChoroplethLegend");
 
     var ls_w = 20, ls_h = 20;
 
@@ -2250,13 +2255,14 @@
       .attr("x", 50)
       .attr("y", function(d, i){ return height - (i*ls_h) - ls_h - 4;})
       .text(function(d, i){ return legend_labels[i]; });
+    }
 
     // ============================================
 
 
-    if (choroplethConfiguration.legendOn) {
+    if (choroplethConfiguration.horizontalLegendOn) {
       var svgLegend = d3.select("#" + div_id).append("svg")
-        .attr("width", width).attr("height", choroplethConfiguration.legendHeight)
+        .attr("width", width).attr("height", choroplethConfiguration.horizontalLegendHeight)
 
       var g = svgLegend.append("g")
         .attr("class", "key")
@@ -2288,7 +2294,7 @@
         .attr("fill", "#000")
         .attr("text-anchor", "start")
         .attr("font-weight", "bold")
-        .text(choroplethConfiguration.legendTitle);
+        .text(choroplethConfiguration.horizontalLegendTitle);
 
       g.call(d3.axisBottom(x)
         .tickSize(13)
