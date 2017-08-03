@@ -2197,18 +2197,30 @@
       .domain(options.thresholds)
       .range(options.colorScheme);
 
+    var quantile = d3.scaleQuantile()
+      .range(d3.range(2, width, width/choroplethConfiguration.thresholds.length)).domain(Math.min.apply(Math, choroplethConfiguration.thresholds.min), Math.min.apply(Math, choroplethConfiguration.thresholds.max))
+
+
+
+    var quantile_inverse = d3.scaleQuantile()
+      .range(d3.range(Math.min.apply(Math, choroplethConfiguration.thresholds.min), Math.min.apply(Math, choroplethConfiguration.thresholds.max), 9))
+      .domain(2, width)
+    console.log(quantile(30))
+
+
     var colorLegend = d3.scaleThreshold()
-      .domain([20,40,80,160,320,640,1000,2000]).range(options.colorScheme)
+      .domain(quantile.range()).range(choroplethConfiguration.colorScheme)
 
     var svgLegend = d3.select("#" + div_id).append("svg")
-      .attr("width", width / 2).attr("height", height / 2)
+      .attr("width", width).attr("height", height)
 
     var g = svgLegend.append("g")
       .attr("class", "key")
       .attr("transform", "translate(0,40)");
 
     g.selectAll("rect")
-      .data(colorLegend.range().map(function (d) {         d = colorLegend.invertExtent(d);
+      .data(colorLegend.range().map(function (d) {
+        d = colorLegend.invertExtent(d);
         if (d[0] == null) d[0] = x.domain()[0];
         if (d[1] == null) d[1] = x.domain()[1];
         return d;
@@ -2234,7 +2246,7 @@
 
     g.call(d3.axisBottom(x)
       .tickSize(13)
-      .tickFormat(function(x, i) { console.log(x,i); return i ? x : x; })
+      .tickFormat(function(x, i) { return i ? quantile_inverse(x) : quantile_inverse(x); })
       .tickValues(colorLegend.domain()))
       .select(".domain")
       .remove();
