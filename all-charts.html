@@ -664,7 +664,7 @@ drawBanner=false    				// supress or show the top Trensant Logo
       tgw.tgPrettyPrint(choroplethSampleData, div+"_data");
 
       //render the chart
-	  tgw.d3Choropleth(choroplethSampleData, div+"_chart", {thresholds: [1, 10, 50, 100, 500, 1000, 5000, 15000], colorScheme: d3.schemeReds[8], svgWidth: 866/1.5, svgHeight: 496/1.5})
+	  tgw.d3Choropleth(choroplethSampleData, div+"_chart", {thresholds: [1, 10, 50, 100, 500, 1000, 5000, 15000], colorScheme: d3.schemeReds[8], value: 'density'})
 	}
 	// mainArea body
 // end main area-----------------------------------------------------------------------------------

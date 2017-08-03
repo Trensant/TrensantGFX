@@ -2166,16 +2166,23 @@
   }
 //  =================================================================================
   /*
+  * d3Chloropleth renders polygon shapes that are shaded and colored by the data.
+  * param: data (dict)
+  * data
   * options:
   * svgHeight, svgWidth, legend*/
   tgw.d3Choropleth = function (data, div_id, options) {
     var choroplethDefaultConfiguration = {
-      children: "children",
       value: "value",
       name: "name",
       svgWidth: tgw.containerDims(div_id).wid,
       svgHeight: tgw.containerDims(div_id).hgt,
-      legendTitle: "scale"
+      legendWidth: tgw.containerDims(div_id).wid,
+      legendHeight: 30,
+      legendOn: true,
+      legendTitle: "scale",
+      thresholds: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      colorScheme: d3.schemeReds
     }
     var choroplethConfiguration = setOptions(choroplethDefaultConfiguration, options);
 
@@ -2185,73 +2192,76 @@
 
     svg.attr("width", width).attr("height", height)
 
-    var unemployment = d3.map();
-
     var path = d3.geoPath();
 
     var x = d3.scaleLinear()
       .domain([1, 9])
       .rangeRound([1, 9]);
 
-    var color = d3.scaleThreshold()
-      .domain(options.thresholds)
-      .range(options.colorScheme);
-
     var quantile = d3.scaleQuantile()
-      .domain(Math.min.apply(Math, choroplethConfiguration.thresholds), Math.min.apply(Math, choroplethConfiguration.thresholds))
-      .range(d3.range(2, width, width/choroplethConfiguration.thresholds.length))
+      .domain(Math.min.apply(Math, choroplethConfiguration.thresholds),
+        Math.min.apply(Math, choroplethConfiguration.thresholds))
+      .range(d3.range(2, width, width / choroplethConfiguration.thresholds.length))
 
     var quantile_inverse = d3.scaleQuantile()
       .domain([2, width])
-      .range(d3.range(Math.min.apply(Math, choroplethConfiguration.thresholds), Math.max.apply(Math, choroplethConfiguration.thresholds), Math.max.apply(Math, choroplethConfiguration.thresholds)/choroplethConfiguration.thresholds.length))
+      .range(d3.range(Math.min.apply(Math, choroplethConfiguration.thresholds),
+        Math.max.apply(Math, choroplethConfiguration.thresholds),
+        Math.max.apply(Math, choroplethConfiguration.thresholds) / choroplethConfiguration.thresholds.length))
 
-
+    var color = d3.scaleThreshold()
+      .domain(choroplethConfiguration.thresholds)
+      .range(choroplethConfiguration.colorScheme);
 
     var colorLegend = d3.scaleThreshold()
       .domain(quantile.range()).range(choroplethConfiguration.colorScheme)
 
-    var svgLegend = d3.select("#" + div_id).append("svg")
-      .attr("width", width).attr("height", height)
+    if (choroplethConfiguration.legendOn) {
+      var svgLegend = d3.select("#" + div_id).append("svg")
+        .attr("width", width).attr("height", height)
 
-    var g = svgLegend.append("g")
-      .attr("class", "key")
-      .attr("transform", "translate(0,40)");
+      var g = svgLegend.append("g")
+        .attr("class", "key")
+        .attr("transform", "translate(0,40)");
 
-    g.selectAll("rect")
-      .data(colorLegend.range().map(function (d) {
-        d = colorLegend.invertExtent(d);
-        if (d[0] == null) d[0] = x.domain()[0];
-        if (d[1] == null) d[1] = x.domain()[1];
-        return d;
-      }))
-      .enter().append("rect")
-      .attr("height", 8)
-      .attr("x", function(d) { return x(d[0]);
-      })
-      .attr("width", function(d) { return (x(d[1]-x(d[0])));
-      })
-      .attr("fill", function (d) {
-        return colorLegend(d[0]);
-      });
+      g.selectAll("rect")
+        .data(colorLegend.range().map(function (d) {
+          d = colorLegend.invertExtent(d);
+          if (d[0] == null) d[0] = x.domain()[0];
+          if (d[1] == null) d[1] = x.domain()[1];
+          return d;
+        }))
+        .enter().append("rect")
+        .attr("height", 8)
+        .attr("x", function (d) {
+          return x(d[0]);
+        })
+        .attr("width", function (d) {
+          return (x(d[1] - x(d[0])));
+        })
+        .attr("fill", function (d) {
+          return colorLegend(d[0]);
+        });
 
-    g.append("text")
-      .attr("class", "caption")
-      .attr("x", x.range()[0])
-      .attr("y", -6)
-      .attr("fill", "#000")
-      .attr("text-anchor", "start")
-      .attr("font-weight", "bold")
-      .text(choroplethConfiguration.legendTitle);
+      g.append("text")
+        .attr("class", "caption")
+        .attr("x", x.range()[0])
+        .attr("y", -6)
+        .attr("fill", "#000")
+        .attr("text-anchor", "start")
+        .attr("font-weight", "bold")
+        .text(choroplethConfiguration.legendTitle);
 
-    g.call(d3.axisBottom(x)
-      .tickSize(13)
-      .tickFormat(function(x, i) { return i ? Math.round(quantile_inverse(x)) :
-        Math.round(quantile_inverse(x)); })
-      .tickValues(colorLegend.domain()))
-      .select(".domain")
-      .remove();
-
-
+      g.call(d3.axisBottom(x)
+        .tickSize(13)
+        .tickFormat(function (x, i) {
+          return i ? Math.round(quantile_inverse(x)) :
+            Math.round(quantile_inverse(x));
+        })
+        .tickValues(colorLegend.domain()))
+        .select(".domain")
+        .remove();
+    }
     var height_width = {
       height_min: 100000,
       height_max: 0,
@@ -2260,7 +2270,6 @@
     }
     var scaleFactors;
     ready(data)
-
 
     function ready(us) {
       svg.append("g")
@@ -2274,30 +2283,25 @@
                 get_height_width(_features[a].geometry.coordinates[b]);
               }
             }
-
-
             scaleFactors = get_scale_factors(height_width);
-
             for (var a in _features) {
               for (var b in _features[a].geometry.coordinates) {
                 scaleCoordinates(_features[a].geometry.coordinates[b], scaleFactors)
               }
             }
-
             return _features
           })
         .enter().append("path")
         .attr("fill", function (d) {
-          d.name = d.properties.name;
-          d.value = d.properties.density
-          return color(d.properties.density);
+          d.name = d.properties[choroplethConfiguration.name];
+          d.value = d.properties[choroplethConfiguration.value]
+          return color(d.properties[choroplethConfiguration.value]);
         })
         .attr("d", path)
         .append("title")
         .text(function (d) {
           return d.name + "," + d.value;
         });
-
       svg.append("path")
         .datum(function () {
           var _mesh = topojson.mesh(us, us.objects.states, function (a, b) {
@@ -2323,7 +2327,6 @@
       return scaleFactors;
     }
 
-
     function get_height_width(feat) {
       for (var b in feat) {
         if (typeof(feat[b]) == "number") {
@@ -2337,7 +2340,6 @@
         }
       }
     }
-
 
     function scaleCoordinates(feat, scaleFactors) {
       var scale = options.coordinateScale ? options.coordinateScale : 1
