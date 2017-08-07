@@ -2183,6 +2183,7 @@
       horizontalLegendTitle: "scale",
       colorThresholds: null,
       verticalLegendOn: false,
+      legendOrientation: 'vertical',
       verticalLegendxPosition: 0,
       verticalLegendyPosition: 0,
       verticalLegendLabels: null,
@@ -2244,16 +2245,30 @@
     var ls_w = 20, ls_h = 20;
 
     legend.append("rect")
-      .attr("x", 20)
-      .attr("y", function(d, i){ return height - (i*ls_h) - 2*ls_h;})
+      .attr("x", function (d, i) {
+        if (choroplethConfiguration.legendOrientation == 'vertical') {return 20;}
+      else {	return i*ls_w }
+			})
+      .attr("y", function(d, i) {
+        if (choroplethConfiguration.legendOrientation == 'vertical') { console.log('rect ' + i);
+				return i*ls_h }
+      else {return 20;}
+      })
       .attr("width", ls_w)
       .attr("height", ls_h)
       .style("fill", function(d, i) { return color(d); })
       .style("opacity", 0.8);
 
     legend.append("text")
-      .attr("x", 50)
-      .attr("y", function(d, i){ return height - (i*ls_h) - ls_h - 4;})
+      .attr("x", function (d, i) {
+		if (choroplethConfiguration.legendOrientation == 'vertical') {return 50;}
+			else { return i*ls_w  }
+		  })
+      .attr("y", function(d, i) {
+				if (choroplethConfiguration.legendOrientation == 'vertical') {console.log('text ' + i);
+				return i*ls_h + 15}
+				else {return 50;}
+				})
       .text(function(d, i){ return legend_labels[i]; });
     }
 
