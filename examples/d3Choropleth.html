@@ -1,7 +1,7 @@
 <!doctype HTML>
 <html>
 <head>
-
+    <meta charset="UTF-8">
     <script src="../libs/jquery.3.2.1.min.js"></script>                <!-- jquery is used for DOM stuff  -->
     <script src="../libs/d3.v4.min.js"></script>
 
@@ -32,7 +32,8 @@
 <script>
 
   //render the chart
-  tgw.d3Choropleth(choroplethSampleData, "_chart");
+  tgw.d3Choropleth(choroplethSampleData, "_chart", {colorThresholds: [10, 20, 50, 75, 100, 250, 500, 1000], colorScheme: d3.schemeReds[8], value: 'density', verticalLegendDomain: [0, 50, 150, 350, 750, 1500],
+    verticalLegendLabels: ["< 50", "50+", "150+", "350+", "750+", "> 1500"], verticalLegendxPosition: 475, verticalLegendOn: true});
 
 </script>
 
