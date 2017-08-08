@@ -2262,14 +2262,17 @@
     legend.append("text")
       .attr("x", function (d, i) {
 		if (choroplethConfiguration.legendOrientation == 'vertical') {return 50;}
-			else { return i*ls_w  }
+			else { return null } //i*ls_w  }
 		  })
       .attr("y", function(d, i) {
-				if (choroplethConfiguration.legendOrientation == 'vertical') {console.log('text ' + i);
-				return i*ls_h + 15}
-				else {return 50;}
+				if (choroplethConfiguration.legendOrientation == 'vertical') {return i*ls_h + 15}
+				else {return null;}
 				})
-      .text(function(d, i){ return legend_labels[i]; });
+			.attr("transform", function(d,i) {
+				if (choroplethConfiguration.legendOrientation == 'vertical') return null;
+				else {return "translate("+i*ls_h+" 50)rotate(45 0 0)";}
+				})
+      .text(function(d, i){ return legend_labels[i];});
     }
 
     // ============================================
