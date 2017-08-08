@@ -2190,7 +2190,7 @@
 
     var svg = d3.select("#" + div_id).append("svg"),
       width = choroplethConfiguration.svgWidth,
-      height = choroplethConfiguration.legendOn ? (choroplethConfiguration.svgHeight - choroplethConfiguration.legendHeight) : choroplethConfiguration.svgHeight;
+      height = choroplethConfiguration.svgHeight;
 
     svg.attr("width", width).attr("height", height)
 
