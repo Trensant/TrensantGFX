@@ -2200,27 +2200,9 @@
 
     var path = d3.geoPath();
 
-    var x = d3.scaleLinear()
-      .domain([1, 100])
-      .rangeRound([1, 100]);
-
-    var quantile = d3.scaleQuantile()
-      .domain(Math.min.apply(Math, choroplethConfiguration.colorThresholds),
-        Math.min.apply(Math, choroplethConfiguration.colorThresholds))
-      .range(d3.range(2, width, width / choroplethConfiguration.colorThresholds.length))
-
-    var quantile_inverse = d3.scaleQuantile()
-      .domain([2, width])
-      .range(d3.range(Math.min.apply(Math, choroplethConfiguration.colorThresholds),
-        Math.max.apply(Math, choroplethConfiguration.colorThresholds),
-        Math.max.apply(Math, choroplethConfiguration.colorThresholds) / choroplethConfiguration.colorThresholds.length))
-
     var color = d3.scaleThreshold()
       .domain(choroplethConfiguration.colorThresholds)
       .range(choroplethConfiguration.colorScheme);
-
-    var colorLegend = d3.scaleThreshold()
-      .domain(quantile.range()).range(choroplethConfiguration.colorScheme)
 
     var height_width = {
       height_min: 1000000000000,
@@ -2234,8 +2216,7 @@
     //==============================
     var ext_color_domain = choroplethConfiguration.verticalLegendDomain;
     var legend_labels = choroplethConfiguration.verticalLegendLabels;
-
-    if (choroplethConfiguration.verticalLegendOn) {
+    
     var legend = svg.selectAll("g.d3ChoroplethLegend")
       .data(ext_color_domain)
       .enter().append("g")
@@ -2273,59 +2254,9 @@
 				else {return "translate("+i*ls_h+" 50)rotate(45 0 0)";}
 				})
       .text(function(d, i){ return legend_labels[i];});
-    }
+    
 
     // ============================================
-
-
-    if (choroplethConfiguration.horizontalLegendOn) {
-      var svgLegend = d3.select("#" + div_id).append("svg")
-        .attr("width", width).attr("height", choroplethConfiguration.horizontalLegendHeight)
-
-      var g = svgLegend.append("g")
-        .attr("class", "key")
-        .attr("transform", "translate(0,40)");
-
-      g.selectAll("rect")
-        .data(colorLegend.range().map(function (d) {
-          d = colorLegend.invertExtent(d);
-          if (d[0] == null) d[0] = x.domain()[0];
-          if (d[1] == null) d[1] = x.domain()[1];
-          return d;
-        }))
-        .enter().append("rect")
-        .attr("height", 8)
-        .attr("x", function (d) {
-          return x(d[0]);
-        })
-        .attr("width", function (d) {
-          return (x(d[1] - x(d[0])));
-        })
-        .attr("fill", function (d) {
-          return colorLegend(d[0]);
-        });
-
-      g.append("text")
-        .attr("class", "caption")
-        .attr("x", x.range()[0])
-        .attr("y", -6)
-        .attr("fill", "#000")
-        .attr("text-anchor", "start")
-        .attr("font-weight", "bold")
-        .text(choroplethConfiguration.horizontalLegendTitle);
-
-      g.call(d3.axisBottom(x)
-        .tickSize(13)
-        .tickFormat(function (x, i) {
-          return i ? Math.round(quantile_inverse(x)) :
-            Math.round(quantile_inverse(x));
-        })
-        .tickValues(colorLegend.domain()))
-        .select(".domain")
-        .remove();
-    }
-
-
     function ready(us) {
       svg.append("g")
         .attr("class", "d3Counties")
