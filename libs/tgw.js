@@ -2177,18 +2177,14 @@
       name: "name",
       svgWidth: tgw.containerDims(div_id).wid,
       svgHeight: tgw.containerDims(div_id).hgt,
-      horizontalLegendOn: false,
-      horizontalLegendWidth: tgw.containerDims(div_id).wid,
-      horizontalLegendHeight: 100,
-      horizontalLegendTitle: "scale",
-      colorThresholds: null,
-      verticalLegendOn: false,
+      legendOn: false,
       legendOrientation: 'vertical',
-      verticalLegendxPosition: 0,
-      verticalLegendyPosition: 0,
-      verticalLegendLabels: null,
-      verticalLegendDomain: null,
-      colorScheme: d3.schemeReds
+      legendxPosition: 0,
+      legendyPosition: 0,
+      legendLabels: null,
+      legendDomain: null,
+			colorThresholds: null,
+      colorScheme: null
     }
     var choroplethConfiguration = setOptions(choroplethDefaultConfiguration, options);
 
@@ -2214,13 +2210,13 @@
     ready(data)
 
     //==============================
-    var ext_color_domain = choroplethConfiguration.verticalLegendDomain;
-    var legend_labels = choroplethConfiguration.verticalLegendLabels;
+    var ext_color_domain = choroplethConfiguration.legendDomain;
+    var legend_labels = choroplethConfiguration.legendLabels;
     
     var legend = svg.selectAll("g.d3ChoroplethLegend")
       .data(ext_color_domain)
       .enter().append("g")
-      .attr("transform", "translate("+choroplethConfiguration.verticalLegendxPosition+","+choroplethConfiguration.verticalLegendyPosition+")")
+      .attr("transform", "translate("+choroplethConfiguration.legendxPosition+","+choroplethConfiguration.legendyPosition+")")
       .attr("class", "d3ChoroplethLegend");
 
     var ls_w = 20, ls_h = 20;
@@ -2231,7 +2227,7 @@
       else {	return i*ls_w }
 			})
       .attr("y", function(d, i) {
-        if (choroplethConfiguration.legendOrientation == 'vertical') { console.log('rect ' + i);
+        if (choroplethConfiguration.legendOrientation == 'vertical') {
 				return i*ls_h }
       else {return 20;}
       })
