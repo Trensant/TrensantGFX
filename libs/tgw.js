@@ -2327,7 +2327,6 @@
     }
 
     function scaleCoordinates(feat, scaleFactors) {
-      var scale = choroplethConfiguration.coordinateScale ? choroplethConfiguration.coordinateScale : 1
       for (var b in feat) {
         if (typeof(feat[b]) == "number") {
           feat[0] = (feat[0] - height_width.width_min) * scaleFactors.width;
