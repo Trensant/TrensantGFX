@@ -2165,28 +2165,48 @@
     layout.start();
   }
 //  =================================================================================
-  /*
-  * d3Chloropleth renders polygon shapes that are shaded and colored by the data.
-  * param: data (dict)
-  * data
-  * options:
-  * svgHeight, svgWidth, legend
-	* coordinatescale*/
+  /* d3choropleth draws a choropleth chart.
+  * param: data (dict)   -- This chart type is unique in that it combines data that draws the polygons (frequently these are geographic objects such as a country or region) with the measurement data. We recommend that you follow this tutorial to construct the data for this chart. https://medium.com/@mbostock/command-line-cartography-part-1-897aa8f8ca2c   
+  * param: id (string) Element to display chart.
+  * param: options (dict) A dictionary that allows you customize renderings and behaviors. Below are the current options keys for customization.
+		* choropleth data options:
+				* name:: type: string, default: "name"
+				* value:: type: string, default: "value"
+				* FURTHER DESCRIPTION for choropleth data options: data options allows you to specify the data
+					measurement key. 
+					Example: You are measuring density and your key value is "density". Usually you would either need to change the key in the data or update your visualization script. Here you can specify-> value: "density".
+		* svgWidth:: type: int, default: container width
+		* svgHeight:: type: int, default: container height
+		* colorThresholds:: type: array of numbers, default: [50, 150, 350, 750, 1500]
+			* This lets you set how many buckets you to create for your dataset.
+		* colorScheme:: type: array, default: ["#adfcad", "#ffcb40", "#ffba00", "#ff7d73", "#ff4e40", "#ff1300"]
+			* The number of colors in colorScheme. The length should be similar to colorThresholds.
+		* legendOn:: type: bool default: false
+		* legendOrientation:: type: string, default: 'vertical'
+			* specify 'horizontal' to create a horizontal oriented legend
+		* legendxPosition: type: int, default: 0
+			* horizontally shift the legend
+		*	legendyPosition: type: int, default: 0
+			* vertically shift the legend
+		*	legendDomain: type: [string]s, default: [10, 50, 150, 350, 750, 1500]
+			* This provides the reference list for legendLabels.
+		*	legendLabels: type: [float]s, default: ["< 50", "50+", "150+", "350+", "750+", "> 1500"]
+			* rendered legend label values.
+		*/
   tgw.d3Choropleth = function (data, div_id, options) {
     var choroplethDefaultConfiguration = {
       value: "value",
       name: "name",
       svgWidth: tgw.containerDims(div_id).wid,
       svgHeight: tgw.containerDims(div_id).hgt,
-      colorThresholds: [10, 50, 150, 350, 750, 1500],
+      colorThresholds: [50, 150, 350, 750, 1500],
       colorScheme: ["#adfcad", "#ffcb40", "#ffba00", "#ff7d73", "#ff4e40", "#ff1300"],
 			legendOn: false,
       legendOrientation: 'vertical',
       legendxPosition: 0,
       legendyPosition: 0,
-      legendLabels: null,
-      legendDomain: null
-			
+			legendDomain: [10, 50, 150, 350, 750, 1500],
+      legendLabels: ["< 50", "50+", "150+", "350+", "750+", "> 1500"]
     }
     var choroplethConfiguration = setOptions(choroplethDefaultConfiguration, options);
 
