@@ -2170,21 +2170,23 @@
   * param: data (dict)
   * data
   * options:
-  * svgHeight, svgWidth, legend*/
+  * svgHeight, svgWidth, legend
+	* coordinatescale*/
   tgw.d3Choropleth = function (data, div_id, options) {
     var choroplethDefaultConfiguration = {
       value: "value",
       name: "name",
       svgWidth: tgw.containerDims(div_id).wid,
       svgHeight: tgw.containerDims(div_id).hgt,
-      legendOn: false,
+      colorThresholds: [10, 50, 150, 350, 750, 1500],
+      colorScheme: ["#adfcad", "#ffcb40", "#ffba00", "#ff7d73", "#ff4e40", "#ff1300"],
+			legendOn: false,
       legendOrientation: 'vertical',
       legendxPosition: 0,
       legendyPosition: 0,
       legendLabels: null,
-      legendDomain: null,
-			colorThresholds: null,
-      colorScheme: null
+      legendDomain: null
+			
     }
     var choroplethConfiguration = setOptions(choroplethDefaultConfiguration, options);
 
@@ -2213,6 +2215,7 @@
     var ext_color_domain = choroplethConfiguration.legendDomain;
     var legend_labels = choroplethConfiguration.legendLabels;
     
+		if (choroplethConfiguration.legendOn) { 
     var legend = svg.selectAll("g.d3ChoroplethLegend")
       .data(ext_color_domain)
       .enter().append("g")
@@ -2250,7 +2253,7 @@
 				else {return "translate("+i*ls_h+" 50)rotate(45 0 0)";}
 				})
       .text(function(d, i){ return legend_labels[i];});
-    
+  }  
 
     // ============================================
     function ready(us) {
@@ -2324,7 +2327,7 @@
     }
 
     function scaleCoordinates(feat, scaleFactors) {
-      var scale = options.coordinateScale ? options.coordinateScale : 1
+      var scale = choroplethConfiguration.coordinateScale ? choroplethConfiguration.coordinateScale : 1
       for (var b in feat) {
         if (typeof(feat[b]) == "number") {
           feat[0] = (feat[0] - height_width.width_min) * scaleFactors.width;
