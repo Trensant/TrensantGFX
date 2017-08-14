@@ -2395,4 +2395,9 @@
     }
   }
 
+  tgw.c3 = function (data, div_id, options) {
+    return null;
+
+  }
+
 })(typeof tgw === 'undefined' ? this['tgw'] = {} : tgw);//(window.hf = window.hf || {});

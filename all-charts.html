@@ -1,70 +1,83 @@
 <html>
 <head>
-<!-- HTML header code for trensant-gfx demo. M A Chatterjee 20170525 -->
-<link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- HTML header code for trensant-gfx demo. M A Chatterjee 20170525 -->
+    <link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<!-- jquery -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>     <!-- jquery is used for DOM stuff  -->
+    <!-- jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- jquery is used for DOM stuff  -->
 
-<!-- bootstrap is used for div management on this page -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>  <!-- not part of graphics library just here for div and layour mgmt -->
-
-
-<script type="text/javascript" src="./libs/helper-fns.js"></script>  <!-- helper-fns is a library for doing generec web work like URL param managment -->
-
-
-<!-- core graphics library includes.  -->
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>  <!-- google charts loader, note there is no offline version -->
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>              <!-- as of 20170620 Google says it needs this for maps      -->
-
-<script src="./libs/d3.v3.min.js"></script>
-<script src="./libs/d3.v4.min.js"></script><!-- not backward compatible with d3.v3 or earlier  -->
-<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
-<script src="./libs/topojson.min.js"></script>
-<script type="text/javascript" src="./dev/us-quantized-topo.js"></script>
-
-<script type="text/javascript" src="./libs/wordcloud2.js"></script>  <!-- wordcloud2.js is a wordcloud library -->
-
-<script type="text/javascript" src="./libs/plotly.min.js"></script>  <!-- loads the excellent plot.ly lib.  see more at plot.ly -->
-
-<!-- see more about jqcloud here: https://github.com/mistic100/jQCloud -->
-<script type="text/javascript" src="./libs/jqcloud.min.js"></script> <!-- jQCloud is a word cloud library (requires jquery-->
-<link rel="stylesheet" href="./libs/jqcloud.min.css"> 				 <!-- jQCloud requires this css file  -->
+    <!-- bootstrap is used for div management on this page -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- not part of graphics library just here for div and layour mgmt -->
 
 
-<!--  maps -->
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBwB-0FhqcR0eYbf4utsUNN02i8olM6ork" ></script>  <!-- google maps -->
+    <script type="text/javascript" src="./libs/helper-fns.js"></script>
+    <!-- helper-fns is a library for doing generec web work like URL param managment -->
 
 
-<!--shared css for tgw rendering -->
-<link rel="stylesheet" href="./style/tgw.css">
+    <!-- core graphics library includes.  -->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <!-- google charts loader, note there is no offline version -->
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <!-- as of 20170620 Google says it needs this for maps      -->
 
-<!-- tgw wrapper!  -->
-<script type="text/javascript" src="./libs/tgw.js"></script>      <!-- tgw is the main lib for all wrappers!        -->
+    <link rel="stylesheet" href="./style/c3.min.css">
+    <script src="./libs/d3.v3.min.js"></script> <!-- c3 depends on d3.v3-->
+    <script src="./libs/c3.min.js"></script>
 
-<!--  code editor -  uses the ace code editor, learn more here: https://ace.c9.io/
-<script src="./code_editor/src-min-noconflict/ace.js"></script>
- -end code editor-
--->
+    <script src="./libs/d3.v4.min.js"></script><!-- not backward compatible with d3.v3 or earlier  -->
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+    <!--<script src="./libs/topojson.min.js"></script>-->
+    <!--<script type="text/javascript" src="./dev/us-quantized-topo.js"></script>-->
 
-<title>Trensant Graphics Wrapper Library</title>
-<style type="text/css">
+    <script type="text/javascript" src="./libs/wordcloud2.js"></script>  <!-- wordcloud2.js is a wordcloud library -->
 
-/* raw chart data display area above each chart */
-.cssData {
-	height : 300px;
-	overflow-y: auto;
-}
+    <script type="text/javascript" src="./libs/plotly.min.js"></script>
+    <!-- loads the excellent plot.ly lib.  see more at plot.ly -->
 
-/* chart display area */
-.cssChart {
-	height: 700px;
-	padding: 10px;
-}
+    <!-- see more about jqcloud here: https://github.com/mistic100/jQCloud -->
+    <script type="text/javascript" src="./libs/jqcloud.min.js"></script>
+    <!-- jQCloud is a word cloud library (requires jquery-->
+    <link rel="stylesheet" href="./libs/jqcloud.min.css">                 <!-- jQCloud requires this css file  -->
 
-</style>
+
+    <!--  maps -->
+    <script type="text/javascript"
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBwB-0FhqcR0eYbf4utsUNN02i8olM6ork"></script>
+    <!-- google maps -->
+
+
+    <!--shared css for tgw rendering -->
+    <link rel="stylesheet" href="./style/tgw.css">
+
+    <!-- tgw wrapper!  -->
+    <script type="text/javascript" src="./libs/tgw.js"></script><!-- tgw is the main lib for all wrappers!        -->
+
+    <!--  code editor -  uses the ace code editor, learn more here: https://ace.c9.io/
+    <script src="./code_editor/src-min-noconflict/ace.js"></script>
+     -end code editor-
+    -->
+
+    <title>Trensant Graphics Wrapper Library</title>
+    <style type="text/css">
+
+        /* raw chart data display area above each chart */
+        .cssData {
+            height: 300px;
+            overflow-y: auto;
+        }
+
+        /* chart display area */
+        .cssChart {
+            height: 700px;
+            padding: 10px;
+        }
+
+    </style>
 </head>
 <body>
 <!-- index.html ... tgw tester
@@ -74,526 +87,473 @@ URL params
 drawBanner=false    				// supress or show the top Trensant Logo
 -->
 
-<div class='container' >     <!-- boostrap container               -->
-	<div class='col-md-12'>  <!-- boostrap basic column management -->
-	<div class="row">
-		<div class='top-banner' id="topBanner">	</div> <!-- top banner is dynamically drawn -->
-		<h1>Trensant Graphics</h1>
-		<p>This is the Trensant Graphics Library Demo page.  The Trensant Graphics Library is a wrapper of several 3rd party graphics and charting libraries which are useful for visualizing data using different techniques.  See the README.md file in the distribution for more on which libraries and charts are wrapped and how to use them.
-		<br>
-		<div id='test'>
-		<!--
-			 <h2>JavaScript</h2>
-        <div class="codeview" id="code"></div>
-		-->
-		</div>  <!-- spare test div, to be deleted -->
-		<h2>Charts</h2>
-		<div id='tocDIV'></div>  <!-- table of contents goes here, dynamically populated -->
-		<br>
-		<div id="graphicsDiv"></div> <!-- chart sections go here, dynmaically populated -->
-	</div>
-	</div>
+<div class='container'>     <!-- boostrap container               -->
+    <div class='col-md-12'>  <!-- boostrap basic column management -->
+        <div class="row">
+            <div class='top-banner' id="topBanner"></div> <!-- top banner is dynamically drawn -->
+            <h1>Trensant Graphics</h1>
+            <p>This is the Trensant Graphics Library Demo page. The Trensant Graphics Library is a wrapper of several
+                3rd party graphics and charting libraries which are useful for visualizing data using different
+                techniques. See the README.md file in the distribution for more on which libraries and charts are
+                wrapped and how to use them.
+                <br>
+            <div id='test'>
+                <!--
+                     <h2>JavaScript</h2>
+                <div class="codeview" id="code"></div>
+                -->
+            </div>  <!-- spare test div, to be deleted -->
+            <h2>Charts</h2>
+            <div id='tocDIV'></div>  <!-- table of contents goes here, dynamically populated -->
+            <br>
+            <div id="graphicsDiv"></div> <!-- chart sections go here, dynmaically populated -->
+        </div>
+    </div>
 </div>
 
 <!-- Begin code ************************************************************************************************ -->
 <script>
-	//global vars
-	google.charts.load('current', {'packages':['table','corechart','geochart','line']});
-	google.charts.setOnLoadCallback(function(){gAvail["table"]=true; gAvail["pie"]=true; gAvail["geochart"]=true; });
-	// end static inits ......
-	var gCharts = {"toc":[]};
-	var gDrawBanner = true;
-	if ((hf.getURLParam("drawBanner") != "false") && (gDrawBanner==true))
-		document.getElementById("topBanner").innerHTML= "<a href='http://trensant.com'><img src='./img/Trensant_apricot_flat_sm.png'></img></a><br><br>";
-	var gAvail ={};
-	var div;
+  //global vars
+  google.charts.load('current', {'packages': ['table', 'corechart', 'geochart', 'line']});
+  google.charts.setOnLoadCallback(function () {
+    gAvail["table"] = true;
+    gAvail["pie"] = true;
+    gAvail["geochart"] = true;
+  });
+  // end static inits ......
+  var gCharts = {"toc": []};
+  var gDrawBanner = true;
+  if ((hf.getURLParam("drawBanner") != "false") && (gDrawBanner == true))
+    document.getElementById("topBanner").innerHTML = "<a href='http://trensant.com'><img src='./img/Trensant_apricot_flat_sm.png'></img></a><br><br>";
+  var gAvail = {};
+  var div;
 
 
-	/* code editor test
-	 var flask = new CodeFlask,
-         flasks = new CodeFlask;
+  /* code editor test
+   var flask = new CodeFlask,
+       flasks = new CodeFlask;
 
-        //flask.run('#code', {        language: 'js'        });
-	*/
-	//============================================================================
-	/*
-	drawNewSectionDiv()
+      //flask.run('#code', {        language: 'js'        });
+  */
+  //============================================================================
+  /*
+  drawNewSectionDiv()
 
-	dynmacally generate all the dom elements for a section for this page in this form:
+  dynmacally generate all the dom elements for a section for this page in this form:
 
-	<div id=domID>
-		<h3  id='domID_heading' 	>Chart Name</h3>  			// name of this chart
-		<p   id='domID_desc'   		>description</p>  			// description string of this chart.  can be HTML
-		<br>
-		<h4  id='domID_dataHeading' >Chart Data Heading</h4>  	// data heading
-		<pre id='domID_data'        >data area </pre>			// raw data shown here
-		<br>
-		<h4  id='domID_chartHeading'>Chart Example Hading</h4>  // title above chart area
-		<div id='domID_chart' 		>chart renders here</div>   // rendering area this chart
-	</div>
+  <div id=domID>
+      <h3  id='domID_heading' 	>Chart Name</h3>  			// name of this chart
+      <p   id='domID_desc'   		>description</p>  			// description string of this chart.  can be HTML
+      <br>
+      <h4  id='domID_dataHeading' >Chart Data Heading</h4>  	// data heading
+      <pre id='domID_data'        >data area </pre>			// raw data shown here
+      <br>
+      <h4  id='domID_chartHeading'>Chart Example Hading</h4>  // title above chart area
+      <div id='domID_chart' 		>chart renders here</div>   // rendering area this chart
+  </div>
 
-	it also adds to the table of contents at the top and generates in-page links e.g. #mySpecialChart
+  it also adds to the table of contents at the top and generates in-page links e.g. #mySpecialChart
 
-	required fields:
-		domID 		 // DOM for base div.  all interall components will be give sub ids based on this.
-		opts["name"] // used for internal ref
-
-
-	*/
-	function drawNewSectionDiv (domID,opts) {
-		if (typeof domID == "undefined") {
-			console.log ("must have id"); return null;
-		}
-		var i,x,dopts = {
-			"name"   : "Chart Name",
-			"line_break" : true,
-			"dataCss"    : '' + 'cssData',
-			"chartCss"   : '' + 'cssChart', // this is the default cssClass for the chart div.  Can overide with a string "myChartClass1 myChartClass2" etc
-			"chartSty"   : ''          // allows styles to be passed to the chart div  eg "width:500; color:red" etc
-		};
-		if (tgw.typeOf(opts) == "object")
-			for (i in opts)
-				dopts[i] = opts[i];
-
-		// individual sections.  these can be overriden by passing in a block like this as opts["sections"]= [ [] [] []]
-		dopts["sections"] = [
-			 //tag  , id_suffix ,  default content, css_class
-			 ["h2"	,'_heading'		,  dopts["name"]				               ],
-			 ["p" 	,'_desc'   		,  'Overview text goes here'	               ],
-			 ["br"  ,'_break1'      , ''                                           ],
-			 ["h4"	,'_dataHeading' ,  'Example Data (click to show/hide)'		   ],
-			 ["pre"	,'_data' 		,  'Formatted data example area for this chart', dopts["dataCss"]],
-			 ["br"  ,'_break2'      , ''                             	           ],
-			 ["h4"	,'_chartHeading',  'Example Rendering'				 		   ],
-			 ["div" ,'_chart' 		,  ''    , dopts["chartCss"], dopts["chartSty"]  ]
-			];
-
-		if (tgw.typeOf(opts) == "object")
-			for (i in opts)
-				dopts[i] = opts[i];   // this loop is repeated to pick up overrides such as dopts["name"], dopts["chartCss"]
+  required fields:
+      domID 		 // DOM for base div.  all interall components will be give sub ids based on this.
+      opts["name"] // used for internal ref
 
 
-		var node = document.createElement("div");
-		node["id"] = domID; // the id for container div
-		for (i=0; i < dopts["sections"].length; i++) {
-			x = document.createElement(dopts["sections"][i][0]);
-			x["id"] = domID+dopts["sections"][i][1];
-			x["innerHTML"] = dopts["sections"][i][2];
-			x["className"] = typeof dopts["sections"][i][3] == "undefined" ? "" : dopts["sections"][i][3] ;
-			x["style"]     = typeof dopts["sections"][i][4] == "undefined" ? "" : dopts["sections"][i][4] ;
-			node.appendChild(x);
-		}
-		if (dopts["line_break"] == true) {
-			x = document.createElement('hr');
-			x["style"] = "border: solid; height:0px";
-			node.appendChild(x);
-		}
-		document.getElementById("graphicsDiv").appendChild(node); // add this section to the document
-		$('#'+domID+"_dataHeading").click(function(){ $('#'+domID+"_data").toggle(200);});
-		//$('#'+domID+"_data").hide(); // default is hidden
+  */
+  function drawNewSectionDiv(domID, opts) {
+    if (typeof domID == "undefined") {
+      console.log("must have id");
+      return null;
+    }
+    var i, x, dopts = {
+      "name": "Chart Name",
+      "line_break": true,
+      "dataCss": '' + 'cssData',
+      "chartCss": '' + 'cssChart', // this is the default cssClass for the chart div.  Can overide with a string "myChartClass1 myChartClass2" etc
+      "chartSty": ''          // allows styles to be passed to the chart div  eg "width:500; color:red" etc
+    };
+    if (tgw.typeOf(opts) == "object")
+      for (i in opts)
+        dopts[i] = opts[i];
 
-		//update table of contents
-		addTOCEntry(dopts["name"],domID);
-		updatePageTOC(); //redraw TOC
+    // individual sections.  these can be overriden by passing in a block like this as opts["sections"]= [ [] [] []]
+    dopts["sections"] = [
+      //tag  , id_suffix ,  default content, css_class
+      ["h2", '_heading', dopts["name"]],
+      ["p", '_desc', 'Overview text goes here'],
+      ["br", '_break1', ''],
+      ["h4", '_dataHeading', 'Example Data (click to show/hide)'],
+      ["pre", '_data', 'Formatted data example area for this chart', dopts["dataCss"]],
+      ["br", '_break2', ''],
+      ["h4", '_chartHeading', 'Example Rendering'],
+      ["div", '_chart', '', dopts["chartCss"], dopts["chartSty"]]
+    ];
 
-		return document.getElementById(domID); // return node ref
-	}
-
-	//===================================================================================================
-	// update the Table of Contents.
-	// TOC links are drawn with HTML in page links so that we can easily bookmark them
-	function updatePageTOC() {
-		var i,h="";
-		for (i in gCharts["toc"]) {
-			h+= "<a href='#"+gCharts["toc"][i]["base_id"]+"'' >"+gCharts["toc"][i]["name"]+"</a><br>";
-		}
-		document.getElementById("tocDIV").innerHTML = h;
-	}
-
-	function addTOCEntry(name,domID) {
-		gCharts["toc"].push( {"name" : name, "base_id" : domID});
-	}
-	//===================================================================================================
-	// now begins the chart gallery
-
-	function mainArea() {
-	//===================================================================================================
-	//===================================================================================================
-	// tgw.tgPrettyPrint
-	drawNewSectionDiv('tgPrettyPrintDiv',{"name":"tgPrettyPrint"});
-	var prettyPrintSampleData = {
-		"sample-array" : [1,2,3,4,5,"another piece"],
-		"key" : "value",
-		"sample-dict" : {1:2, 3:4, 5:6},
-		"num" : 2343.32
-	};
-
-	//emit description info
-	$("#tgPrettyPrintDiv_desc").html("tgPrettyPrint is a function for taking any JSON object and pretty printing to an HTML container div.<br><pre>//Example<br>var x= ... my data of any valid javascript type ...;<br>tgw.tgPrettyPrint(myData,myDiv);<br></pre>");
-
-	//show the raw data
-	tgw.tgPrettyPrint(prettyPrintSampleData,"tgPrettyPrintDiv_data");
-
-	//render the chart
-	tgw.tgPrettyPrint(prettyPrintSampleData,"tgPrettyPrintDiv_chart");
-	//$("#tgPrettyPrintDiv_chart").html(""); // in this case the chart and the data are the same so we don't render a chart
-
-	//===================================================================================================
-	//===================================================================================================
-	// tgw.rowWordCloud
-	div = "tgRowWordCloudDiv";
-	drawNewSectionDiv(div,{"name":"tgRowWordCloud", "chartSty" :" height: 100px"});
+    if (tgw.typeOf(opts) == "object")
+      for (i in opts)
+        dopts[i] = opts[i];   // this loop is repeated to pick up overrides such as dopts["name"], dopts["chartCss"]
 
 
-	//emit description info
-	$("#"+div+"_desc").html("tgRowWordCloud takes an array of word frequencies of the form [[word, freq, optional_color],[word2, freq2, optional_color], [word3,freq3],.. ] and renders a word cloud as a series of rows in a div. <br>Options include minSize, maxSize, and sort.  Sorting can be alpha, ralpha (reverse alpha), and numeric.  See docs.  <br><pre>var x = [['word1', 12], ['word2', 52], ['word3', 45]];<br>tgw.drawRowWordCloud(x,myDiv);<br></pre>");
+    var node = document.createElement("div");
+    node["id"] = domID; // the id for container div
+    for (i = 0; i < dopts["sections"].length; i++) {
+      x = document.createElement(dopts["sections"][i][0]);
+      x["id"] = domID + dopts["sections"][i][1];
+      x["innerHTML"] = dopts["sections"][i][2];
+      x["className"] = typeof dopts["sections"][i][3] == "undefined" ? "" : dopts["sections"][i][3];
+      x["style"] = typeof dopts["sections"][i][4] == "undefined" ? "" : dopts["sections"][i][4];
+      node.appendChild(x);
+    }
+    if (dopts["line_break"] == true) {
+      x = document.createElement('hr');
+      x["style"] = "border: solid; height:0px";
+      node.appendChild(x);
+    }
+    document.getElementById("graphicsDiv").appendChild(node); // add this section to the document
+    $('#' + domID + "_dataHeading").click(function () {
+      $('#' + domID + "_data").toggle(200);
+    });
+    //$('#'+domID+"_data").hide(); // default is hidden
 
-	var rowWordCloudSampleData = [   // note colors are optional, and can be HTML colors e.g. "#f44", data does not need to be sorted
-		["deal", 1998, "red"],
-  		["shoe", 1925, "red"],
-  		["nfl",  1895, "orange" ],
-  		["nike", 1698,   "red"  ],
-  		["lucrative", 1673, "green" ],
-  		["@nfl",    1649,   "red"  ],
-  		["obj",    1469,    "orange"],
-  		["5-year",  1405,    "purple" ],
-  		["25m",    1402,    "orange"],
-  		["safety",  690,    "purple"],
-  		["player",   566,    "purple"],
-  		["@browns",  545,   "green" ],
-  		["league",    531,    "purple" ],
-  		[ "much",    525,    "red"  ],
-  		[ "speed",    490,    "green"],
-  		[ "receiving",  486,   "green"],
-		["fastest",  4484,    "orange"],
-  		[  "game",   458,    "red"  ],
-  		[ "midseason",   456,  "green"]
-  		];
-  	var rowWordOpts = {"minSize":10,"maxSize":30,"sort":"alpha"};
+    //update table of contents
+    addTOCEntry(dopts["name"], domID);
+    updatePageTOC(); //redraw TOC
 
-	//show the raw data
-	tgw.tgPrettyPrint(rowWordCloudSampleData,div+"_data");
+    return document.getElementById(domID); // return node ref
+  }
 
-	//render the chart
-	tgw.tgDrawRowWordCloud( rowWordCloudSampleData,div+"_chart",rowWordOpts);
+  //===================================================================================================
+  // update the Table of Contents.
+  // TOC links are drawn with HTML in page links so that we can easily bookmark them
+  function updatePageTOC() {
+    var i, h = "";
+    for (i in gCharts["toc"]) {
+      h += "<a href='#" + gCharts["toc"][i]["base_id"] + "'' >" + gCharts["toc"][i]["name"] + "</a><br>";
+    }
+    document.getElementById("tocDIV").innerHTML = h;
+  }
 
-	//===================================================================================================
-	//===================================================================================================
-	// tgw.gglDrawPieChart()
-	div = "gglDrawPieChartDiv";
-	drawNewSectionDiv(div,{"name":"gglDrawPieChart"});
+  function addTOCEntry(name, domID) {
+    gCharts["toc"].push({"name": name, "base_id": domID});
+  }
 
-	//emit description info
-	$("#"+div+"_desc").html("gglDrawPieChart takes an array of data of the form [[term, value],[term2, value2], [term3,value3],.. ] and renders a pie Chart using Google charts.");
+  //===================================================================================================
+  // now begins the chart gallery
 
-	var pieChartData = [   // note colors are optional, and can be HTML colors e.g. "#f44", data does not need to be sorted
-		["Category", "Percent"],  //note pie chart will convert raw values to percents
-		["deal", 	198  ],
-  		["shoe", 	1925 ],
-  		["nfl",  	495  ],
-  		["nike", 	243  ],
-  		["speed",    490 ],
-  		[ "game",   2458 ]
-  		];
-  	var pieChartOpts = {};
-
-	//show the raw data
-	tgw.tgPrettyPrint(pieChartData,div+"_data");
-
-	//render the chart
-	tgw.gglDrawPieChart(pieChartData,div+"_chart",pieChartOpts);
-
-	//===================================================================================================
-	//===================================================================================================
-	// tgw.gglDrawPieChart()
-	div = "gglDrawLineChartDiv";
-	drawNewSectionDiv(div,{"name":"gglDrawLineChart"});
-
-	//emit description info
-	$("#"+div+"_desc").html("gglDrawLineChart takes an array of data of the form  and renders a line Chart using Google charts.");
-
-	var lineChartData =
-		[
-		['x-axis','series0','series2','series3'],
-   		[ 0,23,34,45],
-   		[ 10,34,45,63],
-   		[ 20,16,38,99],
-   		[ 30,31,36,32]
-   		];
-  	var lineChartOpts = {};
-
-	//show the raw data
-	tgw.tgPrettyPrint(lineChartData,div+"_data");
-
-	//render the chart
-	tgw.gglDrawLineChart(lineChartData,div+"_chart",lineChartOpts);
-
-	//===================================================================================================
-	// tgw.gglDrawPieChart()
-	div = "gglDrawBarChartDiv";
-	drawNewSectionDiv(div,{"name":"gglDrawBarChart"});
-
-	//emit description info
-	$("#"+div+"_desc").html("gglDrawBarChart takes an array of data of the form  and renders a bar Chart using Google charts.");
-
-	var barChartData =
-		[
-		['x-axis','series0','series2','series3'],
-   		[ 0,23,34,45],
-   		[ 10,34,45,63],
-   		[ 20,16,38,99],
-   		[ 30,31,36,32]
-   		];
-  	var barChartOpts = {};
-
-	//show the raw data
-	tgw.tgPrettyPrint(barChartData,div+"_data");
-
-	//render the chart
-	tgw.gglDrawBarChart(barChartData,div+"_chart",barChartOpts);
-
-
-	//===================================================================================================
-	//===================================================================================================
-	//trensant.d3treeMap
-    div = "d3TreeMapDiv";
-    drawNewSectionDiv(div,{"name":"d3TreeMapDiv", "chartSty": "height:400"});
+  function mainArea() {
+    //===================================================================================================
+    //===================================================================================================
+    // tgw.tgPrettyPrint
+    drawNewSectionDiv('tgPrettyPrintDiv', {"name": "tgPrettyPrint"});
+    var prettyPrintSampleData = {
+      "sample-array": [1, 2, 3, 4, 5, "another piece"],
+      "key": "value",
+      "sample-dict": {1: 2, 3: 4, 5: 6},
+      "num": 2343.32
+    };
 
     //emit description info
-    $("#"+div+"_desc").html("treemap draws a treemap");
+    $("#tgPrettyPrintDiv_desc").html("tgPrettyPrint is a function for taking any JSON object and pretty printing to an HTML container div.<br><pre>//Example<br>var x= ... my data of any valid javascript type ...;<br>tgw.tgPrettyPrint(myData,myDiv);<br></pre>");
 
-    var treeMapSampleData =  { node: {
-      child_name: "Anheuser-Busch",
-      child_id: "565ec0939b72473c7ec9e1ad",
-      children:
-        [
-          {
-            parent_name: "Anheuser-Busch",
-            child_tags: [],
-            child_name: "Budweiser Beer",
-            parent_id: "565ec0939b72473c7ec9e1ad",
-            child_buzz: 79,
-            child_id: "53166c755f3b284a609e1c6b",
-            children: [
-              {
-                parent_id: "53166c755f3b284a609e1c6b",
-                child_buzz: 6342,
-                child_id: "58781b703805ab195625df2c",
-                child_name: "@budweiser",
-                parent_type: "product",
-                children: [
-                  {
-                    parent_id: "58781b703805ab195625df2c",
-                    child_buzz: 3483,
-                    child_id: "565ea6efefa9d5d882d273",
-                    child_name: "childBudweiser",
-                  }
-                ]
-              },
-              {
-                parent_id: "53166c755f3b284a609e1c6b",
-                child_buzz: 3483,
-                child_id: "565ea6efefa9dd25d882d273",
-                child_name: "Budweiser"
-              },
-              {
-                parent_id: "53166c755f3b284a609e1c6b",
-                child_buzz: 250,
-                child_id: "58781a533805ab195625df2a",
-                child_name: "#budweiser"
-              },
-              {
-                parent_id: "531c755f3b284a609e1c6b",
-                child_buzz: 1250,
-                child_id: "58781a533805ab195625df2a",
-                child_name: "#my_best_budweiser",
-              }
-            ]
-          },
-          {
-            child_name: "Bud Light Beer",
-            child_type: "product",
-            parent_id: "565ec0939b72473c7ec9e1ad",
-            child_id: "53166f5c5f3b284a609e1c72",
-            children: [
-              {
-                parent_id: "53166c75284a609e1c6b",
-                child_buzz: 4342,
-                child_id: "58781b703805ab195625df2c",
-                child_name: "@budweiser",
-              }]
-
-          }
-        ]
-    } }
-
-    //display sample data
-	tgw.tgPrettyPrint(treeMapSampleData, div+"_data")
-
-	//render the chart
-    tgw.d3TreeMap(treeMapSampleData, div+"_chart", {parentID: "parent_id", childID: "child_id",
-      childName: "child_name", value: "child_buzz"});
-
-	//===================================================================================================
-	//trensant.d3radialTree
-	div = "d3RadialTree";
-    drawNewSectionDiv(div,{"name":"d3RadialTree", "chartSty": "height:400"});
-
-	var radialTreeSampleData = {name: "Current Article", children: [{name: "S&P500", children: [{name: "Apple", children: [{name: "MacBook"}, {name: "IPhone"}]}, {name: "Home Depot"}, {name: "Amgen"}, {name: "IBM"}]}]}
-
-	//emit description info
-    $("#"+div+"_desc").html("radiale tree draws a radialtree");
-
-    //display sample data
-    tgw.tgPrettyPrint(radialTreeSampleData, div+"_data")
+    //show the raw data
+    tgw.tgPrettyPrint(prettyPrintSampleData, "tgPrettyPrintDiv_data");
 
     //render the chart
-      tgw.d3RadialTree(radialTreeSampleData, div+"_chart", {textClick: "mouseover", onClick: function () {d3.select(this).style("fill", "red")}});
+    tgw.tgPrettyPrint(prettyPrintSampleData, "tgPrettyPrintDiv_chart");
+    //$("#tgPrettyPrintDiv_chart").html(""); // in this case the chart and the data are the same so we don't render a chart
+
+    //===================================================================================================
+    //===================================================================================================
+    // tgw.rowWordCloud
+    div = "tgRowWordCloudDiv";
+    drawNewSectionDiv(div, {"name": "tgRowWordCloud", "chartSty": " height: 100px"});
+
+
+    //emit description info
+    $("#" + div + "_desc").html("tgRowWordCloud takes an array of word frequencies of the form [[word, freq, optional_color],[word2, freq2, optional_color], [word3,freq3],.. ] and renders a word cloud as a series of rows in a div. <br>Options include minSize, maxSize, and sort.  Sorting can be alpha, ralpha (reverse alpha), and numeric.  See docs.  <br><pre>var x = [['word1', 12], ['word2', 52], ['word3', 45]];<br>tgw.drawRowWordCloud(x,myDiv);<br></pre>");
+
+    var rowWordCloudSampleData = [   // note colors are optional, and can be HTML colors e.g. "#f44", data does not need to be sorted
+      ["deal", 1998, "red"],
+      ["shoe", 1925, "red"],
+      ["nfl", 1895, "orange"],
+      ["nike", 1698, "red"],
+      ["lucrative", 1673, "green"],
+      ["@nfl", 1649, "red"],
+      ["obj", 1469, "orange"],
+      ["5-year", 1405, "purple"],
+      ["25m", 1402, "orange"],
+      ["safety", 690, "purple"],
+      ["player", 566, "purple"],
+      ["@browns", 545, "green"],
+      ["league", 531, "purple"],
+      ["much", 525, "red"],
+      ["speed", 490, "green"],
+      ["receiving", 486, "green"],
+      ["fastest", 4484, "orange"],
+      ["game", 458, "red"],
+      ["midseason", 456, "green"]
+    ];
+    var rowWordOpts = {"minSize": 10, "maxSize": 30, "sort": "alpha"};
+
+    //show the raw data
+    tgw.tgPrettyPrint(rowWordCloudSampleData, div + "_data");
+
+    //render the chart
+    tgw.tgDrawRowWordCloud(rowWordCloudSampleData, div + "_chart", rowWordOpts);
+
+    //===================================================================================================
+    //===================================================================================================
+    // tgw.gglDrawPieChart()
+    div = "gglDrawPieChartDiv";
+    drawNewSectionDiv(div, {"name": "gglDrawPieChart"});
+
+    //emit description info
+    $("#" + div + "_desc").html("gglDrawPieChart takes an array of data of the form [[term, value],[term2, value2], [term3,value3],.. ] and renders a pie Chart using Google charts.");
+
+    var pieChartData = [   // note colors are optional, and can be HTML colors e.g. "#f44", data does not need to be sorted
+      ["Category", "Percent"],  //note pie chart will convert raw values to percents
+      ["deal", 198],
+      ["shoe", 1925],
+      ["nfl", 495],
+      ["nike", 243],
+      ["speed", 490],
+      ["game", 2458]
+    ];
+    var pieChartOpts = {};
+
+    //show the raw data
+    tgw.tgPrettyPrint(pieChartData, div + "_data");
+
+    //render the chart
+    tgw.gglDrawPieChart(pieChartData, div + "_chart", pieChartOpts);
+
+    //===================================================================================================
+    //===================================================================================================
+    // tgw.gglDrawPieChart()
+    div = "gglDrawLineChartDiv";
+    drawNewSectionDiv(div, {"name": "gglDrawLineChart"});
+
+    //emit description info
+    $("#" + div + "_desc").html("gglDrawLineChart takes an array of data of the form  and renders a line Chart using Google charts.");
+
+    var lineChartData =
+      [
+        ['x-axis', 'series0', 'series2', 'series3'],
+        [0, 23, 34, 45],
+        [10, 34, 45, 63],
+        [20, 16, 38, 99],
+        [30, 31, 36, 32]
+      ];
+    var lineChartOpts = {};
+
+    //show the raw data
+    tgw.tgPrettyPrint(lineChartData, div + "_data");
+
+    //render the chart
+    tgw.gglDrawLineChart(lineChartData, div + "_chart", lineChartOpts);
+
+    //===================================================================================================
+    // tgw.gglDrawPieChart()
+    div = "gglDrawBarChartDiv";
+    drawNewSectionDiv(div, {"name": "gglDrawBarChart"});
+
+    //emit description info
+    $("#" + div + "_desc").html("gglDrawBarChart takes an array of data of the form  and renders a bar Chart using Google charts.");
+
+    var barChartData =
+      [
+        ['x-axis', 'series0', 'series2', 'series3'],
+        [0, 23, 34, 45],
+        [10, 34, 45, 63],
+        [20, 16, 38, 99],
+        [30, 31, 36, 32]
+      ];
+    var barChartOpts = {};
+
+    //show the raw data
+    tgw.tgPrettyPrint(barChartData, div + "_data");
+
+    //render the chart
+    tgw.gglDrawBarChart(barChartData, div + "_chart", barChartOpts);
+
+
+    //===================================================================================================
+    //===================================================================================================
+    //trensant.d3treeMap
+    div = "d3TreeMapDiv";
+    drawNewSectionDiv(div, {"name": "d3TreeMapDiv", "chartSty": "height:400"});
+
+    //emit description info
+    $("#" + div + "_desc").html("treemap draws a treemap");
+
+    var treeMapSampleData = {
+      node: {
+        child_name: "Anheuser-Busch",
+        child_id: "565ec0939b72473c7ec9e1ad",
+        children:
+          [
+            {
+              parent_name: "Anheuser-Busch",
+              child_tags: [],
+              child_name: "Budweiser Beer",
+              parent_id: "565ec0939b72473c7ec9e1ad",
+              child_buzz: 79,
+              child_id: "53166c755f3b284a609e1c6b",
+              children: [
+                {
+                  parent_id: "53166c755f3b284a609e1c6b",
+                  child_buzz: 6342,
+                  child_id: "58781b703805ab195625df2c",
+                  child_name: "@budweiser",
+                  parent_type: "product",
+                  children: [
+                    {
+                      parent_id: "58781b703805ab195625df2c",
+                      child_buzz: 3483,
+                      child_id: "565ea6efefa9d5d882d273",
+                      child_name: "childBudweiser",
+                    }
+                  ]
+                },
+                {
+                  parent_id: "53166c755f3b284a609e1c6b",
+                  child_buzz: 3483,
+                  child_id: "565ea6efefa9dd25d882d273",
+                  child_name: "Budweiser"
+                },
+                {
+                  parent_id: "53166c755f3b284a609e1c6b",
+                  child_buzz: 250,
+                  child_id: "58781a533805ab195625df2a",
+                  child_name: "#budweiser"
+                },
+                {
+                  parent_id: "531c755f3b284a609e1c6b",
+                  child_buzz: 1250,
+                  child_id: "58781a533805ab195625df2a",
+                  child_name: "#my_best_budweiser",
+                }
+              ]
+            },
+            {
+              child_name: "Bud Light Beer",
+              child_type: "product",
+              parent_id: "565ec0939b72473c7ec9e1ad",
+              child_id: "53166f5c5f3b284a609e1c72",
+              children: [
+                {
+                  parent_id: "53166c75284a609e1c6b",
+                  child_buzz: 4342,
+                  child_id: "58781b703805ab195625df2c",
+                  child_name: "@budweiser",
+                }]
+
+            }
+          ]
+      }
+    }
+
+    //display sample data
+    tgw.tgPrettyPrint(treeMapSampleData, div + "_data")
+
+    //render the chart
+    tgw.d3TreeMap(treeMapSampleData, div + "_chart", {
+      parentID: "parent_id", childID: "child_id",
+      childName: "child_name", value: "child_buzz"
+    });
+
+    //===================================================================================================
+    //trensant.d3radialTree
+    div = "d3RadialTree";
+    drawNewSectionDiv(div, {"name": "d3RadialTree", "chartSty": "height:400"});
+
+    var radialTreeSampleData = {
+      name: "Current Article",
+      children: [{
+        name: "S&P500",
+        children: [{
+          name: "Apple",
+          children: [{name: "MacBook"}, {name: "IPhone"}]
+        }, {name: "Home Depot"}, {name: "Amgen"}, {name: "IBM"}]
+      }]
+    }
+
+    //emit description info
+    $("#" + div + "_desc").html("radiale tree draws a radialtree");
+
+    //display sample data
+    tgw.tgPrettyPrint(radialTreeSampleData, div + "_data")
+
+    //render the chart
+    tgw.d3RadialTree(radialTreeSampleData, div + "_chart", {
+      textClick: "mouseover", onClick: function () {
+        d3.select(this).style("fill", "red")
+      }
+    });
 
 //  ===================================================================================================
-	  div = "d3Chord";
-	  drawNewSectionDiv(div,{"name":"d3Chord", "chartSty": "height:400"});
-	  var chordSampleData = {matrix : [
+    div = "d3Chord";
+    drawNewSectionDiv(div, {"name": "d3Chord", "chartSty": "height:400"});
+    var chordSampleData = {
+      matrix: [
         [0, 0, 1000, 1000],
         [0, 0, 1000, 1000],
         [1000, 1000, 0, 1000],
         [1000, 1000, 1000, 0]
-      ], groups: ["A", "B", "C", "D"]}
+      ], groups: ["A", "B", "C", "D"]
+    }
 
-      //emit description info
-      $("#"+div+"_desc").html("Chord Chart");
+    //emit description info
+    $("#" + div + "_desc").html("Chord Chart");
 
-      //display sample data
-      tgw.tgPrettyPrint(chordSampleData, div+"_data");
-      //render the chart
-      tgw.d3Chord(chordSampleData, div+"_chart");
-
-// ===================================================================================================
-	  div = "d3ZoomableSunburst";
-      drawNewSectionDiv(div,{"name":"d3ZoomableSunburst", "chartSty": "height:400"});
-      var sunburstSampleData = {id: "automobiles",
-        children: [
-          {
-            id: "cars",
-            children: [
-              {
-                id: "midsize",
-                children: [
-                  {id: "Camry", value: 35884},
-                  {id: "Accord", value: 38474},
-                  {id: "Optima", value: 27899},
-                  {id: "Malibu", value: 32000},
-                  {id: "Sonata", value: 26574}
-                ]
-              },
-              {
-                id: "luxury",
-                children: [
-                  {id: "MKZ", value: 56000},
-                  {id: "ES 300", value: 49000},
-                  {id: "Q70", value: 52000},
-                  {id: "LaCrosse", value: 39000},
-                  {id: "Avalon", value: 42000}
-                ]
-              },
-              {
-                id: "compact",
-                children: [
-                  {id: "Elantra", value: 19500},
-                  {id: "Civic", value: 22530},
-                  {id: "Sentra", value: 17000},
-                  {id: "Focus", value: 16900},
-                  {id: "Cruze", value: 14000}
-                ]
-              }
-            ]
-          },
-          {id: "trucks",
-            children: [
-              {
-                id: "pickups",
-                children: [
-                  {id: "Colorado", value: 39000},
-                  {id: "Big Horn", value: 42000},
-                  {id: "Ridgline", value: 80000},
-                  {id: "Tacoma", value: 65000},
-                  {id: "F-150", value: 50000}
-                ]
-              },
-              {
-                id: "minivans",
-                children: [
-                  {id: "Transit", value: 28000},
-                  {id: "Pacifica", value: 29000},
-                  {id: "Odyssey", value: 34000},
-                  {id: "Sienna", value: 35000},
-                  {id: "Sedona", value: 31000}
-                ]
-              },
-              {
-                id: "suvs",
-                children: [
-                  {id: "Model X", value: 90000},
-                  {id: "RX", value: 60000},
-                  {id: "Highlander", value: 55000},
-                  {id: "Cherokee", value: 42000},
-                  {id: "Santa Fe", value: 31000}
-                ]
-              }
-            ]}
-        ]
-      }
-
-      //emit description info
-      $("#"+div+"_desc").html("Zoomable Sunburst");
-
-      //display sample data
-      tgw.tgPrettyPrint(sunburstSampleData, div+"_data");
-
-      //render the chart
-      tgw.d3ZoomableSunburst(sunburstSampleData, div+"_chart", {name: "id"});
+    //display sample data
+    tgw.tgPrettyPrint(chordSampleData, div + "_data");
+    //render the chart
+    tgw.d3Chord(chordSampleData, div + "_chart");
 
 // ===================================================================================================
-      div = "d3Bubble";
-      drawNewSectionDiv(div,{"name":"d3Bubble", "chartSty": "height:400"});
-      var bubbleSampleData = {id: "automobiles",
-        children: [
-          {
-            id: "cars",
-            children: [
-              {
-                id: "midsize",
-                children: [
-                  {id: "Camry", value: 35884},
-                  {id: "Accord", value: 38474},
-                  {id: "Optima", value: 27899},
-                  {id: "Malibu", value: 32000},
-                  {id: "Sonata", value: 26574}
-                ]
-              },
-              {
-                id: "luxury",
-                children: [
-                  {id: "MKZ", value: 56000},
-                  {id: "ES 300", value: 49000},
-                  {id: "Q70", value: 52000},
-                  {id: "LaCrosse", value: 39000},
-                  {id: "Avalon", value: 42000}
-                ]
-              },
-              {
-                id: "compact",
-                children: [
-                  {id: "Elantra", value: 19500},
-                  {id: "Civic", value: 22530},
-                  {id: "Sentra", value: 17000},
-                  {id: "Focus", value: 16900},
-                  {id: "Cruze", value: 14000}
-                ]
-              }
-            ]
-          },
-          {id: "trucks",
+    div = "d3ZoomableSunburst";
+    drawNewSectionDiv(div, {"name": "d3ZoomableSunburst", "chartSty": "height:400"});
+    var sunburstSampleData = {
+      id: "automobiles",
+      children: [
+        {
+          id: "cars",
+          children: [
+            {
+              id: "midsize",
+              children: [
+                {id: "Camry", value: 35884},
+                {id: "Accord", value: 38474},
+                {id: "Optima", value: 27899},
+                {id: "Malibu", value: 32000},
+                {id: "Sonata", value: 26574}
+              ]
+            },
+            {
+              id: "luxury",
+              children: [
+                {id: "MKZ", value: 56000},
+                {id: "ES 300", value: 49000},
+                {id: "Q70", value: 52000},
+                {id: "LaCrosse", value: 39000},
+                {id: "Avalon", value: 42000}
+              ]
+            },
+            {
+              id: "compact",
+              children: [
+                {id: "Elantra", value: 19500},
+                {id: "Civic", value: 22530},
+                {id: "Sentra", value: 17000},
+                {id: "Focus", value: 16900},
+                {id: "Cruze", value: 14000}
+              ]
+            }
+          ]
+        },
+        {
+          id: "trucks",
           children: [
             {
               id: "pickups",
@@ -625,53 +585,169 @@ drawBanner=false    				// supress or show the top Trensant Logo
                 {id: "Santa Fe", value: 31000}
               ]
             }
-          ]}
           ]
-      }
+        }
+      ]
+    }
 
-      //emit description info
-      $("#"+div+"_desc").html("Bubble");
+    //emit description info
+    $("#" + div + "_desc").html("Zoomable Sunburst");
 
-      //display sample data
-      tgw.tgPrettyPrint(bubbleSampleData, div+"_data");
+    //display sample data
+    tgw.tgPrettyPrint(sunburstSampleData, div + "_data");
 
-      //render the chart
-      tgw.d3Bubble(bubbleSampleData, div+"_chart");
+    //render the chart
+    tgw.d3ZoomableSunburst(sunburstSampleData, div + "_chart", {name: "id"});
+
+// ===================================================================================================
+    div = "d3Bubble";
+    drawNewSectionDiv(div, {"name": "d3Bubble", "chartSty": "height:400"});
+    var bubbleSampleData = {
+      id: "automobiles",
+      children: [
+        {
+          id: "cars",
+          children: [
+            {
+              id: "midsize",
+              children: [
+                {id: "Camry", value: 35884},
+                {id: "Accord", value: 38474},
+                {id: "Optima", value: 27899},
+                {id: "Malibu", value: 32000},
+                {id: "Sonata", value: 26574}
+              ]
+            },
+            {
+              id: "luxury",
+              children: [
+                {id: "MKZ", value: 56000},
+                {id: "ES 300", value: 49000},
+                {id: "Q70", value: 52000},
+                {id: "LaCrosse", value: 39000},
+                {id: "Avalon", value: 42000}
+              ]
+            },
+            {
+              id: "compact",
+              children: [
+                {id: "Elantra", value: 19500},
+                {id: "Civic", value: 22530},
+                {id: "Sentra", value: 17000},
+                {id: "Focus", value: 16900},
+                {id: "Cruze", value: 14000}
+              ]
+            }
+          ]
+        },
+        {
+          id: "trucks",
+          children: [
+            {
+              id: "pickups",
+              children: [
+                {id: "Colorado", value: 39000},
+                {id: "Big Horn", value: 42000},
+                {id: "Ridgline", value: 80000},
+                {id: "Tacoma", value: 65000},
+                {id: "F-150", value: 50000}
+              ]
+            },
+            {
+              id: "minivans",
+              children: [
+                {id: "Transit", value: 28000},
+                {id: "Pacifica", value: 29000},
+                {id: "Odyssey", value: 34000},
+                {id: "Sienna", value: 35000},
+                {id: "Sedona", value: 31000}
+              ]
+            },
+            {
+              id: "suvs",
+              children: [
+                {id: "Model X", value: 90000},
+                {id: "RX", value: 60000},
+                {id: "Highlander", value: 55000},
+                {id: "Cherokee", value: 42000},
+                {id: "Santa Fe", value: 31000}
+              ]
+            }
+          ]
+        }
+      ]
+    }
+
+    //emit description info
+    $("#" + div + "_desc").html("Bubble");
+
+    //display sample data
+    tgw.tgPrettyPrint(bubbleSampleData, div + "_data");
+
+    //render the chart
+    tgw.d3Bubble(bubbleSampleData, div + "_chart");
 
 // ==============================================================================================
 
-	  div = "d3WordCloud";
-	  drawNewSectionDiv(div, {"name":"d3WordCloud", "chartSty":"height:400"})
-	  var wordCloudSampleData = [{value: "A", count: 64},{ value: "quick", count: 32},{ value: "red", count: 32},{ value: "fox", count: 96},{ value: "jumped", count: 16},{ value: "over", count: 32},{ value: "the", count: 128},{ value: "lazy", count: 32},{ value: "foo", count: 48},{ value: "bar", count: 12},{ value: "dog", count: 32},{ value: "eclipse", count: 4},{ value: "totality", count: 8},{ value: "narrow", count: 16},{ value: "ultimate", count: 32},{ value: "miles", count: 64},{ value: "astronomy", count: 128},{ value: "experience", count: 4},{ value: "Alaska", count: 8},{ value: "sniff", count: 16},{ value: "jackpot", count: 32},{ value: "common", count: 64},{ value: "nothing", count: 128},{ value: "first", count: 4},{ value: "moon", count: 8},{ value: "hidden", count: 16},{ value: "partial", count: 24},{ value: "darker", count: 32},{ value: "dramatic", count: 40},{ value: "red", count: 64},{ value: "streak", count: 96}];
+    div = "d3WordCloud";
+    drawNewSectionDiv(div, {"name": "d3WordCloud", "chartSty": "height:400"})
+    var wordCloudSampleData = [{value: "A", count: 64}, {value: "quick", count: 32}, {
+      value: "red",
+      count: 32
+    }, {value: "fox", count: 96}, {value: "jumped", count: 16}, {value: "over", count: 32}, {
+      value: "the",
+      count: 128
+    }, {value: "lazy", count: 32}, {value: "foo", count: 48}, {value: "bar", count: 12}, {
+      value: "dog",
+      count: 32
+    }, {value: "eclipse", count: 4}, {value: "totality", count: 8}, {value: "narrow", count: 16}, {
+      value: "ultimate",
+      count: 32
+    }, {value: "miles", count: 64}, {value: "astronomy", count: 128}, {value: "experience", count: 4}, {
+      value: "Alaska",
+      count: 8
+    }, {value: "sniff", count: 16}, {value: "jackpot", count: 32}, {value: "common", count: 64}, {
+      value: "nothing",
+      count: 128
+    }, {value: "first", count: 4}, {value: "moon", count: 8}, {value: "hidden", count: 16}, {
+      value: "partial",
+      count: 24
+    }, {value: "darker", count: 32}, {value: "dramatic", count: 40}, {value: "red", count: 64}, {
+      value: "streak",
+      count: 96
+    }];
 
-      //emit description info
-      $("#"+div+"_desc").html("WordCloud");
+    //emit description info
+    $("#" + div + "_desc").html("WordCloud");
 
-      //display sample data
-      tgw.tgPrettyPrint(wordCloudSampleData, div+"_data");
+    //display sample data
+    tgw.tgPrettyPrint(wordCloudSampleData, div + "_data");
 
-      //render the chart
-      tgw.d3WordCloud(wordCloudSampleData, div+"_chart");
+    //render the chart
+    tgw.d3WordCloud(wordCloudSampleData, div + "_chart");
+
+
+//	=====================================================================================
+    div = "d3Choropleth";
+    drawNewSectionDiv(div, {"name": "d3Choropleth", "chartSty": "height:400"})
+
+    //emit description info
+    $("#" + div + "_desc").html("Choropleth");
+
+    //display sample data
+    tgw.tgPrettyPrint(choroplethSampleData, div + "_data");
+
+    //render the chart
+    tgw.d3Choropleth(choroplethSampleData, div + "_chart")
+  }
 
 	
-//	=====================================================================================
-      div = "d3Choropleth";
-      drawNewSectionDiv(div, {"name":"d3Choropleth", "chartSty":"height:400"})
+  // mainArea body
+  // end main area-----------------------------------------------------------------------------------
 
-      //emit description info
-      $("#"+div+"_desc").html("Choropleth");
-
-      //display sample data
-      tgw.tgPrettyPrint(choroplethSampleData, div+"_data");
-
-      //render the chart
-			tgw.d3Choropleth(choroplethSampleData, div+"_chart")
-	}
-
-    // mainArea body
-// end main area-----------------------------------------------------------------------------------
-
-	tgw.repeatUntil (tgw.gglChartsLoaded , mainArea,null, 75, 35, function(r,c){if (r==false) console.log('chart load error')}); // this waits for gglcharts to load by checking every 75ms up to 35 times...
+  tgw.repeatUntil(tgw.gglChartsLoaded, mainArea, null, 75, 35, function (r, c) {
+    if (r == false) console.log('chart load error')
+  }); // this waits for gglcharts to load by checking every 75ms up to 35 times...
 
 </script>
 
