@@ -2201,11 +2201,11 @@
       svgHeight: tgw.containerDims(div_id).hgt,
       colorThresholds: [50, 150, 350, 750, 1500],
       colorScheme: ["#adfcad", "#ffcb40", "#ffba00", "#ff7d73", "#ff4e40", "#ff1300"],
-			legendOn: false,
+      legendOn: false,
       legendOrientation: 'vertical',
       legendxPosition: 0,
       legendyPosition: 0,
-			legendDomain: [10, 50, 150, 350, 750, 1500],
+      legendDomain: [10, 50, 150, 350, 750, 1500],
       legendLabels: ["< 50", "50+", "150+", "350+", "750+", "> 1500"]
     }
     var choroplethConfiguration = setOptions(choroplethDefaultConfiguration, options);
@@ -2234,46 +2234,67 @@
     //==============================
     var ext_color_domain = choroplethConfiguration.legendDomain;
     var legend_labels = choroplethConfiguration.legendLabels;
-    
-		if (choroplethConfiguration.legendOn) { 
-    var legend = svg.selectAll("g.d3ChoroplethLegend")
-      .data(ext_color_domain)
-      .enter().append("g")
-      .attr("transform", "translate("+choroplethConfiguration.legendxPosition+","+choroplethConfiguration.legendyPosition+")")
-      .attr("class", "d3ChoroplethLegend");
 
-    var ls_w = 20, ls_h = 20;
+    if (choroplethConfiguration.legendOn) {
+      var legend = svg.selectAll("g.d3ChoroplethLegend")
+        .data(ext_color_domain)
+        .enter().append("g")
+        .attr("transform", "translate(" + choroplethConfiguration.legendxPosition + "," + choroplethConfiguration.legendyPosition + ")")
+        .attr("class", "d3ChoroplethLegend");
 
-    legend.append("rect")
-      .attr("x", function (d, i) {
-        if (choroplethConfiguration.legendOrientation == 'vertical') {return 20;}
-      else {	return i*ls_w }
-			})
-      .attr("y", function(d, i) {
-        if (choroplethConfiguration.legendOrientation == 'vertical') {
-				return i*ls_h }
-      else {return 20;}
-      })
-      .attr("width", ls_w)
-      .attr("height", ls_h)
-      .style("fill", function(d, i) { return color(d); })
-      .style("opacity", 0.8);
+      var ls_w = 20, ls_h = 20;
 
-    legend.append("text")
-      .attr("x", function (d, i) {
-		if (choroplethConfiguration.legendOrientation == 'vertical') {return 50;}
-			else { return null } //i*ls_w  }
-		  })
-      .attr("y", function(d, i) {
-				if (choroplethConfiguration.legendOrientation == 'vertical') {return i*ls_h + 15}
-				else {return null;}
-				})
-			.attr("transform", function(d,i) {
-				if (choroplethConfiguration.legendOrientation == 'vertical') return null;
-				else {return "translate("+i*ls_h+" 50)rotate(45 0 0)";}
-				})
-      .text(function(d, i){ return legend_labels[i];});
-  }  
+      legend.append("rect")
+        .attr("x", function (d, i) {
+          if (choroplethConfiguration.legendOrientation == 'vertical') {
+            return 20;
+          }
+          else {
+            return i * ls_w
+          }
+        })
+        .attr("y", function (d, i) {
+          if (choroplethConfiguration.legendOrientation == 'vertical') {
+            return i * ls_h
+          }
+          else {
+            return 20;
+          }
+        })
+        .attr("width", ls_w)
+        .attr("height", ls_h)
+        .style("fill", function (d, i) {
+          return color(d);
+        })
+        .style("opacity", 0.8);
+
+      legend.append("text")
+        .attr("x", function (d, i) {
+          if (choroplethConfiguration.legendOrientation == 'vertical') {
+            return 50;
+          }
+          else {
+            return null
+          } //i*ls_w  }
+        })
+        .attr("y", function (d, i) {
+          if (choroplethConfiguration.legendOrientation == 'vertical') {
+            return i * ls_h + 15
+          }
+          else {
+            return null;
+          }
+        })
+        .attr("transform", function (d, i) {
+          if (choroplethConfiguration.legendOrientation == 'vertical') return null;
+          else {
+            return "translate(" + i * ls_h + " 50)rotate(45 0 0)";
+          }
+        })
+        .text(function (d, i) {
+          return legend_labels[i];
+        });
+    }
 
     // ============================================
     function ready(us) {
