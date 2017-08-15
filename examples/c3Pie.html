@@ -1,0 +1,54 @@
+<!doctype HTML>
+<html>
+<head>
+
+    <script src="../libs/jquery.3.2.1.min.js"></script>                <!-- jquery is used for DOM stuff  -->
+    <script src="../libs/d3.v3.min.js"></script>
+    <script src="../libs/c3.min.js"></script>
+
+    <!-- css for tgw -->
+    <link rel="stylesheet" href="../style/tgw.css">
+    <link rel="stylesheet" href="../style/c3.min.css">
+
+    <!-- js  -->
+    <script type="text/javascript" src="../libs/tgw.js"></script>
+    <!-- TrensantGFX is the main lib for all wrappers!                               -->
+
+    <style>
+        body {
+            height: 98vh;
+            width: 98vw;
+        }
+
+        .chartCSS {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+
+</head>
+
+<body>
+<div class="chartCSS" id="_chart"></div>
+<script>
+
+  var c3sampledata = {
+    data: {
+      columns: [
+        ['data1', 30],
+        ['data2', 120],
+      ]
+    }
+  }
+
+  //render the chart
+  tgw.c3(c3sampledata, "_chart", {
+    data: {
+      type: 'pie'
+    }
+  });
+
+</script>
+
+</body>
+</html>
