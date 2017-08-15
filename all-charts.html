@@ -26,14 +26,14 @@
     <!-- as of 20170620 Google says it needs this for maps      -->
 
     <link rel="stylesheet" href="./style/c3.min.css">
-    <!--<script src="./libs/d3.v4.min.js"></script>&lt;!&ndash; not backward compatible with d3.v3 or earlier  &ndash;&gt;-->
-    <script src="./libs/d3.v3.min.js"></script> <!-- c3 depends on d3.v3-->
-    <script src="./libs/c3.min.js"></script>
+    <script src="./libs/d3.v4.min.js"></script><!-- not backward compatible with d3.v3 or earlier  -->
+    <!--<script src="./libs/d3.v3.min.js"></script> &lt;!&ndash; c3 depends on d3.v3&ndash;&gt;-->
+    <!--<script src="./libs/c3.min.js"></script>-->
 
 
-    <!--<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>-->
-    <!--<script src="./libs/topojson.min.js"></script>-->
-    <!--<script type="text/javascript" src="./dev/us-quantized-topo.js"></script>-->
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+    <script src="./libs/topojson.min.js"></script>
+    <script type="text/javascript" src="./dev/us-quantized-topo.js"></script>
 
     <script type="text/javascript" src="./libs/wordcloud2.js"></script>  <!-- wordcloud2.js is a wordcloud library -->
 
@@ -729,17 +729,17 @@ drawBanner=false    				// supress or show the top Trensant Logo
 
 
 //	=====================================================================================
-//    div = "d3Choropleth";
-//    drawNewSectionDiv(div, {"name": "d3Choropleth", "chartSty": "height:400"})
-//
-//    //emit description info
-//    $("#" + div + "_desc").html("Choropleth");
-//
-//    //display sample data
-//    tgw.tgPrettyPrint(choroplethSampleData, div + "_data");
-//
-//    //render the chart
-//    tgw.d3Choropleth(choroplethSampleData, div + "_chart")
+    div = "d3Choropleth";
+    drawNewSectionDiv(div, {"name": "d3Choropleth", "chartSty": "height:400"})
+
+    //emit description info
+    $("#" + div + "_desc").html("Choropleth");
+
+    //display sample data
+    tgw.tgPrettyPrint(choroplethSampleData, div + "_data");
+
+    //render the chart
+    tgw.d3Choropleth(choroplethSampleData, div + "_chart")
 
 //  ========================================================
 //    This section would have been a c3 chart sample but c3 uses d3.v3 which from the behavior appears to have some
