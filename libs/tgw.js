@@ -2395,9 +2395,21 @@
     }
   }
 
-  tgw.c3 = function (data, div_id, options) {
-    return null;
-
+  tgw.c3 = function (chartConfig, div_id, options) {
+    chartConfig.bindto = "#" + div_id;
+    if (options) {
+      for (var key in options) {
+        if (key != 'data') {
+          chartConfig[key] = options[key]
+        }
+        else {
+          for (var key in options.data) {
+            chartConfig.data[key] = options.data[key]
+          }
+        }
+      }
+    }
+    c3.generate(chartConfig);
   }
 
 })(typeof tgw === 'undefined' ? this['tgw'] = {} : tgw);//(window.hf = window.hf || {});

@@ -26,11 +26,12 @@
     <!-- as of 20170620 Google says it needs this for maps      -->
 
     <link rel="stylesheet" href="./style/c3.min.css">
+    <!--<script src="./libs/d3.v4.min.js"></script>&lt;!&ndash; not backward compatible with d3.v3 or earlier  &ndash;&gt;-->
     <script src="./libs/d3.v3.min.js"></script> <!-- c3 depends on d3.v3-->
     <script src="./libs/c3.min.js"></script>
 
-    <script src="./libs/d3.v4.min.js"></script><!-- not backward compatible with d3.v3 or earlier  -->
-    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+
+    <!--<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>-->
     <!--<script src="./libs/topojson.min.js"></script>-->
     <!--<script type="text/javascript" src="./dev/us-quantized-topo.js"></script>-->
 
@@ -728,20 +729,41 @@ drawBanner=false    				// supress or show the top Trensant Logo
 
 
 //	=====================================================================================
-    div = "d3Choropleth";
-    drawNewSectionDiv(div, {"name": "d3Choropleth", "chartSty": "height:400"})
+//    div = "d3Choropleth";
+//    drawNewSectionDiv(div, {"name": "d3Choropleth", "chartSty": "height:400"})
+//
+//    //emit description info
+//    $("#" + div + "_desc").html("Choropleth");
+//
+//    //display sample data
+//    tgw.tgPrettyPrint(choroplethSampleData, div + "_data");
+//
+//    //render the chart
+//    tgw.d3Choropleth(choroplethSampleData, div + "_chart")
 
-    //emit description info
-    $("#" + div + "_desc").html("Choropleth");
+//  ========================================================
+//    This section would have been a c3 chart sample but c3 uses d3.v3 which from the behavior appears to have some
+//    naming conflicts with d3.v4
+//    div = "c3samplechart"
+//
+//    drawNewSectionDiv(div, {"name": "c3sample", "chartSty": "height:400"})
+//
+//    var c3sampledata =  { data: {
+//      columns: [
+//        ['data1', 30, 200, 100, 400, 150, 250],
+//        ['data2', 50, 20, 10, 40, 15, 25]
+//      ]
+//    }}
+//
+//    //display sample data
+//    tgw.tgPrettyPrint(c3sampledata, div + "_data");
+//
+//    //render the chart
+//    tgw.c3(c3sampledata, div + "_chart")
 
-    //display sample data
-    tgw.tgPrettyPrint(choroplethSampleData, div + "_data");
-
-    //render the chart
-    tgw.d3Choropleth(choroplethSampleData, div + "_chart")
   }
 
-	
+
   // mainArea body
   // end main area-----------------------------------------------------------------------------------
 
