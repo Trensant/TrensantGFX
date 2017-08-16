@@ -2394,7 +2394,7 @@
       return default_configuration
     }
   }
-
+	// =======================================================
   tgw.c3 = function (chartConfig, div_id, options) {
     chartConfig.bindto = "#" + div_id;
     if (options) {
@@ -2411,7 +2411,17 @@
     }
     c3.generate(chartConfig);
   }
-	
+	// =======================================================
+	/* plotlyLine draws a line chart using plotly library.
+  * param: data (array) [{x: [], y: []}]
+  * param: id (string) Element to display chart.
+  * param: options (dict) A dictionary that allows you customize renderings and behaviors. Below are the current options keys for customization.
+			config: (array) use plotly's documentation to fill in chart options.
+				NOTE: The configuration array must be the same length and order as the data array.
+				Example: [{mode: 'lines', name: 'Red', line: { color: 'rgb(219, 64, 82)', width: 3}}]
+			layout: modify the chart layout
+		*/
+		
 	tgw.plotlyLine = function(data, div_id, options) {
 		lineConfigurations = [];
 		for (var d in data) {
@@ -2428,7 +2438,7 @@
 		}
 		Plotly.newPlot(div_id, lineConfigurations);
 	}
-	
+	// =======================================================
 	tgw.plotlyScatter = function(data, div_id, options) {
 		lineConfigurations = [];
 		for (var d in data) {
