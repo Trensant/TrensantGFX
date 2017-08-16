@@ -2195,7 +2195,6 @@
 		*/
   tgw.d3Choropleth = function (data, div_id, options) {
     var choroplethDefaultConfiguration = {
-      map: null,
       value: "value",
       name: "name",
       svgWidth: tgw.containerDims(div_id).wid,
@@ -2211,7 +2210,7 @@
     }
     var choroplethConfiguration = setOptions(choroplethDefaultConfiguration, options);
 
-    /*var svg = d3.select("#" + div_id).append("svg"),
+    var svg = d3.select("#" + div_id).append("svg"),
       width = choroplethConfiguration.svgWidth,
       height = choroplethConfiguration.svgHeight;
 
@@ -2295,7 +2294,7 @@
         .text(function (d, i) {
           return legend_labels[i];
         });
-    }*/
+    }
 
     // ============================================
     function ready(us) {
@@ -2382,7 +2381,6 @@
     }
 
     function setOptions(default_configuration, options) {
-
       /*Options.tree_attribute_names: Gets keys from the tree. If not present sets default values.*/
 
       if (options) {
@@ -2390,10 +2388,6 @@
           if (!(Object.keys(default_configuration).indexOf(setting) > -1)) {
             console.warn(setting + ' is not a default setting.')
           }
-          if ('map' in options) {
-            console.log('yes there is a map')
-          }
-          else console.error('You must provide a map object.')
           default_configuration[setting] = options[setting];
         }
       }
