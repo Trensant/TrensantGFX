@@ -2411,5 +2411,41 @@
     }
     c3.generate(chartConfig);
   }
+	
+	tgw.plotlyLine = function(data, div_id, options) {
+		lineConfigurations = [];
+		for (var d in data) {
+			var lineConfig = {};
+			lineConfig.x = data[d].x;
+			lineConfig.y = data[d].y;
+			lineConfig.type = 'scatter';
+			if (options) {
+				for (var o in options.config[d]) {
+					lineConfig[o] = options.config[d][o]
+				}
+			}
+			lineConfigurations.push(lineConfig);
+		}
+		Plotly.newPlot(div_id, lineConfigurations);
+	}
+	
+	tgw.plotlyScatter = function(data, div_id, options) {
+		lineConfigurations = [];
+		for (var d in data) {
+			var lineConfig = {};
+			lineConfig.x = data[d].x;
+			lineConfig.y = data[d].y;
+			lineConfig.type = 'scatter';
+			if (options) {
+				for (var o in options.config[d]) {
+					lineConfig[o] = options.config[d][o]
+				}
+			}
+			lineConfigurations.push(lineConfig);
+		}
+		options.layout ? Plotly.newPlot(div_id, lineConfigurations, options.layout) : Plotly.newPlot(div_id, lineConfigurations)  
+			;
+	}
+
 
 })(typeof tgw === 'undefined' ? this['tgw'] = {} : tgw);//(window.hf = window.hf || {});
