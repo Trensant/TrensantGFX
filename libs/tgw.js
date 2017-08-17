@@ -2423,38 +2423,48 @@
 		*/
 		
 	tgw.plotlyLine = function(data, div_id, options) {
-		lineConfigurations = [];
+		traceConfigurations = [];
 		for (var d in data) {
-			var lineConfig = {};
-			lineConfig.x = data[d].x;
-			lineConfig.y = data[d].y;
-			lineConfig.type = 'scatter';
+			var traceConfig = {};
+			traceConfig.x = data[d].x;
+			traceConfig.y = data[d].y;
+			traceConfig.type = 'scatter';
 			if (options) {
 				for (var o in options.config[d]) {
-					lineConfig[o] = options.config[d][o]
+					traceConfig[o] = options.config[d][o]
 				}
 			}
-			lineConfigurations.push(lineConfig);
+			traceConfigurations.push(traceConfig);
 		}
-		Plotly.newPlot(div_id, lineConfigurations);
+		Plotly.newPlot(div_id, traceConfigurations);
 	}
 	// =======================================================
+	/* plotlyLine draws a line chart using plotly library.
+  * param: data (array) [{x: [], y: []}]
+  * param: id (string) Element to display chart.
+  * param: options (dict) A dictionary that allows you customize renderings and behaviors. Below are the current options keys for customization.
+			config: (array) use plotly's documentation to fill in chart options.
+				NOTE: The configuration array must be the same length and order as the data array.
+			layout: modify the chart layout
+		*/
+	
 	tgw.plotlyScatter = function(data, div_id, options) {
-		lineConfigurations = [];
+		traceConfigurations = [];
 		for (var d in data) {
-			var lineConfig = {};
-			lineConfig.x = data[d].x;
-			lineConfig.y = data[d].y;
-			lineConfig.type = 'scatter';
+			var traceConfig = {};
+			traceConfig.x = data[d].x;
+			traceConfig.y = data[d].y;
+			traceConfig.mode = 'markers';
 			if (options) {
 				for (var o in options.config[d]) {
-					lineConfig[o] = options.config[d][o]
+					traceConfig[o] = options.config[d][o]
 				}
 			}
-			lineConfigurations.push(lineConfig);
+			traceConfigurations.push(traceConfig);
+			
 		}
-		options.layout ? Plotly.newPlot(div_id, lineConfigurations, options.layout) : Plotly.newPlot(div_id, lineConfigurations)  
-			;
+		console.log(traceConfigurations);
+		Plotly.newPlot(div_id, traceConfigurations);
 	}
 
 
