@@ -2439,7 +2439,7 @@
 		Plotly.newPlot(div_id, traceConfigurations);
 	}
 	// =======================================================
-	/* plotlyLine draws a line chart using plotly library.
+	/* plotlyScatter draws a scatter chart using plotly library.
   * param: data (array) [{x: [], y: []}]
   * param: id (string) Element to display chart.
   * param: options (dict) A dictionary that allows you customize renderings and behaviors. Below are the current options keys for customization.
@@ -2463,9 +2463,64 @@
 			traceConfigurations.push(traceConfig);
 			
 		}
-		console.log(traceConfigurations);
 		Plotly.newPlot(div_id, traceConfigurations);
 	}
 
+	// =======================================================
+	/* plotlyBar draws a bar chart using plotly library.
+  * param: data (array) [{x: [], y: []}]
+  * param: id (string) Element to display chart.
+  * param: options (dict) A dictionary that allows you customize renderings and behaviors. Below are the current options keys for customization.
+			config: (array) use plotly's documentation to fill in chart options.
+				NOTE: The configuration array must be the same length and order as the data array.
+			layout: modify the chart layout
+		*/
+	
+	tgw.plotlyBar = function(data, div_id, options) {
+		traceConfigurations = [];
+		for (var d in data) {
+			var traceConfig = {};
+			traceConfig.x = data[d].x;
+			traceConfig.y = data[d].y;
+			traceConfig.type = 'bar';
+			if (options) {
+				for (var o in options.config[d]) {
+					traceConfig[o] = options.config[d][o]
+				}
+			}
+			traceConfigurations.push(traceConfig);
+			
+		}
+		Plotly.newPlot(div_id, traceConfigurations);
+	}
+
+		// =======================================================
+	/* plotlyArea draws an area chart using plotly library.
+  * param: data (array) [{x: [], y: []}]
+  * param: id (string) Element to display chart.
+  * param: options (dict) A dictionary that allows you customize renderings and behaviors. Below are the current options keys for customization.
+			config: (array) use plotly's documentation to fill in chart options.
+				NOTE: The configuration array must be the same length and order as the data array.
+			layout: modify the chart layout
+		*/
+	
+	tgw.plotlyArea = function(data, div_id, options) {
+		traceConfigurations = [];
+		for (var d in data) {
+			var traceConfig = {};
+			traceConfig.x = data[d].x;
+			traceConfig.y = data[d].y;
+			traceConfig.type = 'scatter';
+			traceConfig.fill = 'tozeroy';
+			if (options) {
+				for (var o in options.config[d]) {
+					traceConfig[o] = options.config[d][o]
+				}
+			}
+			traceConfigurations.push(traceConfig);
+			
+		}
+		Plotly.newPlot(div_id, traceConfigurations);
+	}
 
 })(typeof tgw === 'undefined' ? this['tgw'] = {} : tgw);//(window.hf = window.hf || {});
