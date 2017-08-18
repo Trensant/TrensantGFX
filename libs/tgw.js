@@ -2514,16 +2514,39 @@
 			traceConfig.fill = 'tozeroy';
 			if (options) {
 				for (var o in options.config[d]) {
-					
 					if (o == 'fill') {
-						
 						traceConfig.fill = options.config[d][o];
 						continue;
 					}
 					traceConfig[o] = options.config[o]
 				}
 			}
-			
+			traceConfigurations.push(traceConfig);
+		}
+		Plotly.newPlot(div_id, traceConfigurations);
+	}
+	
+	// =======================================================
+	/* plotlyBox draws a box plot using plotly library.
+  * param: data (array) [{y: []}, {y: []}]
+  * param: id (string) Element to display chart.
+  * param: options (dict) A dictionary that allows you customize renderings and behaviors. Below are the current options keys for customization.
+			config: (array) use plotly's documentation to fill in chart options.
+				NOTE: The config array must be the same length and order as the data array.
+			layout: modify the chart layout
+		*/
+	
+	tgw.plotlyBox = function(data, div_id, options) {
+		traceConfigurations = [];
+		for (var d in data) {
+			var traceConfig = {};
+			traceConfig.y = data[d].y;
+			traceConfig.type = 'box';
+			if (options) {
+				for (var o in options.config[d]) {	
+					traceConfig[o] = options.config[o]
+				}
+			}
 			traceConfigurations.push(traceConfig);
 		}
 		Plotly.newPlot(div_id, traceConfigurations);
