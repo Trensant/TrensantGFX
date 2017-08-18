@@ -2500,7 +2500,7 @@
   * param: id (string) Element to display chart.
   * param: options (dict) A dictionary that allows you customize renderings and behaviors. Below are the current options keys for customization.
 			config: (array) use plotly's documentation to fill in chart options.
-				NOTE: The configuration array must be the same length and order as the data array.
+				NOTE: The config array must be the same length and order as the data array.
 			layout: modify the chart layout
 		*/
 	
@@ -2514,11 +2514,17 @@
 			traceConfig.fill = 'tozeroy';
 			if (options) {
 				for (var o in options.config[d]) {
-					traceConfig[o] = options.config[d][o]
+					
+					if (o == 'fill') {
+						
+						traceConfig.fill = options.config[d][o];
+						continue;
+					}
+					traceConfig[o] = options.config[o]
 				}
 			}
-			traceConfigurations.push(traceConfig);
 			
+			traceConfigurations.push(traceConfig);
 		}
 		Plotly.newPlot(div_id, traceConfigurations);
 	}

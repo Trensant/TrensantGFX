@@ -793,13 +793,13 @@ drawBanner=false    				// supress or show the top Trensant Logo
 		//emit description info
     $("#" + div + "_desc").html("Line");
 		
-		var plotlyArea = [{x: [1, 2, 3, 4], y: [10, 15, 13, 17]}];
+		var plotlyArea = [{x: [1, 2, 3, 4], y: [10, 15, 13, 17]}, {x: [1, 2, 3, 4], y: [20, 10, 20, 15]}];
 
     //display sample data
     tgw.tgPrettyPrint(plotlyArea, div + "_data");
 
     //render the chart
-    tgw.plotlyArea(plotlyArea, div + "_chart");		
+    tgw.plotlyArea(plotlyArea, div + "_chart", {config: [{empty: 'epmty'}, {fill: 'tonexty'}]});
 //  ========================================================
 //    This section would have been a c3 chart sample but c3 uses d3.v3 which from the behavior appears to have some
 //    naming conflicts with d3.v4
