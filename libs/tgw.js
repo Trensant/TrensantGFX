@@ -2551,5 +2551,14 @@
 		}
 		Plotly.newPlot(div_id, traceConfigurations);
 	}
+	
+	tgw.plotlyHeatMap = function(data, div_id, options) {
+		traceConfig = [{
+		z : data.z,
+		coloscale : 'Jet',
+		type: 'heatmap'
+		}]
+		Plotly.newPlot(div_id, traceConfig);
+	}
 
 })(typeof tgw === 'undefined' ? this['tgw'] = {} : tgw);//(window.hf = window.hf || {});
