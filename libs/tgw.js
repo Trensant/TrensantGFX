@@ -2597,8 +2597,82 @@
 					traceConfig[0][o] = options[o];
 				}
 			}
-		console.log(traceConfig);
 		Plotly.newPlot(div_id, traceConfig);
+		}
+		
+	// =======================================================
+	/* plotlyChoropleth draws a choropleth using plotly library.
+  * param: data (object) Example: {z: [[2, 3, 4], [8, 10, 1]]}
+  * param: id (string) Element to display chart.
+  * param: options (dict) A dictionary that allows you customize renderings and behaviors. Below are the current options keys for customization.
+			config: (array) use plotly's documentation to fill in chart options.
+				NOTE: The config array must be the same length and order as the data array.
+			layout: modify the chart layout
+		*/
+	
+	tgw.plotlyChoropleth = function(data, div_id, options) {
+		function unpack(rows, key) {
+          return rows.map(function(row) { return row[key]; });
+      }
+		if (!(options)) {
+			console.error('options is required to render this chart');
+		}
+		if(!(options.config)) {
+			console.error('The options parameter must contain a config object to render this chart.')
+			}
+		if (!(options.config.fieldName)) {
+			console.error('You must specify which field to use from your data.')
+		}
+		
+		traceConfig = [{
+		z : unpack(data, options.config.fieldName),
+		type: 'choropleth',
+		text: unpack(data, 'state'),
+		locationmode: 'USA-states',
+		locations: unpack(data, 'code'),
+		colorscale: [
+              [0, 'rgb(242,240,247)'], [0.2, 'rgb(218,218,235)'],
+              [0.4, 'rgb(188,189,220)'], [0.6, 'rgb(158,154,200)'],
+              [0.8, 'rgb(117,107,177)'], [1, 'rgb(84,39,143)']
+          ],
+          colorbar: {
+              title: 'Millions USD',
+              thickness: 0.2
+          },
+          marker: {
+              line:{
+                  color: 'rgb(255,255,255)',
+                  width: 2
+              }
+          }
+		}];
+		
+		mapValues = [];
+		for (var t in data) {
+			mapValues.push(data[t][options.config.fieldName])
+		}
+		traceConfig.zmin = Math.min( ...mapValues ),
+		traceConfig.zmax = Math.max( ...mapValues );
+				
+		for (var o in options.config)	{
+			traceConfig[o] = options.config[o];
+			}
+		
+		var layout = {
+			geo:{
+				scope: 'usa',
+				showlakes: true,
+				lakecolor: 'rgb(255,255,255)'
+      }
+		};
+		
+		if (options.layout) {
+				for (var o in options.layout) {	
+					layout[o] = options.layout[o];
+				}
+			}
+		console.log(layout, traceConfig)
+		Plotly.plot(div_id, traceConfig, layout);
 		}
 
 

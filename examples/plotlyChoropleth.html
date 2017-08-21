@@ -1,0 +1,343 @@
+<!doctype HTML>
+<html>
+<head>
+
+    <script src="../libs/jquery.3.2.1.min.js"></script>                <!-- jquery is used for DOM stuff  -->
+    <script type="text/javascript" src="../libs/plotly.min.js"></script>
+
+    <!-- css for tgw -->
+    <link rel="stylesheet" href="../style/tgw.css">
+    
+    <!-- js  -->
+    <script type="text/javascript" src="../libs/tgw.js"></script>
+    <!-- TrensantGFX is the main lib for all wrappers!                               -->
+
+    <style>
+        body {
+            height: 98vh;
+            width: 98vw;
+        }
+
+        .chartCSS {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+
+</head>
+
+<body>
+<div class="chartCSS" id="_chart"></div>
+<script>
+
+		var plotlyChoropleth = [
+		 {
+			 "code": "AL",
+			 "state": "Alabama",
+			 "category": "state",
+			 "total exports": 1390.63
+		 },
+		 {
+			 "code": "AK",
+			 "state": "Alaska",
+			 "category": "state",
+			 "total exports": 13.31
+		 },
+		 {
+			 "code": "AZ",
+			 "state": "Arizona",
+			 "category": "state",
+			 "total exports": 1463.17
+		 },
+		 {
+			 "code": "AR",
+			 "state": "Arkansas",
+			 "category": "state",
+			 "total exports": 3586.02
+		 },
+		 {
+			 "code": "CA",
+			 "state": " California",
+			 "category": " state",
+			 "total exports": 16472.88
+		 },
+		 {
+			 "code": "CO",
+			 "state": "Colorado",
+			 "category": "state",
+			 "total exports": 1851.33
+		 },
+		 {
+			 "code": "CT",
+			 "state": "Connecticut",
+			 "category": "state",
+			 "total exports": 259.62
+		 },
+		 {
+			 "code": "DE",
+			 "state": "Delaware",
+			 "category": "state",
+			 "total exports": 282.19
+		 },
+		 {
+			 "code": "FL",
+			 "state": "Florida",
+			 "category": "state",
+			 "total exports": 3764.09
+		 },
+		 {
+			 "code": "GA",
+			 "state": "Georgia",
+			 "category": "state",
+			 "total exports": 2860.84
+		 },
+		 {
+			 "code": "HI",
+			 "state": "Hawaii",
+			 "category": "state",
+			 "total exports": 401.84
+		 },
+		 {
+			 "code": "ID",
+			 "state": "Idaho",
+			 "category": "state",
+			 "total exports": 2078.89
+		 },
+		 {
+			 "code": "IL",
+			 "state": "Illinois",
+			 "category": "state",
+			 "total exports": 8709.48
+		 },
+		 {
+			 "code": "IN",
+			 "state": "Indiana",
+			 "category": "state",
+			 "total exports": 5050.23
+		 },
+		 {
+			 "code": "IA",
+			 "state": "Iowa",
+			 "category": "state",
+			 "total exports": 11273.76
+		 },
+		 {
+			 "code": "KS",
+			 "state": "Kansas",
+			 "category": "state",
+			 "total exports": 4589.01
+		 },
+		 {
+			 "code": "KY",
+			 "state": "Kentucky",
+			 "category": "state",
+			 "total exports": 1889.15
+		 },
+		 {
+			 "code": "LA",
+			 "state": "Louisiana",
+			 "category": "state",
+			 "total exports": 1914.23
+		 },
+		 {
+			 "code": "ME",
+			 "state": "Maine",
+			 "category": "state",
+			 "total exports": 278.37
+		 },
+		 {
+			 "code": "MD",
+			 "state": "Maryland",
+			 "category": "state",
+			 "total exports": 692.75
+		 },
+		 {
+			 "code": "MA",
+			 "state": "Massachusetts",
+			 "category": "state",
+			 "total exports": 248.65
+		 },
+		 {
+			 "code": "MI",
+			 "state": "Michigan",
+			 "category": "state",
+			 "total exports": 3164.16
+		 },
+		 {
+			 "code": "MN",
+			 "state": "Minnesota",
+			 "category": "state",
+			 "total exports": 7192.33
+		 },
+		 {
+			 "code": "MS",
+			 "state": "Mississippi",
+			 "category": "state",
+			 "total exports": 2170.8
+		 },
+		 {
+			 "code": "MO",
+			 "state": "Missouri",
+			 "category": "state",
+			 "total exports": 3933.42
+		 },
+		 {
+			 "code": "MT",
+			 "state": "Montana",
+			 "category": "state",
+			 "total exports": 1718
+		 },
+		 {
+			 "code": "NE",
+			 "state": "Nebraska",
+			 "category": "state",
+			 "total exports": 7114.13
+		 },
+		 {
+			 "code": "NV",
+			 "state": "Nevada",
+			 "category": "state",
+			 "total exports": 139.89
+		 },
+		 {
+			 "code": "NH",
+			 "state": "New Hampshire",
+			 "category": "state",
+			 "total exports": 73.06
+		 },
+		 {
+			 "code": "NJ",
+			 "state": "New Jersey",
+			 "category": "state",
+			 "total exports": 500.4
+		 },
+		 {
+			 "code": "NM",
+			 "state": "New Mexico",
+			 "category": "state",
+			 "total exports": 751.58
+		 },
+		 {
+			 "code": "NY",
+			 "state": "New York",
+			 "category": "state",
+			 "total exports": 1488.9
+		 },
+		 {
+			 "code": "NC",
+			 "state": "North Carolina",
+			 "category": "state",
+			 "total exports": 3806.05
+		 },
+		 {
+			 "code": "ND",
+			 "state": "North Dakota",
+			 "category": "state",
+			 "total exports": 3761.96
+		 },
+		 {
+			 "code": "OH",
+			 "state": "Ohio",
+			 "category": "state",
+			 "total exports": 3979.79
+		 },
+		 {
+			 "code": "OK",
+			 "state": "Oklahoma",
+			 "category": "state",
+			 "total exports": 1646.41
+		 },
+		 {
+			 "code": "OR",
+			 "state": "Oregon",
+			 "category": "state",
+			 "total exports": 1794.57
+		 },
+		 {
+			 "code": "PA",
+			 "state": "Pennsylvania",
+			 "category": "state",
+			 "total exports": 1969.87
+		 },
+		 {
+			 "code": "RI",
+			 "state": "Rhode Island",
+			 "category": "state",
+			 "total exports": 31.59
+		 },
+		 {
+			 "code": "SC",
+			 "state": "South Carolina",
+			 "category": "state",
+			 "total exports": 929.93
+		 },
+		 {
+			 "code": "SD",
+			 "state": "South Dakota",
+			 "category": "state",
+			 "total exports": 3770.19
+		 },
+		 {
+			 "code": "TN",
+			 "state": "Tennessee",
+			 "category": "state",
+			 "total exports": 1535.13
+		 },
+		 {
+			 "code": "TX",
+			 "state": "Texas",
+			 "category": "state",
+			 "total exports": 6648.22
+		 },
+		 {
+			 "code": "UT",
+			 "state": "Utah",
+			 "category": "state",
+			 "total exports": 453.39
+		 },
+		 {
+			 "code": "VT",
+			 "state": "Vermont",
+			 "category": "state",
+			 "total exports": 180.14
+		 },
+		 {
+			 "code": "VA",
+			 "state": "Virginia",
+			 "category": "state",
+			 "total exports": 1146.48
+		 },
+		 {
+			 "code": "WA",
+			 "state": "Washington",
+			 "category": "state",
+			 "total exports": 3894.81
+		 },
+		 {
+			 "code": "WV",
+			 "state": "West Virginia",
+			 "category": "state",
+			 "total exports": 138.89
+		 },
+		 {
+			 "code": "WI",
+			 "state": "Wisconsin",
+			 "category": "state",
+			 "total exports": 3090.23
+		 },
+		 {
+			 "code": "WY",
+			 "state": "Wyoming",
+			 "category": "state",
+			 "total exports": 349.69
+		 }
+		]
+	
+
+  //render the chart
+  tgw.plotlyChoropleth(plotlyChoropleth, "_chart", {config:{fieldName: 'total exports'}, layout: {title: 'US Exports'}});
+
+</script>
+
+</body>
+</html>
