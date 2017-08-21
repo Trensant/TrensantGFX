@@ -2631,20 +2631,19 @@
 		locationmode: 'USA-states',
 		locations: unpack(data, 'code'),
 		colorscale: [
-              [0, 'rgb(242,240,247)'], [0.2, 'rgb(218,218,235)'],
-              [0.4, 'rgb(188,189,220)'], [0.6, 'rgb(158,154,200)'],
-              [0.8, 'rgb(117,107,177)'], [1, 'rgb(84,39,143)']
-          ],
-          colorbar: {
-              title: 'Millions USD',
-              thickness: 0.2
-          },
-          marker: {
-              line:{
-                  color: 'rgb(255,255,255)',
-                  width: 2
-              }
-          }
+			[0, 'rgb(242,240,247)'], [0.2, 'rgb(218,218,235)'],
+			[0.4, 'rgb(188,189,220)'], [0.6, 'rgb(158,154,200)'],
+			[0.8, 'rgb(117,107,177)'], [1, 'rgb(84,39,143)']
+		],
+    colorbar: {
+			thickness: 0.2
+			},
+    marker: {
+			line: {
+				color: 'rgb(255,255,255)',
+				width: 2
+				}
+			}
 		}];
 		
 		mapValues = [];
@@ -2671,7 +2670,6 @@
 					layout[o] = options.layout[o];
 				}
 			}
-		console.log(layout, traceConfig)
 		Plotly.plot(div_id, traceConfig, layout);
 		}
 
