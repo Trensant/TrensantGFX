@@ -2552,6 +2552,16 @@
 		Plotly.newPlot(div_id, traceConfigurations);
 	}
 	
+	// =======================================================
+	/* plotlyHeatMap draws a Heat Map using plotly library.
+  * param: data (object) Example: {z: [[2, 3, 4], [8, 10, 1]]}
+  * param: id (string) Element to display chart.
+  * param: options (dict) A dictionary that allows you customize renderings and behaviors. Below are the current options keys for customization.
+			config: (array) use plotly's documentation to fill in chart options.
+				NOTE: The config array must be the same length and order as the data array.
+			layout: modify the chart layout
+		*/
+	
 	tgw.plotlyHeatMap = function(data, div_id, options) {
 		traceConfig = [{
 		z : data.z,
@@ -2563,10 +2573,33 @@
 					traceConfig[0][o] = options[o];
 				}
 			}
+		Plotly.newPlot(div_id, traceConfig);
+		}
+	
+	// =======================================================
+	/* plotlyHistogram draws a Histogram using plotly library.
+  * param: data (object) Example: {z: [[2, 3, 4], [8, 10, 1]]}
+  * param: id (string) Element to display chart.
+  * param: options (dict) A dictionary that allows you customize renderings and behaviors. Below are the current options keys for customization.
+			config: (array) use plotly's documentation to fill in chart options.
+				NOTE: The config array must be the same length and order as the data array.
+			layout: modify the chart layout
+		*/
+	
+	tgw.plotlyHistogram = function(data, div_id, options) {
+		traceConfig = [{
+		x : data,
+		type: 'histogram'
+		}];
+		
+		if (options) {
+				for (var o in options) {	
+					traceConfig[0][o] = options[o];
+				}
+			}
 		console.log(traceConfig);
 		Plotly.newPlot(div_id, traceConfig);
 		}
-		
 
 
 })(typeof tgw === 'undefined' ? this['tgw'] = {} : tgw);//(window.hf = window.hf || {});

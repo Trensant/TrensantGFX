@@ -1,0 +1,44 @@
+<!doctype HTML>
+<html>
+<head>
+
+    <script src="../libs/jquery.3.2.1.min.js"></script>                <!-- jquery is used for DOM stuff  -->
+    <script type="text/javascript" src="../libs/plotly.min.js"></script>
+
+    <!-- css for tgw -->
+    <link rel="stylesheet" href="../style/tgw.css">
+    
+    <!-- js  -->
+    <script type="text/javascript" src="../libs/tgw.js"></script>
+    <!-- TrensantGFX is the main lib for all wrappers!                               -->
+
+    <style>
+        body {
+            height: 98vh;
+            width: 98vw;
+        }
+
+        .chartCSS {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+
+</head>
+
+<body>
+<div class="chartCSS" id="_chart"></div>
+<script>
+
+  var plotlyHistogram = [];
+	for (var i = 0; i < 500; i ++) {
+		plotlyHistogram[i] = Math.random();
+	}	
+
+  //render the chart
+  tgw.plotlyHistogram(plotlyHistogram, "_chart");
+
+</script>
+
+</body>
+</html>
