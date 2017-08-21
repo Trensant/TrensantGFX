@@ -1,0 +1,43 @@
+<!doctype HTML>
+<html>
+<head>
+
+    <script src="../libs/jquery.3.2.1.min.js"></script>                <!-- jquery is used for DOM stuff  -->
+    <script type="text/javascript" src="../libs/plotly.min.js"></script>
+
+    <!-- css for tgw -->
+    <link rel="stylesheet" href="../style/tgw.css">
+    
+    <!-- js  -->
+    <script type="text/javascript" src="../libs/tgw.js"></script>
+    <!-- TrensantGFX is the main lib for all wrappers!                               -->
+
+    <style>
+        body {
+            height: 98vh;
+            width: 98vw;
+        }
+
+        .chartCSS {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+
+</head>
+
+<body>
+<div class="chartCSS" id="_chart"></div>
+<script>
+
+  var plotlyBox = [
+			{y: [10, 15, 13, 17, 4, 34, 7, 90, 21, 56, 1, 5, 88, 32]},
+			{y: [20, 10, 20, 15, 6, 11, 2, 32, 71, 65, 9, 4, 22, 68]}];
+
+  //render the chart
+  tgw.plotlyBox(plotlyBox, "_chart");
+
+</script>
+
+</body>
+</html>
