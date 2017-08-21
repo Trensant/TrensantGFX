@@ -2555,10 +2555,18 @@
 	tgw.plotlyHeatMap = function(data, div_id, options) {
 		traceConfig = [{
 		z : data.z,
-		coloscale : 'Jet',
 		type: 'heatmap'
-		}]
+		}];
+		
+		if (options) {
+				for (var o in options) {	
+					traceConfig[0][o] = options[o];
+				}
+			}
+		console.log(traceConfig);
 		Plotly.newPlot(div_id, traceConfig);
-	}
+		}
+		
+
 
 })(typeof tgw === 'undefined' ? this['tgw'] = {} : tgw);//(window.hf = window.hf || {});
