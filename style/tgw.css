@@ -44,3 +44,13 @@
 }
 
 .d3ChoroplethLegend {font-size: 12px;}
+
+/*=====================================*/
+.d3radarLegend {
+	font-family: 'Raleway', sans-serif;
+				fill: #333333;
+}
+
+.d3radartooltip { fill: #333333;
+	
+}
