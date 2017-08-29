@@ -511,8 +511,10 @@ drawBanner=false    				// supress or show the top Trensant Logo
     tgw.tgPrettyPrint(chordSampleData, div + "_data");
     //render the chart
     tgw.d3Chord(chordSampleData, div + "_chart");
+		
+// =====================================================================================
 
-// ===================================================================================================
+// =====================================================================================
     div = "d3ZoomableSunburst";
     drawNewSectionDiv(div, {"name": "d3ZoomableSunburst", "chartSty": "height:400"});
     var sunburstSampleData = {
@@ -1169,6 +1171,23 @@ drawBanner=false    				// supress or show the top Trensant Logo
     //render the chart
     tgw.plotlyChoropleth(plotlyChoropleth, div + "_chart", {config:{fieldName: 'total exports'}, layout: {title: 'US Exports'}});
 
+		//		=================================================================================
+		div = "plotlyPolarScatter"
+		drawNewSectionDiv(div, {"name": "plotlyPolarScatter", "chartSty": "height:400"})
+		
+		//emit description info
+    $("#" + div + "_desc").html("Polar Scatter");
+		
+		var plotlyPolarScatter = [{r: [1,2,3,2,1,2,3,2,2,1], t: [45, 90, 180, 270, 60, 30, 135, 215, 75, 155]}];
+		
+
+    //display sample data
+    tgw.tgPrettyPrint(plotlyPolarScatter, div + "_data");
+
+    //render the chart
+    tgw.plotlyPolarScatter(plotlyPolarScatter, div + "_chart", {config: [{marker: {
+    color: 'rgb(117,112,179)'}}]});
+		
 //  ========================================================
 //    This section would have been a c3 chart sample but c3 uses d3.v3 which from the behavior appears to have some
 //    naming conflicts with d3.v4
