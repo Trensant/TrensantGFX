@@ -26,7 +26,9 @@
     <!-- as of 20170620 Google says it needs this for maps      -->
 
     <link rel="stylesheet" href="./style/c3.min.css">
-    <script src="./libs/d3.v4.min.js"></script><!-- not backward compatible with d3.v3 or earlier  -->
+    <script src="./libs/d3.v4.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.24.0/d3-legend.min.js"></script>
+	<!-- not backward compatible with d3.v3 or earlier  -->
     <!--<script src="./libs/d3.v3.min.js"></script> &lt;!&ndash; c3 depends on d3.v3&ndash;&gt;-->
     <!--<script src="./libs/c3.min.js"></script>-->
 
@@ -516,35 +518,142 @@ drawBanner=false    				// supress or show the top Trensant Logo
     div = "d3Radar";
     drawNewSectionDiv(div, {"name": "d3Radar", "chartSty": "height:400"});
     var d3radardata = [
-      [//iPhone
-        {axis: "Battery Life", value: 0.22},
-        {axis: "Brand", value: 0.28},
-        {axis: "Contract Cost", value: 0.29},
-        {axis: "Design And Quality", value: 0.17},
-        {axis: "Have Internet Connectivity", value: 0.22},
-        {axis: "Large Screen", value: 0.02},
-        {axis: "Price Of Device", value: 0.21},
-        {axis: "To Be A Smartphone", value: 0.50}
-      ], [//Samsung
-        {axis: "Battery Life", value: 0.27},
-        {axis: "Brand", value: 0.16},
-        {axis: "Contract Cost", value: 0.35},
-        {axis: "Design And Quality", value: 0.13},
-        {axis: "Have Internet Connectivity", value: 0.20},
-        {axis: "Large Screen", value: 0.13},
-        {axis: "Price Of Device", value: 0.35},
-        {axis: "To Be A Smartphone", value: 0.38}
-      ], [//Nokia Smartphone
-        {axis: "Battery Life", value: 0.26},
-        {axis: "Brand", value: 0.10},
-        {axis: "Contract Cost", value: 0.30},
-        {axis: "Design And Quality", value: 0.14},
-        {axis: "Have Internet Connectivity", value: 0.22},
-        {axis: "Large Screen", value: 0.04},
-        {axis: "Price Of Device", value: 0.41},
-        {axis: "To Be A Smartphone", value: 0.30}
-      ]
-    ];
+	{  
+    "key":"iPhone",
+    "values":[  
+      {  
+        "reason":"Battery Life",
+        "device":"iPhone",
+        "value":0.22
+        
+      },
+      {  
+        "reason":"Brand",
+        "device":"iPhone",
+        "value":0.28
+      },
+      {  
+        "reason":"Contract Cost",
+        "device":"iPhone",
+        "value":0.29
+      },
+      {  
+        "reason":"Design And Quality",
+        "device":"iPhone",
+        "value":0.17
+      },
+      {  
+        "reason":"Have Internet Connectivity",
+        "device":"iPhone",
+        "value":0.22
+      },
+      {  
+        "reason":"Large Screen",
+        "device":"iPhone",
+        "value":0.02
+      },
+      {  
+        "reason":"Price Of Device",
+        "device":"iPhone",
+        "value":0.21
+      },
+      {  
+        "reason":"To Be A Smartphone",
+        "device":"iPhone",
+        "value":0.50
+      }
+    ]
+  },
+  {  
+    "key":"Samsung",
+    "values":[  
+      {  
+        "reason":"Battery Life",
+        "device":"Samsung",
+        "value":0.27
+      },
+      {  
+        "reason":"Brand",
+        "device":"Samsung",
+        "value":0.16
+      },
+      {  
+        "reason":"Contract Cost",
+        "device":"Samsung",
+        "value":0.35
+      },
+      {  
+        "reason":"Design And Quality",
+        "device":"Samsung",
+        "value":0.13
+      },
+      {  
+        "reason":"Have Internet Connectivity",
+        "device":"Samsung",
+        "value":0.20
+      },
+      {  
+        "reason":"Large Screen",
+        "device":"Samsung",
+        "value":0.13
+      },
+      {  
+        "reason":"Price Of Device",
+        "device":"Samsung",
+        "value":0.35
+      },
+      {  
+        "reason":"To Be A Smartphone",
+        "device":"Samsung",
+        "value":0.38
+      }
+    ]
+  },
+  {  
+    "key":"Nokia Smartphone",
+    "values":[  
+      {  
+        "reason":"Battery Life",
+        "device":"Nokia Smartphone",
+        "value":0.26
+      },
+      {  
+        "reason":"Brand",
+        "device":"Nokia Smartphone",
+        "value":0.10
+      },
+      {  
+        "reason":"Contract Cost",
+        "device":"Nokia Smartphone",
+        "value":0.30
+      },
+      {  
+        "reason":"Design And Quality",
+        "device":"Nokia Smartphone",
+        "value":0.14
+      },
+      {  
+        "reason":"Have Internet Connectivity",
+        "device":"Nokia Smartphone",
+        "value":0.22
+      },
+      {  
+        "reason":"Large Screen",
+        "device":"Nokia Smartphone",
+        "value":0.04
+      },
+      {  
+        "reason":"Price Of Device",
+        "device":"Nokia Smartphone",
+        "value":0.41
+      },
+      {  
+        "reason":"To Be A Smartphone",
+        "device":"Nokia Smartphone",
+        "value":0.30
+      }
+    ]
+  }];
 	
 	//emit description info
     $("#" + div + "_desc").html("Radar Chart");

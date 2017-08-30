@@ -2409,6 +2409,7 @@
       w: tgw.containerDims(id).wid,				//Width of the circle
       h: tgw.containerDims(id).hgt,				//Height of the circle
       margin: {top: 20, right: 20, bottom: 20, left: 20}, //The margins of the SVG
+			legendPosition: {x: 20, y: 20}, // the position of the legend, from the top-left corner of the svg
       levels: 3,				//How many levels or inner circles should there be drawn
       maxValue: 0, 			//What is the value that the biggest circle will represent
       labelFactor: 1.25, 	//How much farther than the radius of the outer circle should the labels be placed
@@ -2418,7 +2419,11 @@
       opacityCircles: 0.1, 	//The opacity of the circles of each blob
       strokeWidth: 2, 		//The width of the stroke around each blob
       roundStrokes: false,	//If true the area and stroke will follow a round path (cardinal-closed)
-      color: d3.schemeCategory10	//Color function
+      color: d3.schemeCategory10,	//Color function
+			axisName: "reason",
+			areaName:"device",
+			value: "value",
+			sortAreas: true
     };
 		cfg.color = d3.scaleOrdinal().range(cfg.color);
     //Put all of the options into a variable called cfg
@@ -2433,17 +2438,42 @@
       }//for i
     }//if
 		
+	//Map the fields specified in the configuration 
+	// to the axis and value variables
+	var axisName = cfg["axisName"],
+			areaName = cfg["areaName"],
+			value = cfg["value"];
+			
+	//Calculate the average value for each area
+	data.forEach(function(d){
+		d[value + "Average"] = d3.mean(d.values, function(e){ return e[value] }); 
+	});
+	
+	//Sort the data for the areas from largest to smallest
+	//by average value as an approximation of actual blob area
+	//so that that the smallest area is drawn last
+	//and therefore appears on top
+	data = data.sort(function(a, b){
+		var a = a[value + "Average"],
+				b = b[value + "Average"];
+		return b - a;
+	});
+	
+	//Convert the nested data passed in
+	// into an array of values arrays
+	data = data.map(function(d) { return d.values })
+	
+	
+		
 
     //If the supplied maxValue is smaller than the actual one, replace by the max in the data
-    var maxValue = Math.max(cfg.maxValue, d3.max(data, function (i) {
+    var maxValue = Math.max(cfg.maxValue, d3.max(data, function (i) { 
       return d3.max(i.map(function (o) {
         return o.value;
       }))
     }));
 
-    var allAxis = (data[0].map(function (i, j) {
-        return i.axis
-      })),	//Names of each axis
+    var allAxis = (data[0].map(function (d, i) { return d[axisName] })),	//Names of each axis
       total = allAxis.length,					//The number of different axes
       radius = Math.min(cfg.w / 2, cfg.h / 2), 	//Radius of the outermost circle
       Format = d3.format('.0%'),			 	//Percentage formatting
@@ -2721,6 +2751,49 @@
         }
       });
     }//wrap
+		
+		// on mouseover for the legend symbol
+	function cellover(d) {
+			//Dim all blobs
+			d3.selectAll(".radarArea")
+				.transition().duration(200)
+				.style("fill-opacity", 0.1); 
+			//Bring back the hovered over blob
+			d3.select("." + data[d][0][areaName].replace(/\s+/g, ''))
+				.transition().duration(200)
+				.style("fill-opacity", 0.7);	
+	}
+
+	// on mouseout for the legend symbol
+	function cellout() {
+		//Bring back all blobs
+		d3.selectAll(".radarArea")
+			.transition().duration(200)
+			.style("fill-opacity", cfg.opacityArea);
+	}
+
+	/////////////////////////////////////////////////////////
+	/////////////////// Draw the Legend /////////////////////
+	/////////////////////////////////////////////////////////
+
+	svg.append("g")
+  	.attr("class", "legendOrdinal")
+  	.attr("transform", "translate(" + cfg["legendPosition"]["x"] + "," + cfg["legendPosition"]["y"] + ")");
+	var legendOrdinal = d3.legendColor()
+  //d3 symbol creates a path-string, for example
+  //"M0,-8.059274488676564L9.306048591020996,
+  //8.059274488676564 -9.306048591020996,8.059274488676564Z"
+  	.shape("path", d3.symbol().type(d3.symbolCircle).size(150)())
+  	.shapePadding(10)
+  	.scale(cfg.color)
+  	.labels(cfg.color.domain().map(function(d){ console.log(d);
+  		return data[d][0][areaName];
+  	}))
+  	.on("cellover", function(d){ cellover(d); })
+  	.on("cellout", function(d) { cellout(); });
+
+svg.select(".legendOrdinal")
+  .call(legendOrdinal);
   }
 
   // =======================================================
