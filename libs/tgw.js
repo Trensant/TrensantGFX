@@ -3096,7 +3096,9 @@ svg.select(".legendOrdinal")
   tgw.plotlyPolarScatter = function (data, div_id, options) {
     traceConfigurations = [];
     for (var d in data) {
-      var traceConfig = {};
+      var traceConfig = {marker: {
+          color: 'rgb(117,112,179)'
+        }};
       traceConfig.r = data[d].r;
       traceConfig.t = data[d].t;
       traceConfig.type = 'scatter';
@@ -3106,6 +3108,7 @@ svg.select(".legendOrdinal")
           traceConfig[o] = options.config[d][o]
         }
       }
+			console.log(traceConfig);
       traceConfigurations.push(traceConfig);
     }
     if (data.length < 3) {
@@ -3134,8 +3137,8 @@ svg.select(".legendOrdinal")
     // if ("layout" in options) {
     // var layout = options.lay
     // }
-
-    Plotly.newPlot(div_id, traceConfigurations, options.config);
+		
+    options ? Plotly.newPlot(div_id, traceConfigurations, options.config): Plotly.newPlot(div_id, traceConfigurations);
   }
 
 

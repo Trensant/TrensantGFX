@@ -1339,13 +1339,7 @@ drawBanner=false    				// supress or show the top Trensant Logo
     tgw.tgPrettyPrint(plotlyPolarScatter, div + "_data");
 
     //render the chart
-    tgw.plotlyPolarScatter(plotlyPolarScatter, div + "_chart", {
-      config: [{
-        marker: {
-          color: 'rgb(117,112,179)'
-        }
-      }]
-    });
+    tgw.plotlyPolarScatter(plotlyPolarScatter, div + "_chart");
 
 //  ========================================================
 //    This section would have been a c3 chart sample but c3 uses d3.v3 which from the behavior appears to have some
