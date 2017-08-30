@@ -2425,21 +2425,31 @@
 			value: "value",
 			sortAreas: true
     };
-		cfg.color = d3.scaleOrdinal().range(cfg.color);
+		var copyCFGColor = JSON.parse(JSON.stringify(cfg.color));
+		var legendColor = d3.scaleOrdinal().range(copyCFGColor.slice(0, data.length));
+		var legendColorDomain = Array.apply(null, Array(data.length)).map(function (_, i) {return i;});
+		legendColor.domain(legendColorDomain);
+		cfg.color = d3.scaleOrdinal().range(cfg.color.slice(0, data.length));
+		
     //Put all of the options into a variable called cfg
     if ('undefined' !== typeof options) {
       for (var i in options) {
         if ('undefined' !== typeof options[i]) {
 					if (i == 'color') {
+						copyCFGColor = JSON.parse(JSON.stringify(options[i]));
+						legendColor = d3.scaleOrdinal().range(copyCFGColor.slice(0, data.length));
+						legendColorDomain = Array.apply(null, Array(data.length)).map(function (_, i) {return i;});
+						legendColor.domain(legendColorDomain);
 						cfg[i] = d3.scaleOrdinal().range(options[i]);}
 					else {
 						cfg[i] = options[i];}
         }
       }//for i
     }//if
-		
 	//Map the fields specified in the configuration 
 	// to the axis and value variables
+	
+	
 	var axisName = cfg["axisName"],
 			areaName = cfg["areaName"],
 			value = cfg["value"];
@@ -2464,7 +2474,6 @@
 	data = data.map(function(d) { return d.values })
 	
 	
-		
 
     //If the supplied maxValue is smaller than the actual one, replace by the max in the data
     var maxValue = Math.max(cfg.maxValue, d3.max(data, function (i) { 
@@ -2490,7 +2499,7 @@
 
     //Remove whatever chart with the same id/class was present before
     d3.select("#" + id).select("svg").remove();
-
+	
     //Initiate the radar chart SVG
     var svg = d3.select("#" + id).append("svg")
       .attr("width", cfg.w + cfg.margin.left + cfg.margin.right)
@@ -2656,21 +2665,13 @@
 
     //Append the circles
     blobWrapper.selectAll(".radarCircle")
-      .data(function (d, i) {
-        return d;
-      })
+      .data(function (d, i) {return d;})
       .enter().append("circle")
       .attr("class", "radarCircle")
       .attr("r", cfg.dotRadius)
-      .attr("cx", function (d, i) {
-        return rScale(d.value) * Math.cos(angleSlice * i - Math.PI / 2);
-      })
-      .attr("cy", function (d, i) {
-        return rScale(d.value) * Math.sin(angleSlice * i - Math.PI / 2);
-      })
-      .style("fill", function (d, i, j) {
-        return cfg.color(j);
-      })
+      .attr("cx", function (d, i) {return rScale(d.value) * Math.cos(angleSlice * i - Math.PI / 2);})
+      .attr("cy", function (d, i) {return rScale(d.value) * Math.sin(angleSlice * i - Math.PI / 2);})
+      .style("fill", function (d, i, j) {return cfg.color(j); })
       .style("fill-opacity", 0.8);
 
     /////////////////////////////////////////////////////////
@@ -2775,23 +2776,23 @@
 	/////////////////////////////////////////////////////////
 	/////////////////// Draw the Legend /////////////////////
 	/////////////////////////////////////////////////////////
-
+	
 	svg.append("g")
   	.attr("class", "legendOrdinal")
   	.attr("transform", "translate(" + cfg["legendPosition"]["x"] + "," + cfg["legendPosition"]["y"] + ")");
 	var legendOrdinal = d3.legendColor()
   //d3 symbol creates a path-string, for example
   //"M0,-8.059274488676564L9.306048591020996,
-  //8.059274488676564 -9.306048591020996,8.059274488676564Z"
-  	.shape("path", d3.symbol().type(d3.symbolCircle).size(150)())
+  // //8.059274488676564 -9.306048591020996,8.059274488676564Z"
+  	.shape("circle")
   	.shapePadding(10)
-  	.scale(cfg.color)
-  	.labels(cfg.color.domain().map(function(d){ console.log(d);
+  	.scale(legendColor)
+  	.labels(legendColor.domain().map(function(d){
   		return data[d][0][areaName];
   	}))
   	.on("cellover", function(d){ cellover(d); })
   	.on("cellout", function(d) { cellout(); });
-
+		
 svg.select(".legendOrdinal")
   .call(legendOrdinal);
   }
