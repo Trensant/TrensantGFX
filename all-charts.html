@@ -1325,6 +1325,23 @@ drawBanner=false    				// supress or show the top Trensant Logo
       layout: {title: 'US Exports'}
     });
 
+	//		=================================================================================
+    div = "plotlyStackBar"
+    drawNewSectionDiv(div, {"name": "plotlyStackBar", "chartSty": "height:400"})
+
+    //emit description info
+    $("#" + div + "_desc").html("Stack Bar");
+
+    var plotlyStackBar = [
+	{ x: ['giraffes', 'orangutans', 'monkeys'], y: [20, 14, 23]}, 
+	{ x: ['giraffes', 'orangutans', 'monkeys'], y: [12, 18, 29]}];
+
+    //display sample data
+    tgw.tgPrettyPrint(plotlyStackBar, div + "_data");
+
+    //render the chart
+    tgw.plotlyStackBar(plotlyStackBar, div + "_chart");
+	
     //		=================================================================================
     div = "plotlyPolarScatter"
     drawNewSectionDiv(div, {"name": "plotlyPolarScatter", "chartSty": "height:400"})
@@ -1341,6 +1358,7 @@ drawBanner=false    				// supress or show the top Trensant Logo
     //render the chart
     tgw.plotlyPolarScatter(plotlyPolarScatter, div + "_chart");
 
+	
 //  ========================================================
 //    This section would have been a c3 chart sample but c3 uses d3.v3 which from the behavior appears to have some
 //    naming conflicts with d3.v4

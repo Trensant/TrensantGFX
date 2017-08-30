@@ -1,0 +1,43 @@
+<!doctype HTML>
+<html>
+<head>
+
+    <script src="../libs/jquery.3.2.1.min.js"></script>                <!-- jquery is used for DOM stuff  -->
+    <script type="text/javascript" src="../libs/plotly.min.js"></script>
+
+    <!-- css for tgw -->
+    <link rel="stylesheet" href="../style/tgw.css">
+    
+    <!-- js  -->
+    <script type="text/javascript" src="../libs/tgw.js"></script>
+    <!-- TrensantGFX is the main lib for all wrappers!                               -->
+
+    <style>
+        body {
+            height: 98vh;
+            width: 98vw;
+        }
+
+        .chartCSS {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+
+</head>
+
+<body>
+<div class="chartCSS" id="_chart"></div>
+<script>
+
+  var plotlyStackBar = [
+	{ x: ['giraffes', 'orangutans', 'monkeys'], y: [20, 14, 23]}, 
+	{ x: ['giraffes', 'orangutans', 'monkeys'], y: [12, 18, 29]}];
+
+  //render the chart
+  tgw.plotlyStackBar(plotlyStackBar, "_chart");
+
+</script>
+
+</body>
+</html>

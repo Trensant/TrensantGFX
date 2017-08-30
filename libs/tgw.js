@@ -2897,6 +2897,37 @@ svg.select(".legendOrdinal")
     }
     Plotly.newPlot(div_id, traceConfigurations);
   }
+	
+	  // =======================================================
+  /* plotlyStackBar	draws a Stacked Bar chart using plotly library.
+  * param: data (array) [{x: [], y: []}]
+  * param: id (string) Element to display chart.
+  * param: options (dict) A dictionary that allows you customize renderings and behaviors. Below are the current options keys for customization.
+      config: (array) use plotly's documentation to fill in chart options.
+        NOTE: The configuration array must be the same length and order as the data array.
+      layout: modify the chart layout
+    */
+
+  tgw.plotlyStackBar = function (data, div_id, options) {
+    traceConfigurations = [];
+    for (var d in data) {
+      var traceConfig = {};
+      traceConfig.x = data[d].x;
+      traceConfig.y = data[d].y;
+      traceConfig.type = 'bar';
+      if (options) {
+        for (var o in options.config[d]) {
+          traceConfig[o] = options.config[d][o]
+        }
+      }
+      traceConfigurations.push(traceConfig);
+    }
+    
+		var layout = {barmode: 'stack'};
+		
+    Plotly.newPlot(div_id, traceConfigurations, layout);
+  }
+
 
   // =======================================================
   /* plotlyArea draws an area chart using plotly library.
@@ -3108,7 +3139,7 @@ svg.select(".legendOrdinal")
           traceConfig[o] = options.config[d][o]
         }
       }
-			console.log(traceConfig);
+
       traceConfigurations.push(traceConfig);
     }
     if (data.length < 3) {
@@ -3141,5 +3172,5 @@ svg.select(".legendOrdinal")
     options ? Plotly.newPlot(div_id, traceConfigurations, options.config): Plotly.newPlot(div_id, traceConfigurations);
   }
 
-
+	
 })(typeof tgw === 'undefined' ? this['tgw'] = {} : tgw);//(window.hf = window.hf || {});
