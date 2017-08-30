@@ -1,0 +1,174 @@
+<!doctype HTML>
+<html>
+<head>
+
+<script src="../libs/jquery.3.2.1.min.js"></script>                <!-- jquery is used for DOM stuff  -->
+<script src="../libs/d3.v4.min.js"></script>
+
+<!-- css for tgw -->
+<link rel="stylesheet"        href="../style/tgw.css">
+
+<!-- js  -->
+<script type="text/javascript" src="../libs/tgw.js"></script>      <!-- TrensantGFX is the main lib for all wrappers!                               -->
+
+<style>
+    body {
+        height     : 98vh;
+        width      : 98vw;
+    }
+.chartCSS {
+	height : 100%;
+	width  : 100%;
+}
+</style>
+
+</head>
+
+<body>
+<div class="chartCSS" id="_chart"></div>
+<script>
+    var d3radardata = [
+	{  
+    "key":"iPhone",
+    "values":[  
+      {  
+        "reason":"Battery Life",
+        "device":"iPhone",
+        "value":0.22
+        
+      },
+      {  
+        "reason":"Brand",
+        "device":"iPhone",
+        "value":0.28
+      },
+      {  
+        "reason":"Contract Cost",
+        "device":"iPhone",
+        "value":0.29
+      },
+      {  
+        "reason":"Design And Quality",
+        "device":"iPhone",
+        "value":0.17
+      },
+      {  
+        "reason":"Have Internet Connectivity",
+        "device":"iPhone",
+        "value":0.22
+      },
+      {  
+        "reason":"Large Screen",
+        "device":"iPhone",
+        "value":0.02
+      },
+      {  
+        "reason":"Price Of Device",
+        "device":"iPhone",
+        "value":0.21
+      },
+      {  
+        "reason":"To Be A Smartphone",
+        "device":"iPhone",
+        "value":0.50
+      }
+    ]
+  },
+  {  
+    "key":"Samsung",
+    "values":[  
+      {  
+        "reason":"Battery Life",
+        "device":"Samsung",
+        "value":0.27
+      },
+      {  
+        "reason":"Brand",
+        "device":"Samsung",
+        "value":0.16
+      },
+      {  
+        "reason":"Contract Cost",
+        "device":"Samsung",
+        "value":0.35
+      },
+      {  
+        "reason":"Design And Quality",
+        "device":"Samsung",
+        "value":0.13
+      },
+      {  
+        "reason":"Have Internet Connectivity",
+        "device":"Samsung",
+        "value":0.20
+      },
+      {  
+        "reason":"Large Screen",
+        "device":"Samsung",
+        "value":0.13
+      },
+      {  
+        "reason":"Price Of Device",
+        "device":"Samsung",
+        "value":0.35
+      },
+      {  
+        "reason":"To Be A Smartphone",
+        "device":"Samsung",
+        "value":0.38
+      }
+    ]
+  },
+  {  
+    "key":"Nokia Smartphone",
+    "values":[  
+      {  
+        "reason":"Battery Life",
+        "device":"Nokia Smartphone",
+        "value":0.26
+      },
+      {  
+        "reason":"Brand",
+        "device":"Nokia Smartphone",
+        "value":0.10
+      },
+      {  
+        "reason":"Contract Cost",
+        "device":"Nokia Smartphone",
+        "value":0.30
+      },
+      {  
+        "reason":"Design And Quality",
+        "device":"Nokia Smartphone",
+        "value":0.14
+      },
+      {  
+        "reason":"Have Internet Connectivity",
+        "device":"Nokia Smartphone",
+        "value":0.22
+      },
+      {  
+        "reason":"Large Screen",
+        "device":"Nokia Smartphone",
+        "value":0.04
+      },
+      {  
+        "reason":"Price Of Device",
+        "device":"Nokia Smartphone",
+        "value":0.41
+      },
+      {  
+        "reason":"To Be A Smartphone",
+        "device":"Nokia Smartphone",
+        "value":0.30
+      }
+    ]
+  }];
+
+      //render the chart
+      tgw.d3Radar(d3radardata, "_chart");
+
+</script>
+
+</body>
+</html>
