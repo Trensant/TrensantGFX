@@ -2404,6 +2404,23 @@
     /////////// Inspired by the code of alangrafu ///////////
     /////////////////////////////////////////////////////////
 
+	/*
+	* param: data (dict) Schema [ { "key": "string", "values":[ { "reason":"string", "device":"string", "value":int}]}]
+	* param: id (string) Element to display chart.
+	* param: options (dict) A dictionary that allows you customize renderings and behaviors. Below are the current options keys for customization.
+		* w:: description: Width of the circle. type: int, default: container width, default: container width
+		* h:: description: Height of the circle. type: int, default: container height, default: container height
+		* margin:: description: The margins of the SVG., type: dict, default: {top: 20, right: 20, bottom: 20, left: 20}
+		* levels:: description: How many levels or inner circles should there be drawn., type: int default: 3
+		* maxValue:: description: What is the value that the biggest circle will represent., type: int, default: 0
+		* labelFactor:: description: How much farther than the radius of the outer circle should the labels be placed., type: float, default: 1.25
+		* wrapWidth:: description: The number of pixels after which a label needs to be given a new line., type: int, default: 60
+		* opacityArea:: description: The opacity of the area of the blob.,  type: float, default: 0.35
+		* dotRadius:: description: The size of the colored circles of each blog., type: int, default: 4
+		* opacityCircles:: description: The opacity of the circles of each blob., type: float, default: 0.1
+		* strokeWidth:: description: The width of the stroke around each blob., type: int, default: 2
+		* roundStrokes:: description: If true the area and stroke will follow a round path (cardinal-closed)., type: bool, default: false
+	*/
 
     var cfg = {
       w: tgw.containerDims(id).wid,				//Width of the circle
@@ -3165,9 +3182,6 @@ svg.select(".legendOrdinal")
       })
     }
 
-    // if ("layout" in options) {
-    // var layout = options.lay
-    // }
 		
     options ? Plotly.newPlot(div_id, traceConfigurations, options.config): Plotly.newPlot(div_id, traceConfigurations);
   }
