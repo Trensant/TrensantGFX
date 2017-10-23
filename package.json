@@ -1,0 +1,21 @@
+{
+  "name": "trensantgfx",
+  "version": "1.0.0",
+  "description": "Trensant Graphics Library",
+  "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "Null"
+  },
+  "author": "Manu Chatterjee, Ryeland Gongora",
+  "license": "ISC",
+  "dependencies": {
+    "d3": "^4.11.0"
+  }
+}
