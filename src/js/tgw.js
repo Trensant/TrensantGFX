@@ -39,6 +39,12 @@
 
 
  */
+$ = require('jquery');
+jQuery = require('jquery')
+d3 = require('d3');
+c3 = require('c3');
+topojson = require('./libs/us-quantized-topo.js');
+Plotly = require('plotly')
 
 (function (tgw, undefined) {
 
@@ -3062,7 +3068,7 @@ svg.select(".legendOrdinal")
       layout: modify the chart layout
     */
 
-  tgw.plotlyChoropleth = function (data, div_id, options) {
+  /*tgw.plotlyChoropleth = function (data, div_id, options) {
     function unpack(rows, key) {
       return rows.map(function (row) {
         return row[key];
@@ -3129,7 +3135,7 @@ svg.select(".legendOrdinal")
       }
     }
     Plotly.plot(div_id, traceConfig, layout);
-  }
+  }*/
 
   // =======================================================
   /* plotlyPolarScatter draws a polar scatter chart using plotly library.
