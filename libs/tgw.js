@@ -40,7 +40,7 @@
 
  */
 
-(function (tgw, undefined) {
+tgw = {
 
 //=====================================================================================================
   /*
@@ -3186,5 +3186,5 @@ svg.select(".legendOrdinal")
     options ? Plotly.newPlot(div_id, traceConfigurations, options.config): Plotly.newPlot(div_id, traceConfigurations);
   }
 
-	
-})(typeof tgw === 'undefined' ? this['tgw'] = {} : tgw);//(window.hf = window.hf || {});
+
+}
