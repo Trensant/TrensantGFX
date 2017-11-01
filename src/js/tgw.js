@@ -39,12 +39,12 @@
 
 
  */
-// $ = require('jquery');
-// d3 = require('d3');
+$ = require('jquery');
+var d3 = require('d3');
 // c3 = require('c3');
-// topojson = require('./libs/us-quantized-topo.js');
-// Plotly = require('../../libs/plotly.min.js')
-
+var topojson = require('./libs/us-quantized-topo.js');
+var Plotly = require('../../libs/plotly.min.js');
+var d3legend = require('d3-svg-legend');
 
 //=====================================================================================================
   /*
@@ -1684,494 +1684,494 @@ module.exports.wordCloud2js = function (data, div_id, opts) {
 
   WordCloud(canvas, opts);//, clearCanvas: true,  );
   }
-// //=====================================================================================
-//   /* d3WordCloud renders a wordcloud to a canvas using the d3 library
-//   */
-//   tgw.d3WordCloud = function (data, div_id, options) {
-//     // Word cloud layout by Jason Davies, https://www.jasondavies.com/wordcloud/
-//     // Algorithm due to Jonathan Feinberg, http://static.mrfeinberg.com/bv_ch03.pdf
-//     var dispatch = d3.dispatch;
-//
-//     var cloudRadians = Math.PI / 180,
-//       cw = 1 << 11 >> 5,
-//       ch = 1 << 11;
-//
-//     cloud = function () {
-//       var size = [256, 256],
-//         text = cloudText,
-//         font = cloudFont,
-//         fontSize = cloudFontSize,
-//         fontStyle = cloudFontNormal,
-//         fontWeight = cloudFontNormal,
-//         rotate = cloudRotate,
-//         padding = cloudPadding,
-//         spiral = archimedeanSpiral,
-//         words = [],
-//         timeInterval = Infinity,
-//         event = dispatch("word", "end"),
-//         timer = null,
-//         random = Math.random,
-//         cloud = {},
-//         canvas = cloudCanvas;
-//
-//       cloud.canvas = function (_) {
-//         return arguments.length ? (canvas = functor(_), cloud) : canvas;
-//       };
-//
-//       cloud.start = function () {
-//         var contextAndRatio = getContext(canvas()),
-//           board = zeroArray((size[0] >> 5) * size[1]),
-//           bounds = null,
-//           n = words.length,
-//           i = -1,
-//           tags = [],
-//           data = words.map(function (d, i) {
-//             d.text = text.call(this, d, i);
-//             d.font = font.call(this, d, i);
-//             d.style = fontStyle.call(this, d, i);
-//             d.weight = fontWeight.call(this, d, i);
-//             d.rotate = rotate.call(this, d, i);
-//             d.size = ~~fontSize.call(this, d, i);
-//             d.padding = padding.call(this, d, i);
-//             return d;
-//           }).sort(function (a, b) {
-//             return b.size - a.size;
-//           });
-//
-//         if (timer) clearInterval(timer);
-//         timer = setInterval(step, 0);
-//         step();
-//         return cloud;
-//
-//         function step() {
-//           var start = Date.now();
-//           while (Date.now() - start < timeInterval && ++i < n && timer) {
-//             var d = data[i];
-//             d.x = (size[0] * (random() + .5)) >> 1;
-//             d.y = (size[1] * (random() + .5)) >> 1;
-//             cloudSprite(contextAndRatio, d, data, i);
-//             if (d.hasText && place(board, d, bounds)) {
-//               tags.push(d);
-//               event.call("word", cloud, d);
-//               if (bounds) cloudBounds(bounds, d);
-//               else bounds = [{x: d.x + d.x0, y: d.y + d.y0}, {x: d.x + d.x1, y: d.y + d.y1}];
-//               // Temporary hack
-//               d.x -= size[0] >> 1;
-//               d.y -= size[1] >> 1;
-//             }
-//           }
-//           if (i >= n) {
-//             cloud.stop();
-//             event.call("end", cloud, tags, bounds);
-//           }
-//         }
-//       }
-//
-//       cloud.stop = function () {
-//         if (timer) {
-//           clearInterval(timer);
-//           timer = null;
-//         }
-//         return cloud;
-//       };
-//
-//       function getContext(canvas) {
-//         canvas.width = canvas.height = 1;
-//         var ratio = Math.sqrt(canvas.getContext("2d").getImageData(0, 0, 1, 1).data.length >> 2);
-//         canvas.width = (cw << 5) / ratio;
-//         canvas.height = ch / ratio;
-//
-//         var context = canvas.getContext("2d");
-//         context.fillStyle = context.strokeStyle = "red";
-//         context.textAlign = "center";
-//
-//         return {context: context, ratio: ratio};
-//       }
-//
-//       function place(board, tag, bounds) {
-//         var perimeter = [{x: 0, y: 0}, {x: size[0], y: size[1]}],
-//           startX = tag.x,
-//           startY = tag.y,
-//           maxDelta = Math.sqrt(size[0] * size[0] + size[1] * size[1]),
-//           s = spiral(size),
-//           dt = random() < .5 ? 1 : -1,
-//           t = -dt,
-//           dxdy,
-//           dx,
-//           dy;
-//
-//         while (dxdy = s(t += dt)) {
-//           dx = ~~dxdy[0];
-//           dy = ~~dxdy[1];
-//
-//           if (Math.min(Math.abs(dx), Math.abs(dy)) >= maxDelta) break;
-//
-//           tag.x = startX + dx;
-//           tag.y = startY + dy;
-//
-//           if (tag.x + tag.x0 < 0 || tag.y + tag.y0 < 0 ||
-//             tag.x + tag.x1 > size[0] || tag.y + tag.y1 > size[1]) continue;
-//           // TODO only check for collisions within current bounds.
-//           if (!bounds || !cloudCollide(tag, board, size[0])) {
-//             if (!bounds || collideRects(tag, bounds)) {
-//               var sprite = tag.sprite,
-//                 w = tag.width >> 5,
-//                 sw = size[0] >> 5,
-//                 lx = tag.x - (w << 4),
-//                 sx = lx & 0x7f,
-//                 msx = 32 - sx,
-//                 h = tag.y1 - tag.y0,
-//                 x = (tag.y + tag.y0) * sw + (lx >> 5),
-//                 last;
-//               for (var j = 0; j < h; j++) {
-//                 last = 0;
-//                 for (var i = 0; i <= w; i++) {
-//                   board[x + i] |= (last << msx) | (i < w ? (last = sprite[j * w + i]) >>> sx : 0);
-//                 }
-//                 x += sw;
-//               }
-//               delete tag.sprite;
-//               return true;
-//             }
-//           }
-//         }
-//         return false;
-//       }
-//
-//       cloud.timeInterval = function (_) {
-//         return arguments.length ? (timeInterval = _ == null ? Infinity : _, cloud) : timeInterval;
-//       };
-//
-//       cloud.words = function (_) {
-//         return arguments.length ? (words = _, cloud) : words;
-//       };
-//
-//       cloud.size = function (_) {
-//         return arguments.length ? (size = [+_[0], +_[1]], cloud) : size;
-//       };
-//
-//       cloud.font = function (_) {
-//         return arguments.length ? (font = functor(_), cloud) : font;
-//       };
-//
-//       cloud.fontStyle = function (_) {
-//         return arguments.length ? (fontStyle = functor(_), cloud) : fontStyle;
-//       };
-//
-//       cloud.fontWeight = function (_) {
-//         return arguments.length ? (fontWeight = functor(_), cloud) : fontWeight;
-//       };
-//
-//       cloud.rotate = function (_) {
-//         return arguments.length ? (rotate = functor(_), cloud) : rotate;
-//       };
-//
-//       cloud.text = function (_) {
-//         return arguments.length ? (text = functor(_), cloud) : text;
-//       };
-//
-//       cloud.spiral = function (_) {
-//         return arguments.length ? (spiral = spirals[_] || _, cloud) : spiral;
-//       };
-//
-//       cloud.fontSize = function (_) {
-//         return arguments.length ? (fontSize = functor(_), cloud) : fontSize;
-//       };
-//
-//       cloud.padding = function (_) {
-//         return arguments.length ? (padding = functor(_), cloud) : padding;
-//       };
-//
-//       cloud.random = function (_) {
-//         return arguments.length ? (random = _, cloud) : random;
-//       };
-//
-//       cloud.on = function () {
-//         var value = event.on.apply(event, arguments);
-//         return value === event ? cloud : value;
-//       };
-//
-//       return cloud;
-//     };
-//
-//     function cloudText(d) {
-//       return d.text;
-//     }
-//
-//     function cloudFont() {
-//       return "serif";
-//     }
-//
-//     function cloudFontNormal() {
-//       return "normal";
-//     }
-//
-//     function cloudFontSize(d) {
-//       return Math.sqrt(d.value);
-//     }
-//
-//     function cloudRotate() {
-//       return (~~(Math.random() * 6) - 3) * 30;
-//     }
-//
-//     function cloudPadding() {
-//       return 1;
-//     }
-//
-//     // Fetches a monochrome sprite bitmap for the specified text.
-//     // Load in batches for speed.
-//     function cloudSprite(contextAndRatio, d, data, di) {
-//       if (d.sprite) return;
-//       var c = contextAndRatio.context,
-//         ratio = contextAndRatio.ratio;
-//
-//       c.clearRect(0, 0, (cw << 5) / ratio, ch / ratio);
-//       var x = 0,
-//         y = 0,
-//         maxh = 0,
-//         n = data.length;
-//       --di;
-//       while (++di < n) {
-//         d = data[di];
-//         c.save();
-//         c.font = d.style + " " + d.weight + " " + ~~((d.size + 1) / ratio) + "px " + d.font;
-//         var w = c.measureText(d.text + "m").width * ratio,
-//           h = d.size << 1;
-//         if (d.rotate) {
-//           var sr = Math.sin(d.rotate * cloudRadians),
-//             cr = Math.cos(d.rotate * cloudRadians),
-//             wcr = w * cr,
-//             wsr = w * sr,
-//             hcr = h * cr,
-//             hsr = h * sr;
-//           w = (Math.max(Math.abs(wcr + hsr), Math.abs(wcr - hsr)) + 0x1f) >> 5 << 5;
-//           h = ~~Math.max(Math.abs(wsr + hcr), Math.abs(wsr - hcr));
-//         } else {
-//           w = (w + 0x1f) >> 5 << 5;
-//         }
-//         if (h > maxh) maxh = h;
-//         if (x + w >= (cw << 5)) {
-//           x = 0;
-//           y += maxh;
-//           maxh = 0;
-//         }
-//         if (y + h >= ch) break;
-//         c.translate((x + (w >> 1)) / ratio, (y + (h >> 1)) / ratio);
-//         if (d.rotate) c.rotate(d.rotate * cloudRadians);
-//         c.fillText(d.text, 0, 0);
-//         if (d.padding) c.lineWidth = 2 * d.padding, c.strokeText(d.text, 0, 0);
-//         c.restore();
-//         d.width = w;
-//         d.height = h;
-//         d.xoff = x;
-//         d.yoff = y;
-//         d.x1 = w >> 1;
-//         d.y1 = h >> 1;
-//         d.x0 = -d.x1;
-//         d.y0 = -d.y1;
-//         d.hasText = true;
-//         x += w;
-//       }
-//       var pixels = c.getImageData(0, 0, (cw << 5) / ratio, ch / ratio).data,
-//         sprite = [];
-//       while (--di >= 0) {
-//         d = data[di];
-//         if (!d.hasText) continue;
-//         var w = d.width,
-//           w32 = w >> 5,
-//           h = d.y1 - d.y0;
-//         // Zero the buffer
-//         for (var i = 0; i < h * w32; i++) sprite[i] = 0;
-//         x = d.xoff;
-//         if (x == null) return;
-//         y = d.yoff;
-//         var seen = 0,
-//           seenRow = -1;
-//         for (var j = 0; j < h; j++) {
-//           for (var i = 0; i < w; i++) {
-//             var k = w32 * j + (i >> 5),
-//               m = pixels[((y + j) * (cw << 5) + (x + i)) << 2] ? 1 << (31 - (i % 32)) : 0;
-//             sprite[k] |= m;
-//             seen |= m;
-//           }
-//           if (seen) seenRow = j;
-//           else {
-//             d.y0++;
-//             h--;
-//             j--;
-//             y++;
-//           }
-//         }
-//         d.y1 = d.y0 + seenRow;
-//         d.sprite = sprite.slice(0, (d.y1 - d.y0) * w32);
-//       }
-//     }
-//
-//     // Use mask-based collision detection.
-//     function cloudCollide(tag, board, sw) {
-//       sw >>= 5;
-//       var sprite = tag.sprite,
-//         w = tag.width >> 5,
-//         lx = tag.x - (w << 4),
-//         sx = lx & 0x7f,
-//         msx = 32 - sx,
-//         h = tag.y1 - tag.y0,
-//         x = (tag.y + tag.y0) * sw + (lx >> 5),
-//         last;
-//       for (var j = 0; j < h; j++) {
-//         last = 0;
-//         for (var i = 0; i <= w; i++) {
-//           if (((last << msx) | (i < w ? (last = sprite[j * w + i]) >>> sx : 0))
-//             & board[x + i]) return true;
-//         }
-//         x += sw;
-//       }
-//       return false;
-//     }
-//
-//     function cloudBounds(bounds, d) {
-//       var b0 = bounds[0],
-//         b1 = bounds[1];
-//       if (d.x + d.x0 < b0.x) b0.x = d.x + d.x0;
-//       if (d.y + d.y0 < b0.y) b0.y = d.y + d.y0;
-//       if (d.x + d.x1 > b1.x) b1.x = d.x + d.x1;
-//       if (d.y + d.y1 > b1.y) b1.y = d.y + d.y1;
-//     }
-//
-//     function collideRects(a, b) {
-//       return a.x + a.x1 > b[0].x && a.x + a.x0 < b[1].x && a.y + a.y1 > b[0].y && a.y + a.y0 < b[1].y;
-//     }
-//
-//     function archimedeanSpiral(size) {
-//       var e = size[0] / size[1];
-//       return function (t) {
-//         return [e * (t *= .1) * Math.cos(t), t * Math.sin(t)];
-//       };
-//     }
-//
-//     function rectangularSpiral(size) {
-//       var dy = 4,
-//         dx = dy * size[0] / size[1],
-//         x = 0,
-//         y = 0;
-//       return function (t) {
-//         var sign = t < 0 ? -1 : 1;
-//         // See triangular numbers: T_n = n * (n + 1) / 2.
-//         switch ((Math.sqrt(1 + 4 * sign * t) - sign) & 3) {
-//           case 0:
-//             x += dx;
-//             break;
-//           case 1:
-//             y += dy;
-//             break;
-//           case 2:
-//             x -= dx;
-//             break;
-//           default:
-//             y -= dy;
-//             break;
-//         }
-//         return [x, y];
-//       };
-//     }
-//
-//     // TODO reuse arrays?
-//     function zeroArray(n) {
-//       var a = [],
-//         i = -1;
-//       while (++i < n) a[i] = 0;
-//       return a;
-//     }
-//
-//     function cloudCanvas() {
-//       return document.createElement("canvas");
-//     }
-//
-//     function functor(d) {
-//       return typeof d === "function" ? d : function () {
-//         return d;
-//       };
-//     }
-//
-//     var spirals = {
-//       archimedean: archimedeanSpiral,
-//       rectangular: rectangularSpiral
-//     };
-//
-// //  ========================================================================
-// //  Implementation of the cloud visualization.
-//     function setOptions(default_configuration, options) {
-//       /*Options.tree_attribute_names: Gets keys from the tree. If not present sets default values.*/
-//
-//       if (options) {
-//         for (var setting in options) {
-//           if (!(Object.keys(default_configuration).indexOf(setting) > -1)) {
-//             console.warn(setting + ' is not a default setting.')
-//           }
-//           default_configuration[setting] = options[setting];
-//         }
-//       }
-//       return default_configuration
-//     }
-//
-//     var d3wordCloudDefaultConfiguration = {
-//       svgWidth: tgw.containerDims(div_id).wid,
-//       svgHeight: tgw.containerDims(div_id).hgt,
-//       font: "Impact",
-//       padding: 5,
-//       fontWeight: "normal"
-//     }
-//
-//     var d3wordCloudConfiguration = setOptions(d3wordCloudDefaultConfiguration, options);
-//
-//     var fill = d3.scaleOrdinal(d3.schemeCategory20);
-//
-//     function draw(words) {
-//       d3.select("#" + div_id).append("svg")
-//         .attr("width", layout.size()[0])
-//         .attr("height", layout.size()[1])
-//         .append("g")
-//         .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
-//         .selectAll("text")
-//         .data(words)
-//         .enter().append("text")
-//         .style("font-size", function (d) {
-//           return d.size + "px";
-//         })
-//         .style("font-family", "Impact")
-//         .style("fill", function (d, i) {
-//           return fill(i);
-//         })
-//         .attr("text-anchor", "middle")
-//         .attr("transform", function (d) {
-//           return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
-//         })
-//         .text(function (d) {
-//           return d.text;
-//         });
-//     }
-//
-//     var layout = cloud()
-//       .size([d3wordCloudConfiguration.svgWidth, d3wordCloudConfiguration.svgHeight])
-//       .words(data.map(function (d) {
-//         return {text: d.value, size: d.count};
-//       }))
-//       .padding(d3wordCloudConfiguration.padding)
-//       // .rotate(function () {
-//       //   return ~~(Math.random() * 2) * 90;
-//       // })
-//       .font(d3wordCloudConfiguration.font)
-//       .fontSize(function (d) {
-//         return d.size;
-//       })
-//       .fontWeight(d3wordCloudConfiguration.fontWeight)
-//       .on("end", draw);
-//     if (options && "rotate" in options) {
-//       layout.rotate(options.rotate);
-//     }
-//
-//     layout.start();
-//   }
+//=====================================================================================
+  /* d3WordCloud renders a wordcloud to a canvas using the d3 library
+  */
+  module.exports.d3WordCloud = function (data, div_id, options) {
+    // Word cloud layout by Jason Davies, https://www.jasondavies.com/wordcloud/
+    // Algorithm due to Jonathan Feinberg, http://static.mrfeinberg.com/bv_ch03.pdf
+    var dispatch = d3.dispatch;
+
+    var cloudRadians = Math.PI / 180,
+      cw = 1 << 11 >> 5,
+      ch = 1 << 11;
+
+    cloud = function () {
+      var size = [256, 256],
+        text = cloudText,
+        font = cloudFont,
+        fontSize = cloudFontSize,
+        fontStyle = cloudFontNormal,
+        fontWeight = cloudFontNormal,
+        rotate = cloudRotate,
+        padding = cloudPadding,
+        spiral = archimedeanSpiral,
+        words = [],
+        timeInterval = Infinity,
+        event = dispatch("word", "end"),
+        timer = null,
+        random = Math.random,
+        cloud = {},
+        canvas = cloudCanvas;
+
+      cloud.canvas = function (_) {
+        return arguments.length ? (canvas = functor(_), cloud) : canvas;
+      };
+
+      cloud.start = function () {
+        var contextAndRatio = getContext(canvas()),
+          board = zeroArray((size[0] >> 5) * size[1]),
+          bounds = null,
+          n = words.length,
+          i = -1,
+          tags = [],
+          data = words.map(function (d, i) {
+            d.text = text.call(this, d, i);
+            d.font = font.call(this, d, i);
+            d.style = fontStyle.call(this, d, i);
+            d.weight = fontWeight.call(this, d, i);
+            d.rotate = rotate.call(this, d, i);
+            d.size = ~~fontSize.call(this, d, i);
+            d.padding = padding.call(this, d, i);
+            return d;
+          }).sort(function (a, b) {
+            return b.size - a.size;
+          });
+
+        if (timer) clearInterval(timer);
+        timer = setInterval(step, 0);
+        step();
+        return cloud;
+
+        function step() {
+          var start = Date.now();
+          while (Date.now() - start < timeInterval && ++i < n && timer) {
+            var d = data[i];
+            d.x = (size[0] * (random() + .5)) >> 1;
+            d.y = (size[1] * (random() + .5)) >> 1;
+            cloudSprite(contextAndRatio, d, data, i);
+            if (d.hasText && place(board, d, bounds)) {
+              tags.push(d);
+              event.call("word", cloud, d);
+              if (bounds) cloudBounds(bounds, d);
+              else bounds = [{x: d.x + d.x0, y: d.y + d.y0}, {x: d.x + d.x1, y: d.y + d.y1}];
+              // Temporary hack
+              d.x -= size[0] >> 1;
+              d.y -= size[1] >> 1;
+            }
+          }
+          if (i >= n) {
+            cloud.stop();
+            event.call("end", cloud, tags, bounds);
+          }
+        }
+      }
+
+      cloud.stop = function () {
+        if (timer) {
+          clearInterval(timer);
+          timer = null;
+        }
+        return cloud;
+      };
+
+      function getContext(canvas) {
+        canvas.width = canvas.height = 1;
+        var ratio = Math.sqrt(canvas.getContext("2d").getImageData(0, 0, 1, 1).data.length >> 2);
+        canvas.width = (cw << 5) / ratio;
+        canvas.height = ch / ratio;
+
+        var context = canvas.getContext("2d");
+        context.fillStyle = context.strokeStyle = "red";
+        context.textAlign = "center";
+
+        return {context: context, ratio: ratio};
+      }
+
+      function place(board, tag, bounds) {
+        var perimeter = [{x: 0, y: 0}, {x: size[0], y: size[1]}],
+          startX = tag.x,
+          startY = tag.y,
+          maxDelta = Math.sqrt(size[0] * size[0] + size[1] * size[1]),
+          s = spiral(size),
+          dt = random() < .5 ? 1 : -1,
+          t = -dt,
+          dxdy,
+          dx,
+          dy;
+
+        while (dxdy = s(t += dt)) {
+          dx = ~~dxdy[0];
+          dy = ~~dxdy[1];
+
+          if (Math.min(Math.abs(dx), Math.abs(dy)) >= maxDelta) break;
+
+          tag.x = startX + dx;
+          tag.y = startY + dy;
+
+          if (tag.x + tag.x0 < 0 || tag.y + tag.y0 < 0 ||
+            tag.x + tag.x1 > size[0] || tag.y + tag.y1 > size[1]) continue;
+          // TODO only check for collisions within current bounds.
+          if (!bounds || !cloudCollide(tag, board, size[0])) {
+            if (!bounds || collideRects(tag, bounds)) {
+              var sprite = tag.sprite,
+                w = tag.width >> 5,
+                sw = size[0] >> 5,
+                lx = tag.x - (w << 4),
+                sx = lx & 0x7f,
+                msx = 32 - sx,
+                h = tag.y1 - tag.y0,
+                x = (tag.y + tag.y0) * sw + (lx >> 5),
+                last;
+              for (var j = 0; j < h; j++) {
+                last = 0;
+                for (var i = 0; i <= w; i++) {
+                  board[x + i] |= (last << msx) | (i < w ? (last = sprite[j * w + i]) >>> sx : 0);
+                }
+                x += sw;
+              }
+              delete tag.sprite;
+              return true;
+            }
+          }
+        }
+        return false;
+      }
+
+      cloud.timeInterval = function (_) {
+        return arguments.length ? (timeInterval = _ == null ? Infinity : _, cloud) : timeInterval;
+      };
+
+      cloud.words = function (_) {
+        return arguments.length ? (words = _, cloud) : words;
+      };
+
+      cloud.size = function (_) {
+        return arguments.length ? (size = [+_[0], +_[1]], cloud) : size;
+      };
+
+      cloud.font = function (_) {
+        return arguments.length ? (font = functor(_), cloud) : font;
+      };
+
+      cloud.fontStyle = function (_) {
+        return arguments.length ? (fontStyle = functor(_), cloud) : fontStyle;
+      };
+
+      cloud.fontWeight = function (_) {
+        return arguments.length ? (fontWeight = functor(_), cloud) : fontWeight;
+      };
+
+      cloud.rotate = function (_) {
+        return arguments.length ? (rotate = functor(_), cloud) : rotate;
+      };
+
+      cloud.text = function (_) {
+        return arguments.length ? (text = functor(_), cloud) : text;
+      };
+
+      cloud.spiral = function (_) {
+        return arguments.length ? (spiral = spirals[_] || _, cloud) : spiral;
+      };
+
+      cloud.fontSize = function (_) {
+        return arguments.length ? (fontSize = functor(_), cloud) : fontSize;
+      };
+
+      cloud.padding = function (_) {
+        return arguments.length ? (padding = functor(_), cloud) : padding;
+      };
+
+      cloud.random = function (_) {
+        return arguments.length ? (random = _, cloud) : random;
+      };
+
+      cloud.on = function () {
+        var value = event.on.apply(event, arguments);
+        return value === event ? cloud : value;
+      };
+
+      return cloud;
+    };
+
+    function cloudText(d) {
+      return d.text;
+    }
+
+    function cloudFont() {
+      return "serif";
+    }
+
+    function cloudFontNormal() {
+      return "normal";
+    }
+
+    function cloudFontSize(d) {
+      return Math.sqrt(d.value);
+    }
+
+    function cloudRotate() {
+      return (~~(Math.random() * 6) - 3) * 30;
+    }
+
+    function cloudPadding() {
+      return 1;
+    }
+
+    // Fetches a monochrome sprite bitmap for the specified text.
+    // Load in batches for speed.
+    function cloudSprite(contextAndRatio, d, data, di) {
+      if (d.sprite) return;
+      var c = contextAndRatio.context,
+        ratio = contextAndRatio.ratio;
+
+      c.clearRect(0, 0, (cw << 5) / ratio, ch / ratio);
+      var x = 0,
+        y = 0,
+        maxh = 0,
+        n = data.length;
+      --di;
+      while (++di < n) {
+        d = data[di];
+        c.save();
+        c.font = d.style + " " + d.weight + " " + ~~((d.size + 1) / ratio) + "px " + d.font;
+        var w = c.measureText(d.text + "m").width * ratio,
+          h = d.size << 1;
+        if (d.rotate) {
+          var sr = Math.sin(d.rotate * cloudRadians),
+            cr = Math.cos(d.rotate * cloudRadians),
+            wcr = w * cr,
+            wsr = w * sr,
+            hcr = h * cr,
+            hsr = h * sr;
+          w = (Math.max(Math.abs(wcr + hsr), Math.abs(wcr - hsr)) + 0x1f) >> 5 << 5;
+          h = ~~Math.max(Math.abs(wsr + hcr), Math.abs(wsr - hcr));
+        } else {
+          w = (w + 0x1f) >> 5 << 5;
+        }
+        if (h > maxh) maxh = h;
+        if (x + w >= (cw << 5)) {
+          x = 0;
+          y += maxh;
+          maxh = 0;
+        }
+        if (y + h >= ch) break;
+        c.translate((x + (w >> 1)) / ratio, (y + (h >> 1)) / ratio);
+        if (d.rotate) c.rotate(d.rotate * cloudRadians);
+        c.fillText(d.text, 0, 0);
+        if (d.padding) c.lineWidth = 2 * d.padding, c.strokeText(d.text, 0, 0);
+        c.restore();
+        d.width = w;
+        d.height = h;
+        d.xoff = x;
+        d.yoff = y;
+        d.x1 = w >> 1;
+        d.y1 = h >> 1;
+        d.x0 = -d.x1;
+        d.y0 = -d.y1;
+        d.hasText = true;
+        x += w;
+      }
+      var pixels = c.getImageData(0, 0, (cw << 5) / ratio, ch / ratio).data,
+        sprite = [];
+      while (--di >= 0) {
+        d = data[di];
+        if (!d.hasText) continue;
+        var w = d.width,
+          w32 = w >> 5,
+          h = d.y1 - d.y0;
+        // Zero the buffer
+        for (var i = 0; i < h * w32; i++) sprite[i] = 0;
+        x = d.xoff;
+        if (x == null) return;
+        y = d.yoff;
+        var seen = 0,
+          seenRow = -1;
+        for (var j = 0; j < h; j++) {
+          for (var i = 0; i < w; i++) {
+            var k = w32 * j + (i >> 5),
+              m = pixels[((y + j) * (cw << 5) + (x + i)) << 2] ? 1 << (31 - (i % 32)) : 0;
+            sprite[k] |= m;
+            seen |= m;
+          }
+          if (seen) seenRow = j;
+          else {
+            d.y0++;
+            h--;
+            j--;
+            y++;
+          }
+        }
+        d.y1 = d.y0 + seenRow;
+        d.sprite = sprite.slice(0, (d.y1 - d.y0) * w32);
+      }
+    }
+
+    // Use mask-based collision detection.
+    function cloudCollide(tag, board, sw) {
+      sw >>= 5;
+      var sprite = tag.sprite,
+        w = tag.width >> 5,
+        lx = tag.x - (w << 4),
+        sx = lx & 0x7f,
+        msx = 32 - sx,
+        h = tag.y1 - tag.y0,
+        x = (tag.y + tag.y0) * sw + (lx >> 5),
+        last;
+      for (var j = 0; j < h; j++) {
+        last = 0;
+        for (var i = 0; i <= w; i++) {
+          if (((last << msx) | (i < w ? (last = sprite[j * w + i]) >>> sx : 0))
+            & board[x + i]) return true;
+        }
+        x += sw;
+      }
+      return false;
+    }
+
+    function cloudBounds(bounds, d) {
+      var b0 = bounds[0],
+        b1 = bounds[1];
+      if (d.x + d.x0 < b0.x) b0.x = d.x + d.x0;
+      if (d.y + d.y0 < b0.y) b0.y = d.y + d.y0;
+      if (d.x + d.x1 > b1.x) b1.x = d.x + d.x1;
+      if (d.y + d.y1 > b1.y) b1.y = d.y + d.y1;
+    }
+
+    function collideRects(a, b) {
+      return a.x + a.x1 > b[0].x && a.x + a.x0 < b[1].x && a.y + a.y1 > b[0].y && a.y + a.y0 < b[1].y;
+    }
+
+    function archimedeanSpiral(size) {
+      var e = size[0] / size[1];
+      return function (t) {
+        return [e * (t *= .1) * Math.cos(t), t * Math.sin(t)];
+      };
+    }
+
+    function rectangularSpiral(size) {
+      var dy = 4,
+        dx = dy * size[0] / size[1],
+        x = 0,
+        y = 0;
+      return function (t) {
+        var sign = t < 0 ? -1 : 1;
+        // See triangular numbers: T_n = n * (n + 1) / 2.
+        switch ((Math.sqrt(1 + 4 * sign * t) - sign) & 3) {
+          case 0:
+            x += dx;
+            break;
+          case 1:
+            y += dy;
+            break;
+          case 2:
+            x -= dx;
+            break;
+          default:
+            y -= dy;
+            break;
+        }
+        return [x, y];
+      };
+    }
+
+    // TODO reuse arrays?
+    function zeroArray(n) {
+      var a = [],
+        i = -1;
+      while (++i < n) a[i] = 0;
+      return a;
+    }
+
+    function cloudCanvas() {
+      return document.createElement("canvas");
+    }
+
+    function functor(d) {
+      return typeof d === "function" ? d : function () {
+        return d;
+      };
+    }
+
+    var spirals = {
+      archimedean: archimedeanSpiral,
+      rectangular: rectangularSpiral
+    };
+
+//  ========================================================================
+//  Implementation of the cloud visualization.
+    function setOptions(default_configuration, options) {
+      /*Options.tree_attribute_names: Gets keys from the tree. If not present sets default values.*/
+
+      if (options) {
+        for (var setting in options) {
+          if (!(Object.keys(default_configuration).indexOf(setting) > -1)) {
+            console.warn(setting + ' is not a default setting.')
+          }
+          default_configuration[setting] = options[setting];
+        }
+      }
+      return default_configuration
+    }
+
+    var d3wordCloudDefaultConfiguration = {
+      svgWidth: tgw.containerDims(div_id).wid,
+      svgHeight: tgw.containerDims(div_id).hgt,
+      font: "Impact",
+      padding: 5,
+      fontWeight: "normal"
+    }
+
+    var d3wordCloudConfiguration = setOptions(d3wordCloudDefaultConfiguration, options);
+
+    var fill = d3.scaleOrdinal(d3.schemeCategory20);
+
+    function draw(words) {
+      d3.select("#" + div_id).append("svg")
+        .attr("width", layout.size()[0])
+        .attr("height", layout.size()[1])
+        .append("g")
+        .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
+        .selectAll("text")
+        .data(words)
+        .enter().append("text")
+        .style("font-size", function (d) {
+          return d.size + "px";
+        })
+        .style("font-family", "Impact")
+        .style("fill", function (d, i) {
+          return fill(i);
+        })
+        .attr("text-anchor", "middle")
+        .attr("transform", function (d) {
+          return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+        })
+        .text(function (d) {
+          return d.text;
+        });
+    }
+
+    var layout = cloud()
+      .size([d3wordCloudConfiguration.svgWidth, d3wordCloudConfiguration.svgHeight])
+      .words(data.map(function (d) {
+        return {text: d.value, size: d.count};
+      }))
+      .padding(d3wordCloudConfiguration.padding)
+      // .rotate(function () {
+      //   return ~~(Math.random() * 2) * 90;
+      // })
+      .font(d3wordCloudConfiguration.font)
+      .fontSize(function (d) {
+        return d.size;
+      })
+      .fontWeight(d3wordCloudConfiguration.fontWeight)
+      .on("end", draw);
+    if (options && "rotate" in options) {
+      layout.rotate(options.rotate);
+    }
+
+    layout.start();
+  }
 //  =================================================================================
 /* d3choropleth draws a choropleth chart.
 * param: data (dict)   -- This chart type is unique in that it combines data that draws the polygons (frequently these are geographic objects such as a country or region) with the measurement data. We recommend that you follow this tutorial to construct the data for this chart. https://medium.com/@mbostock/command-line-cartography-part-1-897aa8f8ca2c
@@ -2824,7 +2824,7 @@ module.exports.d3Radar = function (data, id, options) {
   svg.append("g")
     .attr("class", "legendOrdinal")
     .attr("transform", "translate(" + cfg["legendPosition"]["x"] + "," + cfg["legendPosition"]["y"] + ")");
-  var legendOrdinal = d3.legendColor()
+  var legendOrdinal = d3legend.legendColor()
   //d3 symbol creates a path-string, for example
   //"M0,-8.059274488676564L9.306048591020996,
   // //8.059274488676564 -9.306048591020996,8.059274488676564Z"
@@ -2977,242 +2977,240 @@ module.exports.plotlyStackBar = function (data, div_id, options) {
 }
 
 
-//   // =======================================================
-//   /* plotlyArea draws an area chart using plotly library.
-//   * param: data (array) [{x: [], y: []}]
-//   * param: id (string) Element to display chart.
-//   * param: options (dict) A dictionary that allows you customize renderings and behaviors. Below are the current options keys for customization.
-//       config: (array) use plotly's documentation to fill in chart options.
-//         NOTE: The config array must be the same length and order as the data array.
-//       layout: modify the chart layout
-//     */
-//
-//   tgw.plotlyArea = function (data, div_id, options) {
-//     traceConfigurations = [];
-//     for (var d in data) {
-//       var traceConfig = {};
-//       traceConfig.x = data[d].x;
-//       traceConfig.y = data[d].y;
-//       traceConfig.type = 'scatter';
-//       traceConfig.fill = 'tozeroy';
-//       if (options) {
-//         for (var o in options.config[d]) {
-//           if (o == 'fill') {
-//             traceConfig.fill = options.config[d][o];
-//             continue;
-//           }
-//           traceConfig[o] = options.config[o]
-//         }
-//       }
-//       traceConfigurations.push(traceConfig);
-//     }
-//     Plotly.newPlot(div_id, traceConfigurations);
-//   }
-//
-//   // =======================================================
-//   /* plotlyBox draws a box plot using plotly library.
-//   * param: data (array) [{y: []}, {y: []}]
-//   * param: id (string) Element to display chart.
-//   * param: options (dict) A dictionary that allows you customize renderings and behaviors. Below are the current options keys for customization.
-//       config: (array) use plotly's documentation to fill in chart options.
-//         NOTE: The config array must be the same length and order as the data array.
-//       layout: modify the chart layout
-//     */
-//
-//   tgw.plotlyBox = function (data, div_id, options) {
-//     traceConfigurations = [];
-//     for (var d in data) {
-//       var traceConfig = {};
-//       traceConfig.y = data[d].y;
-//       traceConfig.type = 'box';
-//       if (options) {
-//         for (var o in options.config[d]) {
-//           traceConfig[o] = options.config[o]
-//         }
-//       }
-//       traceConfigurations.push(traceConfig);
-//     }
-//     Plotly.newPlot(div_id, traceConfigurations);
-//   }
-//
-//   // =======================================================
-//   /* plotlyHeatMap draws a Heat Map using plotly library.
-//   * param: data (object) Example: {z: [[2, 3, 4], [8, 10, 1]]}
-//   * param: id (string) Element to display chart.
-//   * param: options (dict) A dictionary that allows you customize renderings and behaviors. Below are the current options keys for customization.
-//       config: (array) use plotly's documentation to fill in chart options.
-//         NOTE: The config array must be the same length and order as the data array.
-//       layout: modify the chart layout
-//     */
-//
-//   tgw.plotlyHeatMap = function (data, div_id, options) {
-//     traceConfig = [{
-//       z: data.z,
-//       type: 'heatmap'
-//     }];
-//
-//     if (options) {
-//       for (var o in options) {
-//         traceConfig[0][o] = options[o];
-//       }
-//     }
-//     Plotly.newPlot(div_id, traceConfig);
-//   }
-//
-//   // =======================================================
-//   /* plotlyHistogram draws a Histogram using plotly library.
-//   * param: data (object) Example: {z: [[2, 3, 4], [8, 10, 1]]}
-//   * param: id (string) Element to display chart.
-//   * param: options (dict) A dictionary that allows you customize renderings and behaviors. Below are the current options keys for customization.
-//       config: (array) use plotly's documentation to fill in chart options.
-//         NOTE: The config array must be the same length and order as the data array.
-//       layout: modify the chart layout
-//     */
-//
-//   tgw.plotlyHistogram = function (data, div_id, options) {
-//     traceConfig = [{
-//       x: data,
-//       type: 'histogram'
-//     }];
-//
-//     if (options) {
-//       for (var o in options) {
-//         traceConfig[0][o] = options[o];
-//       }
-//     }
-//     Plotly.newPlot(div_id, traceConfig);
-//   }
-//
-//   // =======================================================
-//   /* plotlyChoropleth draws a choropleth using plotly library.
-//   * param: data (object) Example: {z: [[2, 3, 4], [8, 10, 1]]}
-//   * param: id (string) Element to display chart.
-//   * param: options (dict) A dictionary that allows you customize renderings and behaviors. Below are the current options keys for customization.
-//       config: (array) use plotly's documentation to fill in chart options.
-//         NOTE: The config array must be the same length and order as the data array.
-//       layout: modify the chart layout
-//     */
-//
-//   /*tgw.plotlyChoropleth = function (data, div_id, options) {
-//     function unpack(rows, key) {
-//       return rows.map(function (row) {
-//         return row[key];
-//       });
-//     }
-//
-//     if (!(options)) {
-//       console.error('options is required to render this chart');
-//     }
-//     if (!(options.config)) {
-//       console.error('The options parameter must contain a config object to render this chart.')
-//     }
-//     if (!(options.config.fieldName)) {
-//       console.error('You must specify which field to use from your data.')
-//     }
-//
-//     traceConfig = [{
-//       z: unpack(data, options.config.fieldName),
-//       type: 'choropleth',
-//       text: unpack(data, 'state'),
-//       locationmode: 'USA-states',
-//       locations: unpack(data, 'code'),
-//       colorscale: [
-//         [0, 'rgb(242,240,247)'], [0.2, 'rgb(218,218,235)'],
-//         [0.4, 'rgb(188,189,220)'], [0.6, 'rgb(158,154,200)'],
-//         [0.8, 'rgb(117,107,177)'], [1, 'rgb(84,39,143)']
-//       ],
-//       colorbar: {
-//         thickness: 0.2
-//       },
-//       marker: {
-//         line: {
-//           color: 'rgb(255,255,255)',
-//           width: 2
-//         }
-//       }
-//     }];
-//
-//     mapValues = [];
-//     for (var t in data) {
-//       mapValues.push(data[t][options.config.fieldName])
-//     }
-//     traceConfig.zmin = Math.min(...mapValues
-//   ),
-//     traceConfig.zmax = Math.max(...mapValues
-//   )
-//     ;
-//
-//     for (var o in options.config) {
-//       traceConfig[o] = options.config[o];
-//     }
-//
-//     var layout = {
-//       geo: {
-//         scope: 'usa',
-//         showlakes: true,
-//         lakecolor: 'rgb(255,255,255)'
-//       }
-//     };
-//
-//     if (options.layout) {
-//       for (var o in options.layout) {
-//         layout[o] = options.layout[o];
-//       }
-//     }
-//     Plotly.plot(div_id, traceConfig, layout);
-//   }*/
-//
-//   // =======================================================
-//   /* plotlyPolarScatter draws a polar scatter chart using plotly library.
-//   * param: data (array) [{r: [], t: []}]
-//   * param: id (string) Element to display chart.
-//   * param: options (dict) A dictionary that allows you customize renderings and behaviors. Below are the current options keys for customization.
-//       config: (array) use plotly's documentation to fill in chart options.
-//         NOTE: The configuration array must be the same length and order as the data array.
-//       layout: modify the chart layout
-//     */
-//
-//   tgw.plotlyPolarScatter = function (data, div_id, options) {
-//     traceConfigurations = [];
-//     for (var d in data) {
-//       var traceConfig = {marker: {
-//           color: 'rgb(117,112,179)'
-//         }};
-//       traceConfig.r = data[d].r;
-//       traceConfig.t = data[d].t;
-//       traceConfig.type = 'scatter';
-//       traceConfig.mode = 'markers';
-//       if (options) {
-//         for (var o in options.config[d]) {
-//           traceConfig[o] = options.config[d][o]
-//         }
-//       }
-//
-//       traceConfigurations.push(traceConfig);
-//     }
-//     if (data.length < 3) {
-//       traceConfigurations.push({
-//         r: [],
-//         t: [],
-//         name: ' rr',
-//         type: 'scatter',
-//         mode: 'markers',
-//         showlegend: false,
-//         opacity: 0
-//       })
-//     }
-//     if (data.length < 2) {
-//       traceConfigurations.push({
-//         r: [],
-//         t: [],
-//         name: ' tt',
-//         type: 'scatter',
-//         mode: 'markers',
-//         showlegend: false,
-//         opacity: 0
-//       })
-//     }
-//
-//
-//     options ? Plotly.newPlot(div_id, traceConfigurations, options.config): Plotly.newPlot(div_id, traceConfigurations);
-//   }
+// =======================================================
+/* plotlyArea draws an area chart using plotly library.
+* param: data (array) [{x: [], y: []}]
+* param: id (string) Element to display chart.
+* param: options (dict) A dictionary that allows you customize renderings and behaviors. Below are the current options keys for customization.
+    config: (array) use plotly's documentation to fill in chart options.
+      NOTE: The config array must be the same length and order as the data array.
+    layout: modify the chart layout
+  */
+
+module.exports.plotlyArea = function (data, div_id, options) {
+  traceConfigurations = [];
+  for (var d in data) {
+    var traceConfig = {};
+    traceConfig.x = data[d].x;
+    traceConfig.y = data[d].y;
+    traceConfig.type = 'scatter';
+    traceConfig.fill = 'tozeroy';
+    if (options) {
+      for (var o in options.config[d]) {
+        if (o == 'fill') {
+          traceConfig.fill = options.config[d][o];
+          continue;
+        }
+        traceConfig[o] = options.config[o]
+      }
+    }
+    traceConfigurations.push(traceConfig);
+  }
+  Plotly.newPlot(div_id, traceConfigurations);
+}
+
+// =======================================================
+/* plotlyBox draws a box plot using plotly library.
+* param: data (array) [{y: []}, {y: []}]
+* param: id (string) Element to display chart.
+* param: options (dict) A dictionary that allows you customize renderings and behaviors. Below are the current options keys for customization.
+    config: (array) use plotly's documentation to fill in chart options.
+      NOTE: The config array must be the same length and order as the data array.
+    layout: modify the chart layout
+  */
+
+module.exports.plotlyBox = function (data, div_id, options) {
+  traceConfigurations = [];
+  for (var d in data) {
+    var traceConfig = {};
+    traceConfig.y = data[d].y;
+    traceConfig.type = 'box';
+    if (options) {
+      for (var o in options.config[d]) {
+        traceConfig[o] = options.config[o]
+      }
+    }
+    traceConfigurations.push(traceConfig);
+  }
+  Plotly.newPlot(div_id, traceConfigurations);
+}
+
+// =======================================================
+/* plotlyHeatMap draws a Heat Map using plotly library.
+* param: data (object) Example: {z: [[2, 3, 4], [8, 10, 1]]}
+* param: id (string) Element to display chart.
+* param: options (dict) A dictionary that allows you customize renderings and behaviors. Below are the current options keys for customization.
+    config: (array) use plotly's documentation to fill in chart options.
+      NOTE: The config array must be the same length and order as the data array.
+    layout: modify the chart layout
+  */
+
+module.exports.plotlyHeatMap = function (data, div_id, options) {
+  traceConfig = [{
+    z: data.z,
+    type: 'heatmap'
+  }];
+
+  if (options) {
+    for (var o in options) {
+      traceConfig[0][o] = options[o];
+    }
+  }
+  Plotly.newPlot(div_id, traceConfig);
+}
+
+// =======================================================
+/* plotlyHistogram draws a Histogram using plotly library.
+* param: data (object) Example: {z: [[2, 3, 4], [8, 10, 1]]}
+* param: id (string) Element to display chart.
+* param: options (dict) A dictionary that allows you customize renderings and behaviors. Below are the current options keys for customization.
+    config: (array) use plotly's documentation to fill in chart options.
+      NOTE: The config array must be the same length and order as the data array.
+    layout: modify the chart layout
+  */
+
+module.exports.plotlyHistogram = function (data, div_id, options) {
+  traceConfig = [{
+    x: data,
+    type: 'histogram'
+  }];
+
+  if (options) {
+    for (var o in options) {
+      traceConfig[0][o] = options[o];
+    }
+  }
+  Plotly.newPlot(div_id, traceConfig);
+}
+
+  // =======================================================
+  /* plotlyChoropleth draws a choropleth using plotly library.
+  * param: data (object) Example: {z: [[2, 3, 4], [8, 10, 1]]}
+  * param: id (string) Element to display chart.
+  * param: options (dict) A dictionary that allows you customize renderings and behaviors. Below are the current options keys for customization.
+      config: (array) use plotly's documentation to fill in chart options.
+        NOTE: The config array must be the same length and order as the data array.
+      layout: modify the chart layout
+    */
+
+  module.exports.plotlyChoropleth = function (data, div_id, options) {
+    function unpack(rows, key) {
+      return rows.map(function (row) {
+        return row[key];
+      });
+    }
+
+    if (!(options)) {
+      console.error('options is required to render this chart');
+    }
+    if (!(options.config)) {
+      console.error('The options parameter must contain a config object to render this chart.')
+    }
+    if (!(options.config.fieldName)) {
+      console.error('You must specify which field to use from your data.')
+    }
+
+    traceConfig = [{
+      z: unpack(data, options.config.fieldName),
+      type: 'choropleth',
+      text: unpack(data, 'state'),
+      locationmode: 'USA-states',
+      locations: unpack(data, 'code'),
+      colorscale: [
+        [0, 'rgb(242,240,247)'], [0.2, 'rgb(218,218,235)'],
+        [0.4, 'rgb(188,189,220)'], [0.6, 'rgb(158,154,200)'],
+        [0.8, 'rgb(117,107,177)'], [1, 'rgb(84,39,143)']
+      ],
+      colorbar: {
+        thickness: 0.2
+      },
+      marker: {
+        line: {
+          color: 'rgb(255,255,255)',
+          width: 2
+        }
+      }
+    }];
+
+    mapValues = [];
+    for (var t in data) {
+      mapValues.push(data[t][options.config.fieldName])
+    }
+    traceConfig.zmin = Math.min(...mapValues
+  ),
+    traceConfig.zmax = Math.max(...mapValues
+  )
+    ;
+
+    for (var o in options.config) {
+      traceConfig[o] = options.config[o];
+    }
+
+    var layout = {
+      geo: {
+        scope: 'usa',
+        showlakes: true,
+        lakecolor: 'rgb(255,255,255)'
+      }
+    };
+
+    if (options.layout) {
+      for (var o in options.layout) {
+        layout[o] = options.layout[o];
+      }
+    }
+    Plotly.plot(div_id, traceConfig, layout);
+  }
+
+  // =======================================================
+  /* plotlyPolarScatter draws a polar scatter chart using plotly library.
+  * param: data (array) [{r: [], t: []}]
+  * param: id (string) Element to display chart.
+  * param: options (dict) A dictionary that allows you customize renderings and behaviors. Below are the current options keys for customization.
+      config: (array) use plotly's documentation to fill in chart options.
+        NOTE: The configuration array must be the same length and order as the data array.
+      layout: modify the chart layout
+    */
+
+  module.exports.plotlyPolarScatter = function (data, div_id, options) {
+    traceConfigurations = [];
+    for (var d in data) {
+      var traceConfig = {marker: {
+          color: 'rgb(117,112,179)'
+        }};
+      traceConfig.r = data[d].r;
+      traceConfig.t = data[d].t;
+      traceConfig.type = 'scatter';
+      traceConfig.mode = 'markers';
+      if (options) {
+        for (var o in options.config[d]) {
+          traceConfig[o] = options.config[d][o]
+        }
+      }
+
+      traceConfigurations.push(traceConfig);
+    }
+    if (data.length < 3) {
+      traceConfigurations.push({
+        r: [],
+        t: [],
+        name: ' rr',
+        type: 'scatter',
+        mode: 'markers',
+        showlegend: false,
+        opacity: 0
+      })
+    }
+    if (data.length < 2) {
+      traceConfigurations.push({
+        r: [],
+        t: [],
+        name: ' tt',
+        type: 'scatter',
+        mode: 'markers',
+        showlegend: false,
+        opacity: 0
+      })
+    }
+    options ? Plotly.newPlot(div_id, traceConfigurations, options.config): Plotly.newPlot(div_id, traceConfigurations);
+  }

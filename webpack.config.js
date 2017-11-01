@@ -7,5 +7,10 @@ module.exports = {
     filename: "tgw.js",
     library: "tgw"
   },
-  watch: true
+  // watch: true,
+  // externals: {
+  //   "jQuery": "jQuery",
+  //   "d3":"d3"
+  //
+  // }
 }
