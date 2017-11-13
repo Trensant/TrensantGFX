@@ -7,6 +7,15 @@ module.exports = {
     filename: "tgw.js",
     library: "tgw"
   },
+  module :{
+	  loaders: [
+	  {
+		test: /\.css$/,
+		exclude: /node_modules/,
+		loader: "style-loader!css-loader"
+	  }
+	  ]
+  }
   // watch: true,
   // externals: {
   //   "jQuery": "jQuery",
