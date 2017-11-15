@@ -112,3 +112,46 @@ This frees the developer from maintaining library load states accross the variou
 tgw.js is a licensed under the BSD 2-clause license.
 See the accompanying License.txt file.
 
+
+=======================================================================
+Twig was created for easy chart exploration and creation. 
+
+It is focused on providing the easiest work flows so that you can see and update charts quickly and easily.
+
+Quick Start
+
+Available offline too means that you can use this workflow without starting a server.
+
+Available offline
+Work Flow #1 - See Chart Samples
+
+I have twig and i'm looking to make chart but not sure which. I want to see chart samples
+
+open browser
+open the all-charts file (ctrl o)
+I view the chart I want.
+=========================
+
+Available offline
+Workflow #2 - View charts with your own sample data.
+I want to see a chart but with my sample data.
+
+Open examples/gallery.html
+Select the chart I want.
+This opens a live edit page. 
+The structure of your data must match the sample data shown in the live edit window.
+For example in d3BubbleChart.html there is sample data labeled bubbleSampledata. Your data's structure must match in order for the chart to render correctly.
+Paste in your data.
+(optional) Add additional parameters to alter the rendering of the data. See Additional Parameters.
+Click Run Code.
+
+===================================================
+Workflow #3 - Add a plotly or d3 chart to my page.
+Twig includes webpack to make adding a chart absolutely as easy as possible. Twig has a prebuilt file allows you to add d3 and plotly charts.
+
+Open the dist folder.
+Save tgw.js to your project.
+Add in your html page.
+
+=================================================
+From here we recommend referring to our full documentation.

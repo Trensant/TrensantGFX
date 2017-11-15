@@ -3138,10 +3138,8 @@ module.exports.plotlyHistogram = function (data, div_id, options) {
     for (var t in data) {
       mapValues.push(data[t][options.config.fieldName])
     }
-    traceConfig.zmin = Math.min(...mapValues
-  ),
-    traceConfig.zmax = Math.max(...mapValues
-  )
+    traceConfig.zmin = Math.min.apply(null, mapValues),
+    traceConfig.zmax = Math.max.apply(null, mapValues)
     ;
 
     for (var o in options.config) {
