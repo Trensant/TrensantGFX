@@ -1,10 +1,13 @@
-var path = require('path')
+var path = require('path');
+var webpack = require('webpack');
+var PROD = JSON.parse(process.env.PROD_ENV || '0');
 
+console.log(PROD);
 module.exports = {
   entry: "./src/js/tgw.js",
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: "tgw.js",
+    filename: PROD ? "tgw.min.js" : "tgw.js",
     library: "tgw"
   },
   module :{
@@ -15,7 +18,12 @@ module.exports = {
 		loader: "style-loader!css-loader"
 	  }
 	  ]
-  }
+  },
+  plugins: PROD ? [
+    new webpack.optimize.UglifyJsPlugin({
+      compress: { warnings: false }
+    })
+  ] : []
   // watch: true,
   // externals: {
   //   "jQuery": "jQuery",
