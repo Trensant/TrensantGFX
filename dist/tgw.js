@@ -3493,7 +3493,7 @@ module.exports.d3Radar = function (data, id, options) {
   svg.append("g")
     .attr("class", "legendOrdinal")
     .attr("transform", "translate(" + cfg["legendPosition"]["x"] + "," + cfg["legendPosition"]["y"] + ")");
-  var legendOrdinal = d3legend.legendColor()
+  var legendOrdinal = d3.legendColor()
   //d3 symbol creates a path-string, for example
   //"M0,-8.059274488676564L9.306048591020996,
   // //8.059274488676564 -9.306048591020996,8.059274488676564Z"

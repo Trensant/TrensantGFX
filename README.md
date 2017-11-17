@@ -155,3 +155,10 @@ Add in your html page.
 
 =================================================
 From here we recommend referring to our full documentation.
+
+Webpack
+We use webpack to build our dist files and include the built files. To build your own dev file enter webpack at the console. 
+
+To build a minified production version:
+	Add an environment variable PROD_ENV and set to 1.
+	Enter webpack --env.production
