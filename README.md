@@ -105,9 +105,6 @@ The graphics charts libararies must be loaded before any calls can be made.  For
 TrensantGFX hanldes insuring that all chart-libs are loaded before rendering calls are made and if they are not loaded will cache the data (in a closure) until the chart lib is avaliable.  
 This frees the developer from maintaining library load states accross the various libaries.
 
-
-
-
 ## License
 tgw.js is a licensed under the BSD 2-clause license.
 See the accompanying License.txt file.
@@ -122,6 +119,7 @@ Quick Start
 
 Available offline too means that you can use this workflow without starting a server.
 
+======================================
 Available offline
 Work Flow #1 - See Chart Samples
 
@@ -130,8 +128,8 @@ I have twig and i'm looking to make chart but not sure which. I want to see char
 open browser
 open the all-charts file (ctrl o)
 I view the chart I want.
-=========================
 
+=========================
 Available offline
 Workflow #2 - View charts with your own sample data.
 I want to see a chart but with my sample data.
@@ -146,15 +144,36 @@ Paste in your data.
 Click Run Code.
 
 ===================================================
-Workflow #3 - Add a plotly or d3 chart to my page.
+Workflow #3 - Add a d3 chart to my page.
 Twig includes webpack to make adding a chart absolutely as easy as possible. Twig has a prebuilt file allows you to add d3 and plotly charts.
 
 Open the dist folder.
-Save tgw.js to your project.
+Save tgwWithDependencies.min.js to your project.
 Add in your html page.
 
 =================================================
-From here we recommend referring to our full documentation.
+Additional notes on Other Libraries
+
+Plotly
+Currently Plotly cannot be loaded using NPM. Instead you must either:
+1. Include it in your html page 
+2. Use webpack to include Plotly in your own build. As Plotly fixes that issue we will add it to the build files.
+
+C3
+C3 cannot be used in conjuction with d3 due to library conflicts. If you wish to use c3 functions from Twig you have two options. 
+	1. Using dist/twg.js add a c3 reference to your html page. Such as:
+		<script src="./libs/c3.min.js"></script> 
+	2. Use webpack to include c3 in your own build.
+	
+GoogleCharts
+GoogleCharts cannot be used offline. To use Twig functions that call GoogleCharts you must include the following references in your html pages.
+
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+
+
+
 
 Webpack
 We use webpack to build our dist files and include the built files. To build your own dev file enter webpack at the console. 
