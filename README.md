@@ -6,8 +6,46 @@ The charting library uses charts from several well known libraries, but normaliz
 
 To use a chart from a particular source family note the prefix (e.g. ggl or d3 etc)
 
-## Usage
+## Quick Start
 
+*Available offline* too means that you can use this workflow without starting a server.
+
+======================================
+
+*Available offline*
+### Work Flow #1 - See Chart Samples
+
+I'm looking to make a chart but not sure which. I want to see chart samples
+
+1. Open browser
+2. Open the all-charts file (ctrl o). Or if I have a dev server running on your local navigate to all-charts.html.
+
+=========================
+
+*Available offline*
+### Workflow #2 - View charts with your own sample data.
+I want to see a chart but with my sample data.
+
+1. Open examples/gallery.html
+2. Select the chart I want.
+3. This opens a live edit page. 
+The structure of your data must match the sample data shown in the live edit window.
+For example in d3BubbleChart.html there is sample data labeled bubbleSampledata. Your data's structure must match in order for the chart to render correctly.
+4. Paste in your data.
+5. (optional) Add additional parameters to alter the rendering of the data. See API Documentation.
+6. Click Run Code.
+
+===================================================
+### Workflow #3 - Add a d3 chart to my page.
+Twig includes webpack to make adding a chart absolutely as easy as possible. Included are two build files.
+
+1. Open the dist folder.
+2. Choose and save which twg you want.
+    1. twg.js or twg.min.js is just the Twig functions. You will need to add library dependencies to your page for these Twig methods. Please see Additional Notes on Other Libraries for specifics on other libraries.
+    2. twgWithDependencies.js or twgWithDependencies.min.js includes available libraries which currently is only d3. Please see Additional Notes on Other Libraries for specifics on other libraries. 
+3. Add in your html page.
+
+## Usage
 Being a client side rendering library trensantGFX only runs in a browser environment.  See the examples to sample charts and data sets.
 
 
@@ -115,65 +153,42 @@ Twig was created for easy chart exploration and creation.
 
 It is focused on providing the easiest work flows so that you can see and update charts quickly and easily.
 
-Quick Start
-
-Available offline too means that you can use this workflow without starting a server.
-
-======================================
-Available offline
-Work Flow #1 - See Chart Samples
-
-I have twig and i'm looking to make chart but not sure which. I want to see chart samples
-
-open browser
-open the all-charts file (ctrl o)
-I view the chart I want.
-
-=========================
-Available offline
-Workflow #2 - View charts with your own sample data.
-I want to see a chart but with my sample data.
-
-Open examples/gallery.html
-Select the chart I want.
-This opens a live edit page. 
-The structure of your data must match the sample data shown in the live edit window.
-For example in d3BubbleChart.html there is sample data labeled bubbleSampledata. Your data's structure must match in order for the chart to render correctly.
-Paste in your data.
-(optional) Add additional parameters to alter the rendering of the data. See Additional Parameters.
-Click Run Code.
-
-===================================================
-Workflow #3 - Add a d3 chart to my page.
-Twig includes webpack to make adding a chart absolutely as easy as possible. Twig has a prebuilt file allows you to add d3 and plotly charts.
-
-Open the dist folder.
-Save tgwWithDependencies.min.js to your project.
-Add in your html page.
 
 =================================================
-Additional notes on Other Libraries
+### Additional notes on Other Libraries
 
-Plotly
-Currently Plotly cannot be loaded using NPM. Instead you must either:
-1. Include it in your html page such as:
-	<script type="text/javascript" src="./libs/plotly.min.js">
-2. Use webpack to include Plotly in your own build. As Plotly fixes that issue we will add it to the build files.
+#### Plotly
 
-C3
+	<script type="text/javascript" src="./libs/plotly.min.js"></script>
+Currently Plotly cannot be loaded using NPM. Instead you must either.
+
+Include it in your html page.
+
+	<script type="text/javascript" src="./libs/plotly.min.js"></script>
+
+or
+
+Use webpack to include Plotly in your own build. As Plotly fixes that issue we will add it to the build files.
+
+
+#### C3
 C3 cannot be used in conjuction with d3 due to library conflicts. If you wish to use c3 functions from Twig you have two options. 
-	1. Using dist/twg.js add a c3 reference to your html page. Such as:
-		<script src="./libs/c3.min.js"></script> 
-	2. Use webpack to include c3 in your own build.
+
+Use dist/twg.js and add a c3 reference to your html page. Such as:
+
+    <script src="./libs/c3.min.js"> </script> 
+
+Use webpack to include c3 in your own build.
 	
-GoogleCharts
-GoogleCharts cannot be used offline. To use Twig functions that call GoogleCharts you must include the following references in your html pages.
+#### GoogleCharts
+GoogleCharts cannot be used offline. To use Twig functions that call GoogleCharts you must include the following references in your html page.
 
 	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
-
-Webpack
+=========================================	
+### Build Notes
+#### Webpack
 We use webpack to build our dist files and include the built files. To build your own dev file enter webpack at the console. 
 
 To build a minified production version:

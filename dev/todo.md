@@ -13,12 +13,12 @@ Welcome to the TGW todo list.
 
 
 * Documentation  
-** how to set up charts  
+** ~~how to set up charts  
 ** using charts offline   
 ** minimal examples  
 ** gallery   
 ** live code editor page  
-*** live_edit.html .... support side by side via sideBySide=true  // can use boostrap with divs or hide divs  
+*** live_edit.html .... support side by side via sideBySide=true  // can use boostrap with divs or hide divs  ~~
 
 * Naming conventions across charts  -- these need to not conflicting
 ** onclick()    // d3 uses "click()"  
@@ -30,6 +30,10 @@ Welcome to the TGW todo list.
 *** perhaps use for options = { tgw: {}, native: {} }     // so tgw.onclick() is wrapped across all charts to have the same behavior.  
 
 ** add getURLParam() to tgw  
+
+* Unit Testing
+* Linting and clean up 
+* Plotly
 
 ## Library Support  
 * TGW native
