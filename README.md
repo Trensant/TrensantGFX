@@ -156,7 +156,8 @@ Additional notes on Other Libraries
 
 Plotly
 Currently Plotly cannot be loaded using NPM. Instead you must either:
-1. Include it in your html page 
+1. Include it in your html page such as:
+	<script type="text/javascript" src="./libs/plotly.min.js">
 2. Use webpack to include Plotly in your own build. As Plotly fixes that issue we will add it to the build files.
 
 C3
@@ -172,12 +173,12 @@ GoogleCharts cannot be used offline. To use Twig functions that call GoogleChart
 	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
 
-
-
-
 Webpack
 We use webpack to build our dist files and include the built files. To build your own dev file enter webpack at the console. 
 
 To build a minified production version:
 	Add an environment variable PROD_ENV and set to 1.
 	Enter webpack --env.production
+	
+Twig API
+The best source of method documentation is in src/js/tgw.js.
