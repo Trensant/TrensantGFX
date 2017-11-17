@@ -39,12 +39,12 @@
 
 
  */
-$ = require('jquery');
-var d3 = require('d3');
+// $ = require('jquery');
+// var d3 = require('d3');
 // c3 = require('c3');
-var topojson = require('../../libs/us-quantized-topo.js');
+// var topojson = require('../../libs/us-quantized-topo.js');
 // var Plotly = require('../../libs/plotly.min.js');
-var d3legend = require('d3-svg-legend');
+// var d3legend = require('d3-svg-legend');
 
 require('../../style/tgw.css')
 

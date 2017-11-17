@@ -3,10 +3,10 @@ var webpack = require('webpack');
 var PROD = JSON.parse(process.env.PROD_ENV || '0');
 
 module.exports = {
-  entry: "./src/js/tgw.js",
+  entry: "./src/js/tgwWithDependencies.js",
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: PROD ? "tgw.min.js" : "tgw.js",
+    filename: PROD ? "tgwWithDependencies.min.js" : "tgwWithDependencies.js",
     library: "tgw"
   },
   module :{
@@ -23,10 +23,5 @@ module.exports = {
       compress: { warnings: false }
     })
   ] : []
-  // watch: true,
-  // externals: {
-  //   "jQuery": "jQuery",
-  //   "d3":"d3"
-  //
-  // }
+  // watch: true
 }
