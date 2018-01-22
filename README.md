@@ -8,36 +8,32 @@ To use a chart from a particular source family note the prefix (e.g. ggl or d3 e
 
 ## Quick Start
 
-*Available offline* too means that you can use this workflow without starting a server.
+Note the *Available offline* which means you can use this workflow without a server.
 
 ======================================
 
 *Available offline*
 ### Work Flow #1 - See Chart Samples
 
-I'm looking to make a chart but not sure which. I want to see chart samples
-
 1. Open browser
 2. Open the all-charts file (ctrl o). Or if I have a dev server running on your local navigate to all-charts.html.
 
-=========================
+=====================================
 
 *Available offline*
 ### Workflow #2 - View charts with your own sample data.
-I want to see a chart but with my sample data.
 
 1. Open examples/gallery.html
-2. Select the chart I want.
+2. Select the chart.
 3. This opens a live edit page. 
-The structure of your data must match the sample data shown in the live edit window.
-For example in d3BubbleChart.html there is sample data labeled bubbleSampledata. Your data's structure must match in order for the chart to render correctly.
 4. Paste in your data.
+The structure of your data must match the sample data structure shown in the live edit window.
+For example in d3BubbleChart.html there is sample data labeled bubbleSampledata. Your data's structure must match in order for the chart to render correctly.
 5. (optional) Add additional parameters to alter the rendering of the data. See API Documentation.
 6. Click Run Code.
 
 ===================================================
-### Workflow #3 - Add a d3 chart to my page.
-Twig includes webpack to make adding a chart absolutely as easy as possible. Included are two build files.
+### Workflow #3 - Add a chart to my web page.
 
 1. Open the dist folder.
 2. Choose and save which twg you want.
@@ -140,7 +136,7 @@ The graphics charts libararies must be loaded before any calls can be made.  For
 
 
 ## TODO
-TrensantGFX hanldes insuring that all chart-libs are loaded before rendering calls are made and if they are not loaded will cache the data (in a closure) until the chart lib is avaliable.  
+TrensantGFX handles insuring that all chart-libs are loaded before rendering calls are made and if they are not loaded will cache the data (in a closure) until the chart lib is avaliable.  
 This frees the developer from maintaining library load states accross the various libaries.
 
 ## License
