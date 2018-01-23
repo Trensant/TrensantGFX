@@ -156,15 +156,20 @@ It is focused on providing the easiest work flows so that you can see and update
 #### Plotly
 
 	<script type="text/javascript" src="./libs/plotly.min.js"></script>
-Currently Plotly cannot be loaded using NPM. Instead you must either.
+Currently plotly.js cannot be loaded using NPM 5.0.0. 
+See https://github.com/plotly/plotly.js/issues/1745 for current status.
 
-Include it in your html page.
+
+Instead you must either. 
+
+
+Use dist/twg.js and add a plotly.js reference to your html page. 
 
 	<script type="text/javascript" src="./libs/plotly.min.js"></script>
 
 or
 
-Use webpack to include Plotly in your own build. As Plotly fixes that issue we will add it to the build files.
+Use webpack to include plotly.js in your own build using another NPM version.
 
 
 #### C3
@@ -181,11 +186,14 @@ GoogleCharts cannot be used offline. To use Twig functions that call GoogleChart
 
 	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+	
+
 
 =========================================	
 ### Build Notes
 #### Webpack
-We use webpack to build our dist files and include the built files. To build your own dev file enter webpack at the console. 
+We use webpack to build our dist files and include the built files. To build your own dev file enter at the console:
+$> webpack  
 
 To build a minified production version:
 	Add an environment variable PROD_ENV and set to 1.

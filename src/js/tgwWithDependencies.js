@@ -39,14 +39,20 @@
 
 
  */
-$ = require('jquery');
+var $ = require('jquery');
 var d3 = require('d3');
 // c3 = require('c3');
 var topojson = require('../../libs/us-quantized-topo.js');
 // var Plotly = require('../../libs/plotly.min.js');
 var d3legend = require('d3-svg-legend');
+var WordCloud = require('../../libs/wordcloud2.js');
+var jQCloud = require('../../libs/jqcloud.min.js');
 
+
+
+require('../../libs/jqcloud.min.css')
 require('../../style/tgw.css')
+
 
 //=====================================================================================================
   /*
