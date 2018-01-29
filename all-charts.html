@@ -667,11 +667,11 @@ drawBanner=false    				// supress or show the top Trensant Logo
     tgw.d3Radar(d3radardata, div + "_chart");
 
 // =====================================================================================
-    div = "d3ZoomableSunburst";
-    drawNewSectionDiv(div, {"name": "d3ZoomableSunburst", "chartSty": "height:400"});
+    div = "d3Sunburst";
+    drawNewSectionDiv(div, {"name": "d3Sunburst", "chartSty": "height:400"});
 
     //emit description info
-    $("#" + div + "_desc").html("d3ZoomableSunburst accepts an object with specific properties, as shown in Example Data, and renders a sunburst chart.");
+    $("#" + div + "_desc").html("d3Sunburst accepts an object with specific properties, as shown in Example Data, and renders a sunburst chart.");
 
     var sunburstSampleData = {
       id: "automobiles",
@@ -754,7 +754,7 @@ drawBanner=false    				// supress or show the top Trensant Logo
     tgw.tgPrettyPrint(sunburstSampleData, div + "_data");
 
     //render the chart
-    tgw.d3ZoomableSunburst(sunburstSampleData, div + "_chart", {name: "id"});
+    tgw.d3Sunburst(sunburstSampleData, div + "_chart", {name: "id"});
 
 // ===================================================================================================
     div = "d3Bubble";

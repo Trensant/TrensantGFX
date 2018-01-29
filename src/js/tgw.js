@@ -1408,7 +1408,7 @@ module.exports.d3Chord = function (data, id, options) {
  * svgHeight:: type: int or function, default: 600
  *
  */
-module.exports.d3ZoomableSunburst = function (data, id, options) {
+module.exports.d3Sunburst = function (data, id, options) {
   var zoomableSunburstDefaultConfiguration = {
     children: "children",
     value: "value",
