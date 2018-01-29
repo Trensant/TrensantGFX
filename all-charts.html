@@ -27,8 +27,8 @@
 
     <!-- <link rel="stylesheet" href="./style/c3.min.css"> -->
     <script src="./libs/d3.v4.min.js"></script>
-	<script src="./libs/d3.legend.js"></script>
-	<!-- not backward compatible with d3.v3 or earlier  -->
+    <script src="./libs/d3.legend.js"></script>
+    <!-- not backward compatible with d3.v3 or earlier  -->
     <!--<script src="./libs/d3.v3.min.js"></script> &lt;!&ndash; c3 depends on d3.v3&ndash;&gt;-->
     <!-- <script src="./libs/c3.min.js"></script> -->
 
@@ -384,10 +384,10 @@ drawBanner=false    				// supress or show the top Trensant Logo
     //===================================================================================================
     //trensant.d3treeMap
     div = "d3TreeMapDiv";
-    drawNewSectionDiv(div, {"name": "d3TreeMapDiv", "chartSty": "height:400"});
+    drawNewSectionDiv(div, {"name": "d3TreeMap", "chartSty": "height:400"});
 
     //emit description info
-    $("#" + div + "_desc").html("treemap draws a treemap");
+    $("#" + div + "_desc").html("d3TreeMap accepts an object with specific properties, as shown in Example Data, and renders a tree map.");
 
     var treeMapSampleData = {
       node: {
@@ -470,6 +470,9 @@ drawBanner=false    				// supress or show the top Trensant Logo
     div = "d3RadialTree";
     drawNewSectionDiv(div, {"name": "d3RadialTree", "chartSty": "height:400"});
 
+    //emit description info
+    $("#" + div + "_desc").html("d3RadialTree accepts an object with specific properties, as shown in Example Data, and renders a radial tree.");
+
     var radialTreeSampleData = {
       name: "Current Article",
       children: [{
@@ -480,9 +483,6 @@ drawBanner=false    				// supress or show the top Trensant Logo
         }, {name: "Home Depot"}, {name: "Amgen"}, {name: "IBM"}]
       }]
     }
-
-    //emit description info
-    $("#" + div + "_desc").html("radiale tree draws a radialtree");
 
     //display sample data
     tgw.tgPrettyPrint(radialTreeSampleData, div + "_data")
@@ -497,6 +497,10 @@ drawBanner=false    				// supress or show the top Trensant Logo
 //  ===================================================================================================
     div = "d3Chord";
     drawNewSectionDiv(div, {"name": "d3Chord", "chartSty": "height:400"});
+
+    //emit description info
+    $("#" + div + "_desc").html("d3Chord accepts an array of arrays, as shown in Example Data, and renders a chord diagram.");
+
     var chordSampleData = {
       matrix: [
         [0, 0, 1000, 1000],
@@ -506,9 +510,6 @@ drawBanner=false    				// supress or show the top Trensant Logo
       ], groups: ["A", "B", "C", "D"]
     }
 
-    //emit description info
-    $("#" + div + "_desc").html("Chord Chart");
-
     //display sample data
     tgw.tgPrettyPrint(chordSampleData, div + "_data");
     //render the chart
@@ -517,146 +518,147 @@ drawBanner=false    				// supress or show the top Trensant Logo
 // =====================================================================================
     div = "d3Radar";
     drawNewSectionDiv(div, {"name": "d3Radar", "chartSty": "height:400"});
+
+    //emit description info
+    $("#" + div + "_desc").html("d3Radar accepts an array of objects, as shown in Example Data, and renders a radar chart.");
+
     var d3radardata = [
-	{  
-    "key":"iPhone",
-    "values":[  
-      {  
-        "reason":"Battery Life",
-        "device":"iPhone",
-        "value":0.22
-        
+      {
+        "key": "iPhone",
+        "values": [
+          {
+            "reason": "Battery Life",
+            "device": "iPhone",
+            "value": 0.22
+
+          },
+          {
+            "reason": "Brand",
+            "device": "iPhone",
+            "value": 0.28
+          },
+          {
+            "reason": "Contract Cost",
+            "device": "iPhone",
+            "value": 0.29
+          },
+          {
+            "reason": "Design And Quality",
+            "device": "iPhone",
+            "value": 0.17
+          },
+          {
+            "reason": "Have Internet Connectivity",
+            "device": "iPhone",
+            "value": 0.22
+          },
+          {
+            "reason": "Large Screen",
+            "device": "iPhone",
+            "value": 0.02
+          },
+          {
+            "reason": "Price Of Device",
+            "device": "iPhone",
+            "value": 0.21
+          },
+          {
+            "reason": "To Be A Smartphone",
+            "device": "iPhone",
+            "value": 0.50
+          }
+        ]
       },
-      {  
-        "reason":"Brand",
-        "device":"iPhone",
-        "value":0.28
+      {
+        "key": "Samsung",
+        "values": [
+          {
+            "reason": "Battery Life",
+            "device": "Samsung",
+            "value": 0.27
+          },
+          {
+            "reason": "Brand",
+            "device": "Samsung",
+            "value": 0.16
+          },
+          {
+            "reason": "Contract Cost",
+            "device": "Samsung",
+            "value": 0.35
+          },
+          {
+            "reason": "Design And Quality",
+            "device": "Samsung",
+            "value": 0.13
+          },
+          {
+            "reason": "Have Internet Connectivity",
+            "device": "Samsung",
+            "value": 0.20
+          },
+          {
+            "reason": "Large Screen",
+            "device": "Samsung",
+            "value": 0.13
+          },
+          {
+            "reason": "Price Of Device",
+            "device": "Samsung",
+            "value": 0.35
+          },
+          {
+            "reason": "To Be A Smartphone",
+            "device": "Samsung",
+            "value": 0.38
+          }
+        ]
       },
-      {  
-        "reason":"Contract Cost",
-        "device":"iPhone",
-        "value":0.29
-      },
-      {  
-        "reason":"Design And Quality",
-        "device":"iPhone",
-        "value":0.17
-      },
-      {  
-        "reason":"Have Internet Connectivity",
-        "device":"iPhone",
-        "value":0.22
-      },
-      {  
-        "reason":"Large Screen",
-        "device":"iPhone",
-        "value":0.02
-      },
-      {  
-        "reason":"Price Of Device",
-        "device":"iPhone",
-        "value":0.21
-      },
-      {  
-        "reason":"To Be A Smartphone",
-        "device":"iPhone",
-        "value":0.50
-      }
-    ]
-  },
-  {  
-    "key":"Samsung",
-    "values":[  
-      {  
-        "reason":"Battery Life",
-        "device":"Samsung",
-        "value":0.27
-      },
-      {  
-        "reason":"Brand",
-        "device":"Samsung",
-        "value":0.16
-      },
-      {  
-        "reason":"Contract Cost",
-        "device":"Samsung",
-        "value":0.35
-      },
-      {  
-        "reason":"Design And Quality",
-        "device":"Samsung",
-        "value":0.13
-      },
-      {  
-        "reason":"Have Internet Connectivity",
-        "device":"Samsung",
-        "value":0.20
-      },
-      {  
-        "reason":"Large Screen",
-        "device":"Samsung",
-        "value":0.13
-      },
-      {  
-        "reason":"Price Of Device",
-        "device":"Samsung",
-        "value":0.35
-      },
-      {  
-        "reason":"To Be A Smartphone",
-        "device":"Samsung",
-        "value":0.38
-      }
-    ]
-  },
-  {  
-    "key":"Nokia Smartphone",
-    "values":[  
-      {  
-        "reason":"Battery Life",
-        "device":"Nokia Smartphone",
-        "value":0.26
-      },
-      {  
-        "reason":"Brand",
-        "device":"Nokia Smartphone",
-        "value":0.10
-      },
-      {  
-        "reason":"Contract Cost",
-        "device":"Nokia Smartphone",
-        "value":0.30
-      },
-      {  
-        "reason":"Design And Quality",
-        "device":"Nokia Smartphone",
-        "value":0.14
-      },
-      {  
-        "reason":"Have Internet Connectivity",
-        "device":"Nokia Smartphone",
-        "value":0.22
-      },
-      {  
-        "reason":"Large Screen",
-        "device":"Nokia Smartphone",
-        "value":0.04
-      },
-      {  
-        "reason":"Price Of Device",
-        "device":"Nokia Smartphone",
-        "value":0.41
-      },
-      {  
-        "reason":"To Be A Smartphone",
-        "device":"Nokia Smartphone",
-        "value":0.30
-      }
-    ]
-  }];
-	
-	//emit description info
-    $("#" + div + "_desc").html("Radar Chart");
+      {
+        "key": "Nokia Smartphone",
+        "values": [
+          {
+            "reason": "Battery Life",
+            "device": "Nokia Smartphone",
+            "value": 0.26
+          },
+          {
+            "reason": "Brand",
+            "device": "Nokia Smartphone",
+            "value": 0.10
+          },
+          {
+            "reason": "Contract Cost",
+            "device": "Nokia Smartphone",
+            "value": 0.30
+          },
+          {
+            "reason": "Design And Quality",
+            "device": "Nokia Smartphone",
+            "value": 0.14
+          },
+          {
+            "reason": "Have Internet Connectivity",
+            "device": "Nokia Smartphone",
+            "value": 0.22
+          },
+          {
+            "reason": "Large Screen",
+            "device": "Nokia Smartphone",
+            "value": 0.04
+          },
+          {
+            "reason": "Price Of Device",
+            "device": "Nokia Smartphone",
+            "value": 0.41
+          },
+          {
+            "reason": "To Be A Smartphone",
+            "device": "Nokia Smartphone",
+            "value": 0.30
+          }
+        ]
+      }];
 
     //display sample data
     tgw.tgPrettyPrint(d3radardata, div + "_data");
@@ -667,6 +669,10 @@ drawBanner=false    				// supress or show the top Trensant Logo
 // =====================================================================================
     div = "d3ZoomableSunburst";
     drawNewSectionDiv(div, {"name": "d3ZoomableSunburst", "chartSty": "height:400"});
+
+    //emit description info
+    $("#" + div + "_desc").html("d3ZoomableSunburst accepts an object with specific properties, as shown in Example Data, and renders a sunburst chart.");
+
     var sunburstSampleData = {
       id: "automobiles",
       children: [
@@ -743,8 +749,6 @@ drawBanner=false    				// supress or show the top Trensant Logo
       ]
     }
 
-    //emit description info
-    $("#" + div + "_desc").html("Zoomable Sunburst");
 
     //display sample data
     tgw.tgPrettyPrint(sunburstSampleData, div + "_data");
@@ -755,6 +759,11 @@ drawBanner=false    				// supress or show the top Trensant Logo
 // ===================================================================================================
     div = "d3Bubble";
     drawNewSectionDiv(div, {"name": "d3Bubble", "chartSty": "height:400"});
+
+    //emit description info
+    $("#" + div + "_desc").html("d3Bubble accepts an object with specific properties, as shown in Example Data, and renders a Bubble chart.");
+
+
     var bubbleSampleData = {
       id: "automobiles",
       children: [
@@ -831,8 +840,6 @@ drawBanner=false    				// supress or show the top Trensant Logo
       ]
     }
 
-    //emit description info
-    $("#" + div + "_desc").html("Bubble");
 
     //display sample data
     tgw.tgPrettyPrint(bubbleSampleData, div + "_data");
@@ -843,35 +850,13 @@ drawBanner=false    				// supress or show the top Trensant Logo
 // ==============================================================================================
 
     div = "d3WordCloud";
-    drawNewSectionDiv(div, {"name": "d3WordCloud", "chartSty": "height:400"})
-    var wordCloudSampleData = [{value: "A", count: 64}, {value: "quick", count: 32}, {
-      value: "red",
-      count: 32
-    }, {value: "fox", count: 96}, {value: "jumped", count: 16}, {value: "over", count: 32}, {
-      value: "the",
-      count: 128
-    }, {value: "lazy", count: 32}, {value: "foo", count: 48}, {value: "bar", count: 12}, {
-      value: "dog",
-      count: 32
-    }, {value: "eclipse", count: 4}, {value: "totality", count: 8}, {value: "narrow", count: 16}, {
-      value: "ultimate",
-      count: 32
-    }, {value: "miles", count: 64}, {value: "astronomy", count: 128}, {value: "experience", count: 4}, {
-      value: "Alaska",
-      count: 8
-    }, {value: "sniff", count: 16}, {value: "jackpot", count: 32}, {value: "common", count: 64}, {
-      value: "nothing",
-      count: 128
-    }, {value: "first", count: 4}, {value: "moon", count: 8}, {value: "hidden", count: 16}, {
-      value: "partial",
-      count: 24
-    }, {value: "darker", count: 32}, {value: "dramatic", count: 40}, {value: "red", count: 64}, {
-      value: "streak",
-      count: 96
-    }];
+    drawNewSectionDiv(div, {"name": "d3WordCloud", "chartSty": "height:400"});
 
     //emit description info
-    $("#" + div + "_desc").html("WordCloud");
+    $("#" + div + "_desc").html("d3WordCloud accepts an object with specific properties, as shown in Example Data, and renders a Word Cloud.");
+
+    var wordCloudSampleData = [{value: "A", count: 64}, {value: "quick", count: 32}, {value: "red", count: 32}, {value: "fox", count: 96}, {value: "jumped", count: 16}, {value: "over", count: 32}, {value: "the", count: 128}, {value: "lazy", count: 32}, {value: "foo", count: 48}, {value: "bar", count: 12}, {value: "dog", count: 32}, {value: "eclipse", count: 4}, {value: "totality", count: 8}, {value: "narrow", count: 16}, {value: "ultimate", count: 32}, {value: "miles", count: 64}, {value: "astronomy", count: 128}, {value: "experience", count: 4}, {value: "Alaska", count: 8}, {value: "sniff", count: 16}, {value: "jackpot", count: 32}, {value: "common", count: 64}, {value: "nothing", count: 128}, {value: "first", count: 4}, {value: "moon", count: 8}, {value: "hidden", count: 16}, {value: "partial", count: 24}, {value: "darker", count: 32}, {value: "dramatic", count: 40}, {value: "red", count: 64}, {value: "streak", count: 96}];
+
 
     //display sample data
     tgw.tgPrettyPrint(wordCloudSampleData, div + "_data");
@@ -898,7 +883,8 @@ drawBanner=false    				// supress or show the top Trensant Logo
     drawNewSectionDiv(div, {"name": "plotlyLine", "chartSty": "height:400"})
 
     //emit description info
-    $("#" + div + "_desc").html("Line");
+    $("#" + div + "_desc").html("plotlyLine accepts an array, as shown in Example Data, and renders a line chart.");
+
 
     var plotlyLine = [{x: [1, 2, 3, 4], y: [10, 15, 13, 17]}, {x: [1, 2, 3, 4], y: [16, 5, 11, 9]}];
 
@@ -913,7 +899,7 @@ drawBanner=false    				// supress or show the top Trensant Logo
     drawNewSectionDiv(div, {"name": "plotlyScatter", "chartSty": "height:400"})
 
     //emit description info
-    $("#" + div + "_desc").html("Line");
+    $("#" + div + "_desc").html("plotlyScatter accepts an array, as shown in Example Data, and renders a scatter chart.");
 
     var plotlyScatter = [{x: [1, 2, 3, 4], y: [10, 15, 13, 17]}, {x: [1, 2, 3, 4], y: [16, 5, 11, 9]}];
 
@@ -928,7 +914,7 @@ drawBanner=false    				// supress or show the top Trensant Logo
     drawNewSectionDiv(div, {"name": "plotlyBar", "chartSty": "height:400"})
 
     //emit description info
-    $("#" + div + "_desc").html("Line");
+    $("#" + div + "_desc").html("plotlyBar accepts an array, as shown in Example Data, and renders a bar chart.");
 
     var plotlyBar = [{x: [1, 2, 3, 4], y: [10, 15, 13, 17]}];
 
@@ -943,7 +929,8 @@ drawBanner=false    				// supress or show the top Trensant Logo
     drawNewSectionDiv(div, {"name": "plotlyArea", "chartSty": "height:400"})
 
     //emit description info
-    $("#" + div + "_desc").html("Line");
+    $("#" + div + "_desc").html("plotlyArea accepts an array, as shown in Example Data, and renders an area chart.");
+
 
     var plotlyArea = [{x: [1, 2, 3, 4], y: [10, 15, 13, 17]}, {x: [1, 2, 3, 4], y: [20, 10, 20, 15]}];
 
@@ -958,7 +945,7 @@ drawBanner=false    				// supress or show the top Trensant Logo
     drawNewSectionDiv(div, {"name": "plotlyBox", "chartSty": "height:400"})
 
     //emit description info
-    $("#" + div + "_desc").html("Box");
+    $("#" + div + "_desc").html("plotlyBox accepts an array, as shown in Example Data, and renders a box plot.");
 
     var plotlyBox = [
       {y: [10, 15, 13, 17, 4, 34, 7, 90, 21, 56, 1, 5, 88, 32]},
@@ -975,7 +962,8 @@ drawBanner=false    				// supress or show the top Trensant Logo
     drawNewSectionDiv(div, {"name": "plotlyHeatMap", "chartSty": "height:400"})
 
     //emit description info
-    $("#" + div + "_desc").html("HeatMap");
+    $("#" + div + "_desc").html("plotlyHeatMap accepts an array, as shown in Example Data, and renders a heat map.");
+
 
     var plotlyHeatMap = {
       "z":
@@ -993,7 +981,8 @@ drawBanner=false    				// supress or show the top Trensant Logo
     drawNewSectionDiv(div, {"name": "plotlyHistogram", "chartSty": "height:400"})
 
     //emit description info
-    $("#" + div + "_desc").html("Histogram");
+    $("#" + div + "_desc").html("plotlyHistogram accepts an array and renders a histogram.");
+
 
     var plotlyHistogram = [];
     for (var i = 0; i < 500; i++) {
@@ -1011,7 +1000,8 @@ drawBanner=false    				// supress or show the top Trensant Logo
     drawNewSectionDiv(div, {"name": "plotlyChoropleth", "chartSty": "height:400"})
 
     //emit description info
-    $("#" + div + "_desc").html("Choropleth");
+    $("#" + div + "_desc").html("plotlyChoropleth accepts an array, as shown in Example Data, and renders a choropleth.");
+
 
     var plotlyChoropleth = [
       {
@@ -1325,29 +1315,30 @@ drawBanner=false    				// supress or show the top Trensant Logo
       layout: {title: 'US Exports'}
     });
 
-	//		=================================================================================
+    //		=================================================================================
     div = "plotlyStackBar"
     drawNewSectionDiv(div, {"name": "plotlyStackBar", "chartSty": "height:400"})
 
     //emit description info
-    $("#" + div + "_desc").html("Stack Bar");
+    $("#" + div + "_desc").html("plotlyStackBar accepts an array, as shown in Example Data, and renders a stacked bar chart.");
+
 
     var plotlyStackBar = [
-	{ x: ['giraffes', 'orangutans', 'monkeys'], y: [20, 14, 23]}, 
-	{ x: ['giraffes', 'orangutans', 'monkeys'], y: [12, 18, 29]}];
+      {x: ['giraffes', 'orangutans', 'monkeys'], y: [20, 14, 23]},
+      {x: ['giraffes', 'orangutans', 'monkeys'], y: [12, 18, 29]}];
 
     //display sample data
     tgw.tgPrettyPrint(plotlyStackBar, div + "_data");
 
     //render the chart
     tgw.plotlyStackBar(plotlyStackBar, div + "_chart");
-	
+
     //		=================================================================================
     div = "plotlyPolarScatter"
     drawNewSectionDiv(div, {"name": "plotlyPolarScatter", "chartSty": "height:400"})
 
     //emit description info
-    $("#" + div + "_desc").html("Polar Scatter");
+    $("#" + div + "_desc").html("plotlyPolarScatter accepts an array, as shown in Example Data, and renders a scatter chart.");
 
     var plotlyPolarScatter = [{r: [1, 2, 3, 2, 1, 2, 3, 2, 2, 1], t: [45, 90, 180, 270, 60, 30, 135, 215, 75, 155]}];
 
@@ -1358,7 +1349,7 @@ drawBanner=false    				// supress or show the top Trensant Logo
     //render the chart
     tgw.plotlyPolarScatter(plotlyPolarScatter, div + "_chart");
 
-	
+
 //  ========================================================
 //    This section would have been a c3 chart sample but c3 uses d3.v3 which from the behavior appears to have some
 //    naming conflicts with d3.v4

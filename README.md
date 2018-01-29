@@ -8,7 +8,7 @@ To use a chart from a particular source family note the prefix (e.g. ggl or d3 e
 
 ## Quick Start
 
-Note the *Available offline* which means you can use this workflow without a server.
+*Available offline*: available without a server.
 
 ======================================
 
@@ -16,7 +16,7 @@ Note the *Available offline* which means you can use this workflow without a ser
 ### Work Flow #1 - See Chart Samples
 
 1. Open browser
-2. Open the all-charts file (ctrl o). Or if I have a dev server running on your local navigate to all-charts.html.
+2. Open the ./all-charts.html file (ctrl o). Or if I have a dev server running on your local navigate to all-charts.html.
 
 =====================================
 
