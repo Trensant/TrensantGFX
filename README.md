@@ -193,11 +193,14 @@ GoogleCharts cannot be used offline. To use Twig functions that call GoogleChart
 ### Build Notes
 #### Webpack
 We use webpack to build our dist files and include the built files. To build your own dev file enter at the console:
-$> webpack  
+$> webpack
+
+with dependencies:
+webpack --config webpack-dependencies.config.js  
 
 To build a minified production version:
 	Add an environment variable PROD_ENV and set to 1.
-	Enter webpack --env.production
+    rerun
 	
 Twig API
 The best source of method documentation is in src/js/tgw.js.

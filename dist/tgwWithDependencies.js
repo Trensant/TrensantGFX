@@ -40009,7 +40009,6 @@ module.exports = function (css) {
 
  */
 var $ = __webpack_require__(111);
-// jQuery = require('jquery')
 var d3 = __webpack_require__(222);
 // c3 = require('c3');
 var topojson = __webpack_require__(219);

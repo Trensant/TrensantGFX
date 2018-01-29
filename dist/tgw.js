@@ -707,7 +707,7 @@ module.exports = function (css) {
 
  */
 
-__webpack_require__(0)
+__webpack_require__(0);
 
 //=====================================================================================================
   /*
@@ -721,7 +721,7 @@ __webpack_require__(0)
 
   */
 var _to = function (x) {
-  return (typeof x == "undefined") ? "undefined" : (({}).toString.call(x).match(/\s([a-zA-Z]+)/)[1].toLowerCase());
+  return (typeof x === "undefined") ? "undefined" : (({}).toString.call(x).match(/\s([a-zA-Z]+)/)[1].toLowerCase());
 };
 
 module.exports.typeOf = _to;
@@ -734,9 +734,9 @@ module.exports.typeOf = _to;
     round a number to specified sig digits.	 default is 2
   */
 var _round = function (x, numDigits) {
-    numDigits = (_to(numDigits) == 'number') ? Math.pow(10, Math.round(numDigits)) : 100;
+    numDigits = (_to(numDigits) === 'number') ? Math.pow(10, Math.round(numDigits)) : 100;
     return Math.round(x * numDigits) / numDigits;
-  }
+  };
 // = roundNum;  // short hand used internally
 
 module.exports.roundNum = _round;
@@ -745,7 +745,7 @@ module.exports.roundNum = _round;
 //constrain input x in between min, max, expects numeric input
 module.exports.constrain = function (x, min, max) {
     if (max < min) {
-      a = min;
+      var a = min;
       min = max;
       max = a;
     }
@@ -756,12 +756,12 @@ module.exports.constrain = function (x, min, max) {
       x = max;
     }
     return x;
-  }
+  };
 //=====================================================================================================
   /*
    Map an input value z in its natural range in0...in1 to the output
    space out0...out1 with optional clipping
-   exp_scale allows sigmoidal warping to stretch input values contrained to a small range. (floating point scale factor)
+   exp_scale allows sigmoidal warping to stretch input values constrained to a small range. (floating point scale factor)
 
    example:
       trensant.mapScaleEXP(33,0,100,-100,100)  --> maps 33 with input range from 0 .. 100 in to the range -100,100 linearly ==>
@@ -782,7 +782,7 @@ var _mapScale = function (z, in0, in1, out0, out1, clip, exp_scale) {
   if (clip != false)
     z = tgw.constrain(z, out0, out1);
   return z;
-}
+};
 module.exports.mapScaleEXP = _mapScale; //short hand used internally
 
 
@@ -794,14 +794,14 @@ module.exports.mapScaleEXP = _mapScale; //short hand used internally
   */
 var _dims = function (domID) {
   return {"wid": $('#' + domID).width(), "hgt": $('#' + domID).height()}
-}
+};
 
 module.exports.containerDims = _dims;
 
 
 //=====================================================================================================
   /* 	tgw.setIntervalX(callbackFn, delayBtwCalls, repetitions)
-     set a javascript timer to only run a max of N repetions.
+     set a javascript timer to only run a max of N repetitions.
     // Note: Only works in browser not server side as it requires access to window object.
     // also note that callback function is called with the interval number to be used for whatever purposes the callback likes
   */
@@ -815,7 +815,7 @@ module.exports.setIntervalX = function (callback, delay, repetitions) {
       window.clearInterval(intervalID);
     }
   }, delay);
-}
+};
 //=====================================================================================================
 /*
   tgw.repeatUntil()
@@ -865,9 +865,9 @@ module.exports.repeatUntil = function (testFn, successFn, failFn, delay, maxReps
       }
     }
 
-  }
+  };
   _f();
-}
+};
 //=====================================================================================================
 //=====================================================================================================
 // BEGIN Graphics Wrapper Functions
@@ -876,7 +876,7 @@ module.exports.repeatUntil = function (testFn, successFn, failFn, delay, maxReps
 //=====================================================================================================
 /*
   tgw.tgPrettyPrint (data, domID, opts)
-    prettyPrint a Javscript object
+    prettyPrint a Javascript object
     this is a "native" graphics call in that it doesn't wrap another charting library
 
   example usage:
@@ -916,13 +916,13 @@ module.exports.tgPrettyPrint = function (data, domID, opts) {
       }
       return '<span style="' + sty + '">' + match + '</span>';
     });
-  }
+  };
   var c = dopts["class"] == "" ? "" : ' class="' + dopts["class"] + '" ';
   var s = dopts["style"] == "" ? "" : ' style="' + dopts["style"] + '" ';
   h = "<" + dopts["tag"] + c + s + " >" + f(json) + "</" + dopts["tag"] + ">";
   document.getElementById(domID).innerHTML = h;
   return document.getElementById(domID);
-}
+};
 
 //=====================================================================================================
 // drawRowWordCloudBase draws a word cloud with words in rows.  It is the base renderer.  see tgDrawRowWordCloud for direct calls
@@ -933,7 +933,7 @@ module.exports.tgDrawRowWordCloudBase = function (words, domID, opts) {
     "minSize": 9, 	  					// any valid number for min font size
     "sizeUnits": "px",	 					// css units  for maxSize, minSize : px em %
     "sort": "none", 					// "up", "down", "alpha", "ralpha", "none"
-    "spacer": "&nbsp; &nbsp;", 			// spacer to put bewteen words (string) -- can be "" or html
+    "spacer": "&nbsp; &nbsp;", 			// spacer to put between words (string) -- can be "" or html
     "wclass": "",  						// optional style class for each word's span
     "sortIgnore1stChars": ['@', '#', '$'],  	//if a string begins with one of these ignore for purposes of sorting.
     "scale": 1.0,
@@ -971,7 +971,7 @@ module.exports.tgDrawRowWordCloudBase = function (words, domID, opts) {
   }; // do nothing if default
   var _f = function (s) {
     return (dopts["sortIgnore1stChars"].indexOf(s[0]) == -1) ? s : s.substr(1, s.length);
-  } // handle 1st character
+  }; // handle 1st character
 
   switch (dopts["sort"]) {
     case "alpha"  :
@@ -1010,7 +1010,7 @@ module.exports.tgDrawRowWordCloudBase = function (words, domID, opts) {
   }
 
   return h; // return HTML string if domID is not valid
-}
+};
 
 //=====================================================================================================
 // drawRowWordCloudBase draws a word cloud with words in rows.
@@ -1027,7 +1027,7 @@ module.exports.tgDrawRowWordCloud = function (words, domID, opts) {
   while (re.bottom <= (box["bottom"] - (box["height"] * 0.085))) {
     rs = $("#" + domID + " > span")[0].getClientRects()[0];
     re = $("#" + domID + " > span")[$("#" + domID + " > span").length - 1].getClientRects()[0];
-    gTemp = {"rs": rs, "re": re};
+    var gTemp = {"rs": rs, "re": re};
     m += 0.33;
     module.exports.tgDrawRowWordCloudBase(words, domID, opts);  // working version with bounds issues
 
@@ -1039,16 +1039,16 @@ module.exports.tgDrawRowWordCloud = function (words, domID, opts) {
   m -= 0.67;
   module.exports.tgDrawRowWordCloudBase(words, domID, opts);  // working version with bounds issues
 
-}
+};
 
 
 //=====================================================================================================
 //=====================================================================================================
-// Beging Google chart wrappers
+// Beginning Google chart wrappers
 
 //=====================================================================================================
 /* gglChartsLoaded()   // function returns whether google chart functions have been loaded
-  -- since google charts loads asynchornously its easy to have situations where data is available before
+  -- since google charts loads asynchronously its easy to have situations where data is available before
   the charts libs are (a race condition).
 
  */
@@ -1066,7 +1066,7 @@ module.exports.gglChartsLoaded = function () {
       return false;
   }
   return true;
-}
+};
 
 //=====================================================================================================
 /* gglDrawTable(data,cols,id,opts)
@@ -1079,12 +1079,12 @@ module.exports.gglChartsLoaded = function () {
     ]
 
   cols must be array of types, labels e.g.
-    [ ["string", "this column label"], ["boolean", "another label"],	["number", "label for this colum"] ]
+    [ ["string", "this column label"], ["boolean", "another label"],	["number", "label for this column"] ]
 
-  id must be a valid unqiue HTML DOM id
+  id must be a valid unique HTML DOM id
   opts for google charts (see Google charts docs)
 
-// example: gglDrawTable([['a',23,34],['b',23,12],['c',34,64]],[["string","labelx"],["number","this"],["number","that"]],"table-x");
+// example: gglDrawTable([['a',23,34],['b',23,12],['c',34,64]],[["string","label x"],["number","this"],["number","that"]],"table-x");
 
 */
 
@@ -1096,7 +1096,7 @@ module.exports.gglDrawTable = function (data, cols, domID, opts) {
       width: '80%',
       height: 30 * 4 + 'px',
       allowHTML: true
-    }
+    };
     if (_to(opts) == "object") // override default options
       for (i in opts)
         dopts[i] = opts[i];
@@ -1119,7 +1119,7 @@ module.exports.gglDrawTable = function (data, cols, domID, opts) {
     }
   }
   return false;
-}
+};
 
 
 //=====================================================================================================
@@ -1159,7 +1159,7 @@ module.exports.gglDrawPieChart = function (data, domID, opts) {
   else
     return false; // couldn't access google visualizations (perhaps not loaded at all just or not loaded yet)
 
-}
+};
 
 //=====================================================================================================
 /*  gglDrawLineChart(data,domID,opts)
@@ -1169,7 +1169,7 @@ requires:
 
 data must be of this form:
     [
-      ['lablel for x axis','label for y1series','label for y2series',...],
+      ['label for x axis','label for y1series','label for y2series',...],
        [ 12,23,34,45],
        [ 23,34,45,63],
     ]
@@ -1192,7 +1192,7 @@ module.exports.gglDrawLineChart = function (data, domID, opts) {
     return c2; //return chart context..
   }
   return false;
-}
+};
 //=====================================================================================================
   /*	gglDrawBarChart
 
@@ -1217,7 +1217,7 @@ module.exports.gglDrawBarChart = function (data, domID, options) {
     return cbar;
   }
   return false;
-}
+};
 
 //=====================================================================================================
   /*  gglDrawHistogram(data,domID,opts)
@@ -1248,15 +1248,15 @@ module.exports.gglDrawHistogram = function (data, domID, options) {
       return ch;
     }
     return false;
-  }
+  };
 
 
 //======================================================================================================
 module.exports.d3ChartsLoaded = function () {
-  if (typeof d3 != "undefined")
+  if (typeof d3 !== "undefined")
     return true;
   return false;
-}
+};
 
 //======================================================================================================
 /*
@@ -1276,10 +1276,10 @@ module.exports.d3ChartsLoaded = function () {
        * value:: type: string, default:
      * FURTHER DESCRIPTION for Tree data options:
        * Frequently trees contain different keys labels. For
-       * example your tree label for children may be childs instead of children.
+       * example your tree label for children may be child's instead of children.
        * Normally in that case you would either change the all the keys in
        * you data prior to passing or specify a custom function in d3.hierarchy call.
-       * Instead you can specify key lables in options.
+       * Instead you can specify key labels in options.
        * Default values are parentID, childID, childName,
        * children, value.
        * Example: {children: childs}.
@@ -1310,8 +1310,8 @@ module.exports.d3TreeMap = function (tree, id, options) {
     rectangleBehaviorOptions: null,
     svgBehavior: null,
     svgBehaviorOptions: null
-  }
-  treeMapConfiguration = setOptions(treemapDefaultConfiguration, options);
+  };
+  var treeMapConfiguration = setOptions(treemapDefaultConfiguration, options);
 
   var fader = function (color) {
       return d3.interpolateRgb(color, "#fff")(treeMapConfiguration.fader);
@@ -1322,14 +1322,14 @@ module.exports.d3TreeMap = function (tree, id, options) {
   var width = typeof treeMapConfiguration.svgWidth === "function" ? treeMapConfiguration.svgWidth() : treeMapConfiguration.svgWidth,
     height = typeof treeMapConfiguration.svgHeight === "function" ? treeMapConfiguration.svgHeight() : treeMapConfiguration.svgHeight;
 
-  d3.select('#' + id).append("p").classed("parent", true)
+  d3.select('#' + id).append("p").classed("parent", true);
   d3.select('#' + id)
-    .append("svg")
+    .append("svg");
   var svg = d3.select('#' + id)
     .select("svg")
     .attr("width", width)
     .attr("height", height)
-    .style("font", "10px sans-serif")
+    .style("font", "10px sans-serif");
   if ("svgBehavior" in treeMapConfiguration) {
     for (var key in treeMapConfiguration.svgBehavior) {
       svg.on(key, function () {
@@ -1362,7 +1362,7 @@ module.exports.d3TreeMap = function (tree, id, options) {
   });
 
   function drawit() {
-    cell = svg.selectAll("g").data(root[treeMapConfiguration.children]).enter().append("g")
+    var cell = svg.selectAll("g").data(root[treeMapConfiguration.children]).enter().append("g")
       .attr("transform", function (d) {
         return "translate(" + d.x0 + "," + d.y0 + ")";
       });
@@ -1453,29 +1453,29 @@ module.exports.d3TreeMap = function (tree, id, options) {
           return b.value - a.value || b.value - a.value;
         });
       treemap(root);
-      svg.selectAll('g').remove()
+      svg.selectAll('g').remove();
       drawit();
       addChildNode(nodeTree, node);
     }
-  }
+  };
 
   var redraw_parent = function (id) {
     var mylen = d3.selectAll(".parent a")._groups[0].length;
 
     var tickLabels = d3.selectAll(".parent a").filter(function (d, i) {
-      if (mylen == 1) {
+      if (mylen === 1) {
         return 1;
       }
       else {
         for (i < mylen; i++;) {
-          if (i == mylen) {
+          if (i === mylen) {
             return i
           }
         }
       }
     }).remove();
 
-    if (typeof(id) != 'undefined') {
+    if (typeof(id) !== 'undefined') {
       root = get_node(nodeTree, id);
       root = d3.hierarchy(root);
       root.eachBefore(function (d) {
@@ -1488,10 +1488,10 @@ module.exports.d3TreeMap = function (tree, id, options) {
           return b.value - a.value || b.value - a.value;
         });
       treemap(root);
-      svg.selectAll('g').remove()
+      svg.selectAll('g').remove();
       drawit();
     }
-  }
+  };
 
   function changed(sum, index, group) {
     //treemap(root.sum(sum)) passes the sum function to root.sum
@@ -1519,12 +1519,12 @@ module.exports.d3TreeMap = function (tree, id, options) {
   }
 
   function addChildNode(nodeTree, d3node) {
-    child_id = d3node.data.child_id;
-    parent_id = d3node.data.parent_id;
-    if (nodeTree.node.child_id == parent_id) {
+    var child_id = d3node.data.child_id;
+    var parent_id = d3node.data.parent_id;
+    if (nodeTree.node.child_id === parent_id) {
       if ('children' in nodeTree) {
         for (var node in nodeTree.children) {
-          if (nodeTree.children[node].node == d3node.data) {
+          if (nodeTree.children[node].node === d3node.data) {
             continue;
           }
           else {
@@ -1545,7 +1545,7 @@ module.exports.d3TreeMap = function (tree, id, options) {
   }
 
   function get_node(nodeTree, id) {
-    if (nodeTree.node.child_id == id) {
+    if (nodeTree.node.child_id === id) {
       return nodeTree.node;
     }
     else {
@@ -1570,7 +1570,7 @@ module.exports.d3TreeMap = function (tree, id, options) {
     }
     return default_configuration
   }
-}
+};
 //======================================================================================================
 
 /*d3 radialtree draws a redial zoomable graph of related items
@@ -1588,7 +1588,7 @@ module.exports.d3TreeMap = function (tree, id, options) {
      * example your tree label for children may be childs instead of children.
      * Normally in that case you would either change the all the keys in
      * you data prior to passing or specify a custom function in d3.hierarchy call.
-     * Instead you can specify key lables in options.
+     * Instead you can specify key labels in options.
      * Example: {children: childs}.
  *
 *
@@ -1606,9 +1606,9 @@ module.exports.d3RadialTree = function (treeData, id, options) {
     svgHeight: tgw.containerDims(id).hgt,
     diameter: tgw.containerDims(id).wid / 2,
     duration: 750
-  }
-  radialTreeConfiguration = setOptions(radialTreeDefaultConfiguration, options);
-  if (typeof options == "undefined") {
+  };
+  var radialTreeConfiguration = setOptions(radialTreeDefaultConfiguration, options);
+  if (typeof options === "undefined") {
     options = {};
   }
 
@@ -1623,7 +1623,7 @@ module.exports.d3RadialTree = function (treeData, id, options) {
 
   var treeLayout = d3.tree().size([360, diameter / 2]).separation(
     function (a, b) {
-      return (a.parent == b.parent ? 1 : 2) / a.depth;
+      return (a.parent === b.parent ? 1 : 2) / a.depth;
     }), root;
 
   var nodeSvg, linkSvg, nodeEnter, linkEnter;
@@ -1704,7 +1704,7 @@ module.exports.d3RadialTree = function (treeData, id, options) {
         else {
           return null
         }
-      }).on(options && options.textClick ? options.textClick : "click", options.onClick)
+      }).on(options && options.textClick ? options.textClick : "click", options.onClick);
 
     // Transition nodes to their new position.
     var nodeUpdate = nodeSvg.merge(nodeEnter).transition()
@@ -1854,7 +1854,7 @@ module.exports.d3RadialTree = function (treeData, id, options) {
     }
     return default_configuration
   }
-}
+};
 
 //  ====================================================================================================
 
@@ -1879,8 +1879,8 @@ module.exports.d3Chord = function (data, id, options) {
   var chordDefaultConfiguration = {
     svgWidth: tgw.containerDims(id).wid,
     svgHeight: tgw.containerDims(id).hgt
-  }
-  chordConfiguration = setOptions(chordDefaultConfiguration, options);
+  };
+  var chordConfiguration = setOptions(chordDefaultConfiguration, options);
 
   var width = typeof chordConfiguration.svgWidth === "function" ? chordConfiguration.svgWidth() : chordConfiguration.svgWidth,
     height = typeof chordConfiguration.svgHeight === "function" ? chordConfiguration.svgHeight() : chordConfiguration.svgHeight;
@@ -1939,7 +1939,7 @@ module.exports.d3Chord = function (data, id, options) {
     })
     .attr("d", arc)
     .on("mouseover", fade(.1))         /* Where attempt at mouseover is made */
-    .on("mouseout", fade(1))
+    .on("mouseout", fade(1));
 
 
   group.append("title").text(function (d) {
@@ -2017,14 +2017,14 @@ module.exports.d3Chord = function (data, id, options) {
   }
 
   function chordTip(d) {
-    var p = d3.format(".2%"), q = d3.formatPrefix("$,.2", 1e3)
+    var p = d3.format(".2%"), q = d3.formatPrefix("$,.2", 1e3);
     return "Flow Info:\n"
       + data.groups[d.source.index] + " → " + data.groups[d.target.index] + ": " + q(d.target.value) + "\n"
       + data.groups[d.target.index] + " → " + data.groups[d.source.index] + ": " + q(d.source.value);
   }
 
   function groupTip(d) {
-    var q = d3.formatPrefix("$,.2", 1e3)
+    var q = d3.formatPrefix("$,.2", 1e3);
     return "Total Managed by " + data.groups[d.index] + ":\n" + q(d.value)
   }
 
@@ -2042,10 +2042,10 @@ module.exports.d3Chord = function (data, id, options) {
     return default_configuration
   }
 
-}
+};
 //  =================================================================
 
-/*d3zoombaleSunburst draws a sunburst chart of hierarchically related items
+/*d3zoomableSunburst draws a sunburst chart of hierarchically related items
  * param: data (dict)
    * data schema:
    * {name: "string",
@@ -2075,15 +2075,15 @@ module.exports.d3Chord = function (data, id, options) {
  * svgHeight:: type: int or function, default: 600
  *
  */
-module.exports.d3ZoomableSunburst = function (data, id, options) {
+module.exports.d3Sunburst = function (data, id, options) {
   var zoomableSunburstDefaultConfiguration = {
     children: "children",
     value: "value",
     name: "name",
     svgWidth: tgw.containerDims(id).wid,
     svgHeight: tgw.containerDims(id).hgt
-  }
-  sunburstConfiguration = setOptions(zoomableSunburstDefaultConfiguration, options);
+  };
+  var sunburstConfiguration = setOptions(zoomableSunburstDefaultConfiguration, options);
 
   var width = sunburstConfiguration.svgWidth,
     height = sunburstConfiguration.svgHeight,
@@ -2121,7 +2121,7 @@ module.exports.d3ZoomableSunburst = function (data, id, options) {
     .append("g")
     .attr("transform", "translate(" + width / 2 + "," + (height / 2) + ")");
 
-  root = d3.hierarchy(data);
+  var root = d3.hierarchy(data);
   root.sum(function (d) {
     return d[sunburstConfiguration.value];
   });
@@ -2175,7 +2175,7 @@ module.exports.d3ZoomableSunburst = function (data, id, options) {
     }
     return default_configuration
   }
-}
+};
 
 //	========================================================================
 /*d3Bubble draws a Bubble chart
@@ -2214,7 +2214,7 @@ module.exports.d3Bubble = function (data, id, options) {
     svgWidth: tgw.containerDims(id).wid,
     svgHeight: tgw.containerDims(id).hgt
 
-  }
+  };
 
   var bubbleConfiguration = setOptions(bubbleDefaultConfiguration, options);
 
@@ -2311,7 +2311,7 @@ module.exports.d3Bubble = function (data, id, options) {
     return default_configuration
   }
 
-}
+};
 //=========================================================================
 /* wordcloud2.js  renders a wordcloud to a canvas using the WordCloud2.js library
 */
@@ -2342,11 +2342,11 @@ module.exports.wordCloud2js = function (data, div_id, opts) {
     maxWords: 30,
     origin: [canvas.width / 2, canvas.height / 3],
     backgroundColor: '#fff'
-  }
+  };
 
 
   WordCloud(canvas, opts);//, clearCanvas: true,  );
-  }
+  };
 //=====================================================================================
   /* d3WordCloud renders a wordcloud to a canvas using the d3 library
   */
@@ -2359,7 +2359,7 @@ module.exports.wordCloud2js = function (data, div_id, opts) {
       cw = 1 << 11 >> 5,
       ch = 1 << 11;
 
-    cloud = function () {
+    var cloud = function () {
       var size = [256, 256],
         text = cloudText,
         font = cloudFont,
@@ -2428,7 +2428,7 @@ module.exports.wordCloud2js = function (data, div_id, opts) {
             event.call("end", cloud, tags, bounds);
           }
         }
-      }
+      };
 
       cloud.stop = function () {
         if (timer) {
@@ -2646,7 +2646,7 @@ module.exports.wordCloud2js = function (data, div_id, opts) {
         // Zero the buffer
         for (var i = 0; i < h * w32; i++) sprite[i] = 0;
         x = d.xoff;
-        if (x == null) return;
+        if (x === null) return;
         y = d.yoff;
         var seen = 0,
           seenRow = -1;
@@ -2783,7 +2783,7 @@ module.exports.wordCloud2js = function (data, div_id, opts) {
       font: "Impact",
       padding: 5,
       fontWeight: "normal"
-    }
+    };
 
     var d3wordCloudConfiguration = setOptions(d3wordCloudDefaultConfiguration, options);
 
@@ -2834,7 +2834,7 @@ module.exports.wordCloud2js = function (data, div_id, opts) {
     }
 
     layout.start();
-  }
+  };
 //  =================================================================================
 /* d3choropleth draws a choropleth chart.
 * param: data (dict)   -- This chart type is unique in that it combines data that draws the polygons (frequently these are geographic objects such as a country or region) with the measurement data. We recommend that you follow this tutorial to construct the data for this chart. https://medium.com/@mbostock/command-line-cartography-part-1-897aa8f8ca2c
@@ -2878,14 +2878,14 @@ module.exports.d3Choropleth = function (data, div_id, options) {
     legendyPosition: 0,
     legendDomain: [10, 50, 150, 350, 750, 1500],
     legendLabels: ["< 50", "50+", "150+", "350+", "750+", "> 1500"]
-  }
+  };
   var choroplethConfiguration = setOptions(choroplethDefaultConfiguration, options);
 
   var svg = d3.select("#" + div_id).append("svg"),
     width = choroplethConfiguration.svgWidth,
     height = choroplethConfiguration.svgHeight;
 
-  svg.attr("width", width).attr("height", height)
+  svg.attr("width", width).attr("height", height);
 
   var path = d3.geoPath();
 
@@ -2898,9 +2898,9 @@ module.exports.d3Choropleth = function (data, div_id, options) {
     height_max: -1000000000000,
     width_min: 1000000000000,
     width_max: -1000000000000
-  }
+  };
   var scaleFactors;
-  ready(data)
+  ready(data);
 
   //==============================
   var ext_color_domain = choroplethConfiguration.legendDomain;
@@ -2917,7 +2917,7 @@ module.exports.d3Choropleth = function (data, div_id, options) {
 
     legend.append("rect")
       .attr("x", function (d, i) {
-        if (choroplethConfiguration.legendOrientation == 'vertical') {
+        if (choroplethConfiguration.legendOrientation === 'vertical') {
           return 20;
         }
         else {
@@ -2925,7 +2925,7 @@ module.exports.d3Choropleth = function (data, div_id, options) {
         }
       })
       .attr("y", function (d, i) {
-        if (choroplethConfiguration.legendOrientation == 'vertical') {
+        if (choroplethConfiguration.legendOrientation === 'vertical') {
           return i * ls_h
         }
         else {
@@ -2941,7 +2941,7 @@ module.exports.d3Choropleth = function (data, div_id, options) {
 
     legend.append("text")
       .attr("x", function (d, i) {
-        if (choroplethConfiguration.legendOrientation == 'vertical') {
+        if (choroplethConfiguration.legendOrientation === 'vertical') {
           return 50;
         }
         else {
@@ -2949,7 +2949,7 @@ module.exports.d3Choropleth = function (data, div_id, options) {
         } //i*ls_w  }
       })
       .attr("y", function (d, i) {
-        if (choroplethConfiguration.legendOrientation == 'vertical') {
+        if (choroplethConfiguration.legendOrientation === 'vertical') {
           return i * ls_h + 15
         }
         else {
@@ -2957,7 +2957,7 @@ module.exports.d3Choropleth = function (data, div_id, options) {
         }
       })
       .attr("transform", function (d, i) {
-        if (choroplethConfiguration.legendOrientation == 'vertical') return null;
+        if (choroplethConfiguration.legendOrientation === 'vertical') return null;
         else {
           return "translate(" + i * ls_h + " 50)rotate(45 0 0)";
         }
@@ -2974,7 +2974,7 @@ module.exports.d3Choropleth = function (data, div_id, options) {
       .selectAll("path")
       .data(
         function () {
-          var _features = topojson.feature(us, us.objects.states).features
+          var _features = topojson.feature(us, us.objects.states).features;
           for (var a in _features) {
             for (var b in _features[a].geometry.coordinates) {
               get_height_width(_features[a].geometry.coordinates[b]);
@@ -2991,7 +2991,7 @@ module.exports.d3Choropleth = function (data, div_id, options) {
       .enter().append("path")
       .attr("fill", function (d) {
         d.name = d.properties[choroplethConfiguration.name];
-        d.value = d.properties[choroplethConfiguration.value]
+        d.value = d.properties[choroplethConfiguration.value];
         return color(d.properties[choroplethConfiguration.value]);
       })
       .attr("d", path)
@@ -3003,7 +3003,7 @@ module.exports.d3Choropleth = function (data, div_id, options) {
       .datum(function () {
         var _mesh = topojson.mesh(us, us.objects.states, function (a, b) {
           return a !== b;
-        })
+        });
         for (var a in _mesh.coordinates) {
           for (var b in _mesh.coordinates[a]) {
             scaleCoordinates(_mesh.coordinates[a][b], scaleFactors)
@@ -3026,10 +3026,10 @@ module.exports.d3Choropleth = function (data, div_id, options) {
 
   function get_height_width(feat) {
     for (var b in feat) {
-      if (typeof(feat[b]) == "number") {
-        height_width.height_min = (feat[1] < height_width.height_min ? feat[1] : height_width.height_min)
-        height_width.height_max = (feat[1] > height_width.height_max ? feat[1] : height_width.height_max)
-        height_width.width_min = (feat[0] < height_width.width_min ? feat[0] : height_width.width_min)
+      if (typeof(feat[b]) === "number") {
+        height_width.height_min = (feat[1] < height_width.height_min ? feat[1] : height_width.height_min);
+        height_width.height_max = (feat[1] > height_width.height_max ? feat[1] : height_width.height_max);
+        height_width.width_min = (feat[0] < height_width.width_min ? feat[0] : height_width.width_min);
         height_width.width_max = (feat[0] > height_width.width_max ? feat[0] : height_width.width_max)
       }
       else {
@@ -3040,7 +3040,7 @@ module.exports.d3Choropleth = function (data, div_id, options) {
 
   function scaleCoordinates(feat, scaleFactors) {
     for (var b in feat) {
-      if (typeof(feat[b]) == "number") {
+      if (typeof(feat[b]) === "number") {
         feat[0] = (feat[0] - height_width.width_min) * scaleFactors.width;
         feat[1] = (feat[1] - height_width.height_min) * scaleFactors.height;
         break
@@ -3064,7 +3064,7 @@ module.exports.d3Choropleth = function (data, div_id, options) {
     }
     return default_configuration
   }
-}
+};
 //==========================================================
 module.exports.d3Radar = function (data, id, options) {
   /////////////////////////////////////////////////////////
@@ -3125,7 +3125,7 @@ module.exports.d3Radar = function (data, id, options) {
   if ('undefined' !== typeof options) {
     for (var i in options) {
       if ('undefined' !== typeof options[i]) {
-        if (i == 'color') {
+        if (i === 'color') {
           copyCFGColor = JSON.parse(JSON.stringify(options[i]));
           legendColor = d3.scaleOrdinal().range(copyCFGColor.slice(0, data.length));
           legendColorDomain = Array.apply(null, Array(data.length)).map(function (_, i) {
@@ -3169,7 +3169,7 @@ module.exports.d3Radar = function (data, id, options) {
   // into an array of values arrays
   data = data.map(function (d) {
     return d.values
-  })
+  });
 
 
   //If the supplied maxValue is smaller than the actual one, replace by the max in the data
@@ -3408,8 +3408,8 @@ module.exports.d3Radar = function (data, id, options) {
     .style("fill", "none")
     .style("pointer-events", "all")
     .on("mouseover", function (d, i) {
-      newX = parseFloat(d3.select(this).attr('cx')) - 10;
-      newY = parseFloat(d3.select(this).attr('cy')) - 10;
+      var newX = parseFloat(d3.select(this).attr('cx')) - 10;
+      var newY = parseFloat(d3.select(this).attr('cy')) - 10;
 
       tooltip
         .attr('x', newX)
@@ -3506,7 +3506,7 @@ module.exports.d3Radar = function (data, id, options) {
 
   svg.select(".legendOrdinal")
     .call(legendOrdinal);
-}
+};
 
 //   // =======================================================
 //   tgw.c3 = function (chartConfig, div_id, options) {
@@ -3537,7 +3537,7 @@ module.exports.d3Radar = function (data, id, options) {
   */
 
 module.exports.plotlyLine = function (data, div_id, options) {
-  traceConfigurations = [];
+  var traceConfigurations = [];
   for (var d in data) {
     var traceConfig = {};
     traceConfig.x = data[d].x;
@@ -3551,7 +3551,7 @@ module.exports.plotlyLine = function (data, div_id, options) {
     traceConfigurations.push(traceConfig);
   }
   Plotly.newPlot(div_id, traceConfigurations);
-}
+};
 // =======================================================
 /* plotlyScatter draws a scatter chart using plotly library.
 * param: data (array) [{x: [], y: []}]
@@ -3563,7 +3563,7 @@ module.exports.plotlyLine = function (data, div_id, options) {
   */
 
 module.exports.plotlyScatter = function (data, div_id, options) {
-  traceConfigurations = [];
+  var traceConfigurations = [];
   for (var d in data) {
     var traceConfig = {};
     traceConfig.x = data[d].x;
@@ -3579,7 +3579,7 @@ module.exports.plotlyScatter = function (data, div_id, options) {
 
   }
   Plotly.newPlot(div_id, traceConfigurations);
-}
+};
 
 // =======================================================
 /* plotlyBar draws a bar chart using plotly library.
@@ -3592,7 +3592,7 @@ module.exports.plotlyScatter = function (data, div_id, options) {
   */
 
 module.exports.plotlyBar = function (data, div_id, options) {
-  traceConfigurations = [];
+  var traceConfigurations = [];
   for (var d in data) {
     var traceConfig = {};
     traceConfig.x = data[d].x;
@@ -3607,7 +3607,7 @@ module.exports.plotlyBar = function (data, div_id, options) {
 
   }
   Plotly.newPlot(div_id, traceConfigurations);
-}
+};
 
 // =======================================================
 /* plotlyStackBar	draws a Stacked Bar chart using plotly library.
@@ -3620,7 +3620,7 @@ module.exports.plotlyBar = function (data, div_id, options) {
   */
 
 module.exports.plotlyStackBar = function (data, div_id, options) {
-  traceConfigurations = [];
+  var traceConfigurations = [];
   for (var d in data) {
     var traceConfig = {};
     traceConfig.x = data[d].x;
@@ -3637,7 +3637,7 @@ module.exports.plotlyStackBar = function (data, div_id, options) {
   var layout = {barmode: 'stack'};
 
   Plotly.newPlot(div_id, traceConfigurations, layout);
-}
+};
 
 
 // =======================================================
@@ -3651,7 +3651,7 @@ module.exports.plotlyStackBar = function (data, div_id, options) {
   */
 
 module.exports.plotlyArea = function (data, div_id, options) {
-  traceConfigurations = [];
+  var traceConfigurations = [];
   for (var d in data) {
     var traceConfig = {};
     traceConfig.x = data[d].x;
@@ -3660,7 +3660,7 @@ module.exports.plotlyArea = function (data, div_id, options) {
     traceConfig.fill = 'tozeroy';
     if (options) {
       for (var o in options.config[d]) {
-        if (o == 'fill') {
+        if (o === 'fill') {
           traceConfig.fill = options.config[d][o];
           continue;
         }
@@ -3670,7 +3670,7 @@ module.exports.plotlyArea = function (data, div_id, options) {
     traceConfigurations.push(traceConfig);
   }
   Plotly.newPlot(div_id, traceConfigurations);
-}
+};
 
 // =======================================================
 /* plotlyBox draws a box plot using plotly library.
@@ -3683,7 +3683,7 @@ module.exports.plotlyArea = function (data, div_id, options) {
   */
 
 module.exports.plotlyBox = function (data, div_id, options) {
-  traceConfigurations = [];
+  var traceConfigurations = [];
   for (var d in data) {
     var traceConfig = {};
     traceConfig.y = data[d].y;
@@ -3696,7 +3696,7 @@ module.exports.plotlyBox = function (data, div_id, options) {
     traceConfigurations.push(traceConfig);
   }
   Plotly.newPlot(div_id, traceConfigurations);
-}
+};
 
 // =======================================================
 /* plotlyHeatMap draws a Heat Map using plotly library.
@@ -3709,7 +3709,7 @@ module.exports.plotlyBox = function (data, div_id, options) {
   */
 
 module.exports.plotlyHeatMap = function (data, div_id, options) {
-  traceConfig = [{
+  var traceConfig = [{
     z: data.z,
     type: 'heatmap'
   }];
@@ -3720,7 +3720,7 @@ module.exports.plotlyHeatMap = function (data, div_id, options) {
     }
   }
   Plotly.newPlot(div_id, traceConfig);
-}
+};
 
 // =======================================================
 /* plotlyHistogram draws a Histogram using plotly library.
@@ -3733,7 +3733,7 @@ module.exports.plotlyHeatMap = function (data, div_id, options) {
   */
 
 module.exports.plotlyHistogram = function (data, div_id, options) {
-  traceConfig = [{
+  var traceConfig = [{
     x: data,
     type: 'histogram'
   }];
@@ -3744,7 +3744,7 @@ module.exports.plotlyHistogram = function (data, div_id, options) {
     }
   }
   Plotly.newPlot(div_id, traceConfig);
-}
+};
 
   // =======================================================
   /* plotlyChoropleth draws a choropleth using plotly library.
@@ -3773,7 +3773,7 @@ module.exports.plotlyHistogram = function (data, div_id, options) {
       console.error('You must specify which field to use from your data.')
     }
 
-    traceConfig = [{
+    var traceConfig = [{
       z: unpack(data, options.config.fieldName),
       type: 'choropleth',
       text: unpack(data, 'state'),
@@ -3795,13 +3795,12 @@ module.exports.plotlyHistogram = function (data, div_id, options) {
       }
     }];
 
-    mapValues = [];
+    var mapValues = [];
     for (var t in data) {
       mapValues.push(data[t][options.config.fieldName])
     }
-    traceConfig.zmin = Math.min.apply(null, mapValues),
-    traceConfig.zmax = Math.max.apply(null, mapValues)
-    ;
+    traceConfig.zmin = Math.min.apply(null, mapValues);
+    traceConfig.zmax = Math.max.apply(null, mapValues);
 
     for (var o in options.config) {
       traceConfig[o] = options.config[o];
@@ -3821,7 +3820,7 @@ module.exports.plotlyHistogram = function (data, div_id, options) {
       }
     }
     Plotly.plot(div_id, traceConfig, layout);
-  }
+  };
 
   // =======================================================
   /* plotlyPolarScatter draws a polar scatter chart using plotly library.
@@ -3834,7 +3833,7 @@ module.exports.plotlyHistogram = function (data, div_id, options) {
     */
 
   module.exports.plotlyPolarScatter = function (data, div_id, options) {
-    traceConfigurations = [];
+    var traceConfigurations = [];
     for (var d in data) {
       var traceConfig = {marker: {
           color: 'rgb(117,112,179)'
@@ -3874,7 +3873,7 @@ module.exports.plotlyHistogram = function (data, div_id, options) {
       })
     }
     options ? Plotly.newPlot(div_id, traceConfigurations, options.config): Plotly.newPlot(div_id, traceConfigurations);
-  }
+  };
 
 /***/ })
 /******/ ]);
