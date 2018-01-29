@@ -40,7 +40,7 @@
 
  */
 
-require('../../style/tgw.css')
+require('../../style/tgw.css');
 
 //=====================================================================================================
   /*
@@ -54,7 +54,7 @@ require('../../style/tgw.css')
 
   */
 var _to = function (x) {
-  return (typeof x == "undefined") ? "undefined" : (({}).toString.call(x).match(/\s([a-zA-Z]+)/)[1].toLowerCase());
+  return (typeof x === "undefined") ? "undefined" : (({}).toString.call(x).match(/\s([a-zA-Z]+)/)[1].toLowerCase());
 };
 
 module.exports.typeOf = _to;
@@ -67,7 +67,7 @@ module.exports.typeOf = _to;
     round a number to specified sig digits.	 default is 2
   */
 var _round = function (x, numDigits) {
-    numDigits = (_to(numDigits) == 'number') ? Math.pow(10, Math.round(numDigits)) : 100;
+    numDigits = (_to(numDigits) === 'number') ? Math.pow(10, Math.round(numDigits)) : 100;
     return Math.round(x * numDigits) / numDigits;
   }
 // = roundNum;  // short hand used internally
