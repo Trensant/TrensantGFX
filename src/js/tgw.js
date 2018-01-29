@@ -94,7 +94,7 @@ module.exports.constrain = function (x, min, max) {
   /*
    Map an input value z in its natural range in0...in1 to the output
    space out0...out1 with optional clipping
-   exp_scale allows sigmoidal warping to stretch input values contrained to a small range. (floating point scale factor)
+   exp_scale allows sigmoidal warping to stretch input values constrained to a small range. (floating point scale factor)
 
    example:
       trensant.mapScaleEXP(33,0,100,-100,100)  --> maps 33 with input range from 0 .. 100 in to the range -100,100 linearly ==>
@@ -134,7 +134,7 @@ module.exports.containerDims = _dims;
 
 //=====================================================================================================
   /* 	tgw.setIntervalX(callbackFn, delayBtwCalls, repetitions)
-     set a javascript timer to only run a max of N repetions.
+     set a javascript timer to only run a max of N repetitions.
     // Note: Only works in browser not server side as it requires access to window object.
     // also note that callback function is called with the interval number to be used for whatever purposes the callback likes
   */
@@ -209,7 +209,7 @@ module.exports.repeatUntil = function (testFn, successFn, failFn, delay, maxReps
 //=====================================================================================================
 /*
   tgw.tgPrettyPrint (data, domID, opts)
-    prettyPrint a Javscript object
+    prettyPrint a Javascript object
     this is a "native" graphics call in that it doesn't wrap another charting library
 
   example usage:
@@ -266,7 +266,7 @@ module.exports.tgDrawRowWordCloudBase = function (words, domID, opts) {
     "minSize": 9, 	  					// any valid number for min font size
     "sizeUnits": "px",	 					// css units  for maxSize, minSize : px em %
     "sort": "none", 					// "up", "down", "alpha", "ralpha", "none"
-    "spacer": "&nbsp; &nbsp;", 			// spacer to put bewteen words (string) -- can be "" or html
+    "spacer": "&nbsp; &nbsp;", 			// spacer to put between words (string) -- can be "" or html
     "wclass": "",  						// optional style class for each word's span
     "sortIgnore1stChars": ['@', '#', '$'],  	//if a string begins with one of these ignore for purposes of sorting.
     "scale": 1.0,
@@ -377,11 +377,11 @@ module.exports.tgDrawRowWordCloud = function (words, domID, opts) {
 
 //=====================================================================================================
 //=====================================================================================================
-// Beging Google chart wrappers
+// Beginning Google chart wrappers
 
 //=====================================================================================================
 /* gglChartsLoaded()   // function returns whether google chart functions have been loaded
-  -- since google charts loads asynchornously its easy to have situations where data is available before
+  -- since google charts loads asynchronously its easy to have situations where data is available before
   the charts libs are (a race condition).
 
  */
@@ -412,12 +412,12 @@ module.exports.gglChartsLoaded = function () {
     ]
 
   cols must be array of types, labels e.g.
-    [ ["string", "this column label"], ["boolean", "another label"],	["number", "label for this colum"] ]
+    [ ["string", "this column label"], ["boolean", "another label"],	["number", "label for this column"] ]
 
-  id must be a valid unqiue HTML DOM id
+  id must be a valid unique HTML DOM id
   opts for google charts (see Google charts docs)
 
-// example: gglDrawTable([['a',23,34],['b',23,12],['c',34,64]],[["string","labelx"],["number","this"],["number","that"]],"table-x");
+// example: gglDrawTable([['a',23,34],['b',23,12],['c',34,64]],[["string","label x"],["number","this"],["number","that"]],"table-x");
 
 */
 
@@ -502,7 +502,7 @@ requires:
 
 data must be of this form:
     [
-      ['lablel for x axis','label for y1series','label for y2series',...],
+      ['label for x axis','label for y1series','label for y2series',...],
        [ 12,23,34,45],
        [ 23,34,45,63],
     ]
@@ -586,7 +586,7 @@ module.exports.gglDrawHistogram = function (data, domID, options) {
 
 //======================================================================================================
 module.exports.d3ChartsLoaded = function () {
-  if (typeof d3 != "undefined")
+  if (typeof d3 !== "undefined")
     return true;
   return false;
 };
@@ -609,10 +609,10 @@ module.exports.d3ChartsLoaded = function () {
        * value:: type: string, default:
      * FURTHER DESCRIPTION for Tree data options:
        * Frequently trees contain different keys labels. For
-       * example your tree label for children may be childs instead of children.
+       * example your tree label for children may be child's instead of children.
        * Normally in that case you would either change the all the keys in
        * you data prior to passing or specify a custom function in d3.hierarchy call.
-       * Instead you can specify key lables in options.
+       * Instead you can specify key labels in options.
        * Default values are parentID, childID, childName,
        * children, value.
        * Example: {children: childs}.
@@ -695,7 +695,7 @@ module.exports.d3TreeMap = function (tree, id, options) {
   });
 
   function drawit() {
-    cell = svg.selectAll("g").data(root[treeMapConfiguration.children]).enter().append("g")
+    var cell = svg.selectAll("g").data(root[treeMapConfiguration.children]).enter().append("g")
       .attr("transform", function (d) {
         return "translate(" + d.x0 + "," + d.y0 + ")";
       });
@@ -796,19 +796,19 @@ module.exports.d3TreeMap = function (tree, id, options) {
     var mylen = d3.selectAll(".parent a")._groups[0].length;
 
     var tickLabels = d3.selectAll(".parent a").filter(function (d, i) {
-      if (mylen == 1) {
+      if (mylen === 1) {
         return 1;
       }
       else {
         for (i < mylen; i++;) {
-          if (i == mylen) {
+          if (i === mylen) {
             return i
           }
         }
       }
     }).remove();
 
-    if (typeof(id) != 'undefined') {
+    if (typeof(id) !== 'undefined') {
       root = get_node(nodeTree, id);
       root = d3.hierarchy(root);
       root.eachBefore(function (d) {
@@ -852,12 +852,12 @@ module.exports.d3TreeMap = function (tree, id, options) {
   }
 
   function addChildNode(nodeTree, d3node) {
-    child_id = d3node.data.child_id;
-    parent_id = d3node.data.parent_id;
-    if (nodeTree.node.child_id == parent_id) {
+    var child_id = d3node.data.child_id;
+    var parent_id = d3node.data.parent_id;
+    if (nodeTree.node.child_id === parent_id) {
       if ('children' in nodeTree) {
         for (var node in nodeTree.children) {
-          if (nodeTree.children[node].node == d3node.data) {
+          if (nodeTree.children[node].node === d3node.data) {
             continue;
           }
           else {
@@ -878,7 +878,7 @@ module.exports.d3TreeMap = function (tree, id, options) {
   }
 
   function get_node(nodeTree, id) {
-    if (nodeTree.node.child_id == id) {
+    if (nodeTree.node.child_id === id) {
       return nodeTree.node;
     }
     else {
@@ -921,7 +921,7 @@ module.exports.d3TreeMap = function (tree, id, options) {
      * example your tree label for children may be childs instead of children.
      * Normally in that case you would either change the all the keys in
      * you data prior to passing or specify a custom function in d3.hierarchy call.
-     * Instead you can specify key lables in options.
+     * Instead you can specify key labels in options.
      * Example: {children: childs}.
  *
 *
@@ -940,8 +940,8 @@ module.exports.d3RadialTree = function (treeData, id, options) {
     diameter: tgw.containerDims(id).wid / 2,
     duration: 750
   };
-  radialTreeConfiguration = setOptions(radialTreeDefaultConfiguration, options);
-  if (typeof options == "undefined") {
+  var radialTreeConfiguration = setOptions(radialTreeDefaultConfiguration, options);
+  if (typeof options === "undefined") {
     options = {};
   }
 
@@ -956,7 +956,7 @@ module.exports.d3RadialTree = function (treeData, id, options) {
 
   var treeLayout = d3.tree().size([360, diameter / 2]).separation(
     function (a, b) {
-      return (a.parent == b.parent ? 1 : 2) / a.depth;
+      return (a.parent === b.parent ? 1 : 2) / a.depth;
     }), root;
 
   var nodeSvg, linkSvg, nodeEnter, linkEnter;
@@ -1213,7 +1213,7 @@ module.exports.d3Chord = function (data, id, options) {
     svgWidth: tgw.containerDims(id).wid,
     svgHeight: tgw.containerDims(id).hgt
   };
-  chordConfiguration = setOptions(chordDefaultConfiguration, options);
+  var chordConfiguration = setOptions(chordDefaultConfiguration, options);
 
   var width = typeof chordConfiguration.svgWidth === "function" ? chordConfiguration.svgWidth() : chordConfiguration.svgWidth,
     height = typeof chordConfiguration.svgHeight === "function" ? chordConfiguration.svgHeight() : chordConfiguration.svgHeight;
@@ -1378,7 +1378,7 @@ module.exports.d3Chord = function (data, id, options) {
 };
 //  =================================================================
 
-/*d3zoombaleSunburst draws a sunburst chart of hierarchically related items
+/*d3zoomableSunburst draws a sunburst chart of hierarchically related items
  * param: data (dict)
    * data schema:
    * {name: "string",
@@ -1416,7 +1416,7 @@ module.exports.d3ZoomableSunburst = function (data, id, options) {
     svgWidth: tgw.containerDims(id).wid,
     svgHeight: tgw.containerDims(id).hgt
   };
-  sunburstConfiguration = setOptions(zoomableSunburstDefaultConfiguration, options);
+  var sunburstConfiguration = setOptions(zoomableSunburstDefaultConfiguration, options);
 
   var width = sunburstConfiguration.svgWidth,
     height = sunburstConfiguration.svgHeight,
@@ -1454,7 +1454,7 @@ module.exports.d3ZoomableSunburst = function (data, id, options) {
     .append("g")
     .attr("transform", "translate(" + width / 2 + "," + (height / 2) + ")");
 
-  root = d3.hierarchy(data);
+  var root = d3.hierarchy(data);
   root.sum(function (d) {
     return d[sunburstConfiguration.value];
   });
@@ -1692,7 +1692,7 @@ module.exports.wordCloud2js = function (data, div_id, opts) {
       cw = 1 << 11 >> 5,
       ch = 1 << 11;
 
-    cloud = function () {
+    var cloud = function () {
       var size = [256, 256],
         text = cloudText,
         font = cloudFont,
@@ -1979,7 +1979,7 @@ module.exports.wordCloud2js = function (data, div_id, opts) {
         // Zero the buffer
         for (var i = 0; i < h * w32; i++) sprite[i] = 0;
         x = d.xoff;
-        if (x == null) return;
+        if (x === null) return;
         y = d.yoff;
         var seen = 0,
           seenRow = -1;
@@ -2250,7 +2250,7 @@ module.exports.d3Choropleth = function (data, div_id, options) {
 
     legend.append("rect")
       .attr("x", function (d, i) {
-        if (choroplethConfiguration.legendOrientation == 'vertical') {
+        if (choroplethConfiguration.legendOrientation === 'vertical') {
           return 20;
         }
         else {
@@ -2258,7 +2258,7 @@ module.exports.d3Choropleth = function (data, div_id, options) {
         }
       })
       .attr("y", function (d, i) {
-        if (choroplethConfiguration.legendOrientation == 'vertical') {
+        if (choroplethConfiguration.legendOrientation === 'vertical') {
           return i * ls_h
         }
         else {
@@ -2274,7 +2274,7 @@ module.exports.d3Choropleth = function (data, div_id, options) {
 
     legend.append("text")
       .attr("x", function (d, i) {
-        if (choroplethConfiguration.legendOrientation == 'vertical') {
+        if (choroplethConfiguration.legendOrientation === 'vertical') {
           return 50;
         }
         else {
@@ -2282,7 +2282,7 @@ module.exports.d3Choropleth = function (data, div_id, options) {
         } //i*ls_w  }
       })
       .attr("y", function (d, i) {
-        if (choroplethConfiguration.legendOrientation == 'vertical') {
+        if (choroplethConfiguration.legendOrientation === 'vertical') {
           return i * ls_h + 15
         }
         else {
@@ -2290,7 +2290,7 @@ module.exports.d3Choropleth = function (data, div_id, options) {
         }
       })
       .attr("transform", function (d, i) {
-        if (choroplethConfiguration.legendOrientation == 'vertical') return null;
+        if (choroplethConfiguration.legendOrientation === 'vertical') return null;
         else {
           return "translate(" + i * ls_h + " 50)rotate(45 0 0)";
         }
@@ -2359,7 +2359,7 @@ module.exports.d3Choropleth = function (data, div_id, options) {
 
   function get_height_width(feat) {
     for (var b in feat) {
-      if (typeof(feat[b]) == "number") {
+      if (typeof(feat[b]) === "number") {
         height_width.height_min = (feat[1] < height_width.height_min ? feat[1] : height_width.height_min);
         height_width.height_max = (feat[1] > height_width.height_max ? feat[1] : height_width.height_max);
         height_width.width_min = (feat[0] < height_width.width_min ? feat[0] : height_width.width_min);
@@ -2373,7 +2373,7 @@ module.exports.d3Choropleth = function (data, div_id, options) {
 
   function scaleCoordinates(feat, scaleFactors) {
     for (var b in feat) {
-      if (typeof(feat[b]) == "number") {
+      if (typeof(feat[b]) === "number") {
         feat[0] = (feat[0] - height_width.width_min) * scaleFactors.width;
         feat[1] = (feat[1] - height_width.height_min) * scaleFactors.height;
         break
@@ -2458,7 +2458,7 @@ module.exports.d3Radar = function (data, id, options) {
   if ('undefined' !== typeof options) {
     for (var i in options) {
       if ('undefined' !== typeof options[i]) {
-        if (i == 'color') {
+        if (i === 'color') {
           copyCFGColor = JSON.parse(JSON.stringify(options[i]));
           legendColor = d3.scaleOrdinal().range(copyCFGColor.slice(0, data.length));
           legendColorDomain = Array.apply(null, Array(data.length)).map(function (_, i) {
@@ -2741,8 +2741,8 @@ module.exports.d3Radar = function (data, id, options) {
     .style("fill", "none")
     .style("pointer-events", "all")
     .on("mouseover", function (d, i) {
-      newX = parseFloat(d3.select(this).attr('cx')) - 10;
-      newY = parseFloat(d3.select(this).attr('cy')) - 10;
+      var newX = parseFloat(d3.select(this).attr('cx')) - 10;
+      var newY = parseFloat(d3.select(this).attr('cy')) - 10;
 
       tooltip
         .attr('x', newX)
@@ -2870,7 +2870,7 @@ module.exports.d3Radar = function (data, id, options) {
   */
 
 module.exports.plotlyLine = function (data, div_id, options) {
-  traceConfigurations = [];
+  var traceConfigurations = [];
   for (var d in data) {
     var traceConfig = {};
     traceConfig.x = data[d].x;
@@ -2896,7 +2896,7 @@ module.exports.plotlyLine = function (data, div_id, options) {
   */
 
 module.exports.plotlyScatter = function (data, div_id, options) {
-  traceConfigurations = [];
+  var traceConfigurations = [];
   for (var d in data) {
     var traceConfig = {};
     traceConfig.x = data[d].x;
@@ -2925,7 +2925,7 @@ module.exports.plotlyScatter = function (data, div_id, options) {
   */
 
 module.exports.plotlyBar = function (data, div_id, options) {
-  traceConfigurations = [];
+  var traceConfigurations = [];
   for (var d in data) {
     var traceConfig = {};
     traceConfig.x = data[d].x;
@@ -2953,7 +2953,7 @@ module.exports.plotlyBar = function (data, div_id, options) {
   */
 
 module.exports.plotlyStackBar = function (data, div_id, options) {
-  traceConfigurations = [];
+  var traceConfigurations = [];
   for (var d in data) {
     var traceConfig = {};
     traceConfig.x = data[d].x;
@@ -2984,7 +2984,7 @@ module.exports.plotlyStackBar = function (data, div_id, options) {
   */
 
 module.exports.plotlyArea = function (data, div_id, options) {
-  traceConfigurations = [];
+  var traceConfigurations = [];
   for (var d in data) {
     var traceConfig = {};
     traceConfig.x = data[d].x;
@@ -2993,7 +2993,7 @@ module.exports.plotlyArea = function (data, div_id, options) {
     traceConfig.fill = 'tozeroy';
     if (options) {
       for (var o in options.config[d]) {
-        if (o == 'fill') {
+        if (o === 'fill') {
           traceConfig.fill = options.config[d][o];
           continue;
         }
@@ -3016,7 +3016,7 @@ module.exports.plotlyArea = function (data, div_id, options) {
   */
 
 module.exports.plotlyBox = function (data, div_id, options) {
-  traceConfigurations = [];
+  var traceConfigurations = [];
   for (var d in data) {
     var traceConfig = {};
     traceConfig.y = data[d].y;
@@ -3042,7 +3042,7 @@ module.exports.plotlyBox = function (data, div_id, options) {
   */
 
 module.exports.plotlyHeatMap = function (data, div_id, options) {
-  traceConfig = [{
+  var traceConfig = [{
     z: data.z,
     type: 'heatmap'
   }];
@@ -3066,7 +3066,7 @@ module.exports.plotlyHeatMap = function (data, div_id, options) {
   */
 
 module.exports.plotlyHistogram = function (data, div_id, options) {
-  traceConfig = [{
+  var traceConfig = [{
     x: data,
     type: 'histogram'
   }];
@@ -3106,7 +3106,7 @@ module.exports.plotlyHistogram = function (data, div_id, options) {
       console.error('You must specify which field to use from your data.')
     }
 
-    traceConfig = [{
+    var traceConfig = [{
       z: unpack(data, options.config.fieldName),
       type: 'choropleth',
       text: unpack(data, 'state'),
@@ -3128,13 +3128,12 @@ module.exports.plotlyHistogram = function (data, div_id, options) {
       }
     }];
 
-    mapValues = [];
+    var mapValues = [];
     for (var t in data) {
       mapValues.push(data[t][options.config.fieldName])
     }
-    traceConfig.zmin = Math.min.apply(null, mapValues),
-    traceConfig.zmax = Math.max.apply(null, mapValues)
-    ;
+    traceConfig.zmin = Math.min.apply(null, mapValues);
+    traceConfig.zmax = Math.max.apply(null, mapValues);
 
     for (var o in options.config) {
       traceConfig[o] = options.config[o];
@@ -3167,7 +3166,7 @@ module.exports.plotlyHistogram = function (data, div_id, options) {
     */
 
   module.exports.plotlyPolarScatter = function (data, div_id, options) {
-    traceConfigurations = [];
+    var traceConfigurations = [];
     for (var d in data) {
       var traceConfig = {marker: {
           color: 'rgb(117,112,179)'
