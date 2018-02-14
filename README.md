@@ -23,7 +23,10 @@ To use a chart from a particular source family note the prefix (e.g. ggl or d3 e
 *Available offline*
 ### Workflow #2 - View charts with your own sample data.
 
+Browser Dependent: 
+Chrome start with step one
 1. Start a local server such as python -m http.server
+Firefox Start with step 2
 2. Open examples/gallery.html
 3. Select the chart.
 4. This opens a live edit page. 
