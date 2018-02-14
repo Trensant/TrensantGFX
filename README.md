@@ -23,14 +23,15 @@ To use a chart from a particular source family note the prefix (e.g. ggl or d3 e
 *Available offline*
 ### Workflow #2 - View charts with your own sample data.
 
-1. Open examples/gallery.html
-2. Select the chart.
-3. This opens a live edit page. 
-4. Paste in your data.
+1. Start a local server such as python -m simple.server
+2. Open examples/gallery.html
+3. Select the chart.
+4. This opens a live edit page. 
+5. Paste in your data.
 The structure of your data must match the sample data structure shown in the live edit window.
 For example in d3BubbleChart.html there is sample data labeled bubbleSampledata. Your data's structure must match in order for the chart to render correctly.
-5. (optional) Add additional parameters to alter the rendering of the data. See API Documentation.
-6. Click Run Code.
+6. (optional) Add additional parameters to alter the rendering of the data. See API Documentation.
+7. Click Run Code.
 
 ===================================================
 ### Workflow #3 - Add a chart to my web page.
