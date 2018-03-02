@@ -1,15 +1,17 @@
-# TGW (multi-lib html chart library wrapper)
+# TrensantGFX  (a chart library built on opensource projects)
 
-TGW (Trensant Graphics Wrapper) is a client-side javascript library for rendering charts.  It wraps components of different charting libraries with a common api and handles loading.
+TrensantGX (Trensant Graphics) is a client-side javascript library for rendering charts.  It wraps components of different charting libraries with a common api and handles loading.  TrensantGFX is designed to run standalone and to run offline with minimal dependancies.  This means it can use to quick-test ideas, and also can take files outputted from non web friendly environments such as embedded systems.
 
 The charting library uses charts from several well known libraries, but normalizes their input as noted in the Chart Data section. Not all libraries are fully wrapped, meaning that the tgw libary provides wrappers only for the charts listed here, even if other charts exist in those libaries.   In some cases we wrap the same chart type from different sources.
 
 To use a chart from a particular source family note the prefix (e.g. ggl or d3 etc)
 
-## Quick Start
+## Offline Notes
 
-*Available offline*: available without a server.
+Where possible examples are given in minimal form with live edit capability.  *Available offline*: denotes that the example can run without a server (e.g. Apache or nodejs not required) by just navigating to the files.  (open as file:// in a browser).
 
+
+## Examples
 ======================================
 
 *Available offline*
