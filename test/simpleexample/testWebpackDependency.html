@@ -1,0 +1,144 @@
+<!doctype HTML>
+<html>
+<head>
+
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>-->
+
+    <!--<script src="https://d3js.org/d3.v4.min.js"></script>-->
+
+    <!--<script type="text/javascript" src="../../libs/tgw.js"></script>-->
+
+    <script type="text/javascript" src="../../dist/tgwWithDependencies.js"></script>
+
+    <style>
+        body {
+            height: 98vh;
+            width: 98vw;
+        }
+
+        .chartCSS {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+
+</head>
+
+<body>
+<div class="chartCSS" id="_chart"></div>
+<script>
+
+  var treeMapSampleData = {
+    node: {
+      child_name: "Anheuser-Busch",
+      child_id: "565ec0939b72473c7ec9e1ad",
+      children:
+        [
+          {
+            parent_name: "Anheuser-Busch",
+            child_tags: [],
+            child_name: "Budweiser Beer",
+            parent_id: "565ec0939b72473c7ec9e1ad",
+            child_buzz: 79,
+            child_id: "53166c755f3b284a609e1c6b",
+            children: [
+              {
+                parent_id: "53166c755f3b284a609e1c6b",
+                child_buzz: 6342,
+                child_id: "58781b703805ab195625df2c",
+                child_name: "@budweiser",
+                parent_type: "product",
+                children: [
+                  {
+                    parent_id: "58781b703805ab195625df2c",
+                    child_buzz: 3483,
+                    child_id: "565ea6efefa9d5d882d273",
+                    child_name: "childBudweiser",
+                  }
+                ]
+              },
+              {
+                parent_id: "53166c755f3b284a609e1c6b",
+                child_buzz: 3483,
+                child_id: "565ea6efefa9dd25d882d273",
+                child_name: "Budweiser"
+              },
+              {
+                parent_id: "53166c755f3b284a609e1c6b",
+                child_buzz: 250,
+                child_id: "58781a533805ab195625df2a",
+                child_name: "#budweiser"
+              },
+              {
+                parent_id: "531c755f3b284a609e1c6b",
+                child_buzz: 1250,
+                child_id: "58781a533805ab195625df2a",
+                child_name: "#my_best_budweiser",
+              }
+            ]
+          },
+          {
+            child_name: "Bud Light Beer",
+            child_type: "product",
+            parent_id: "565ec0939b72473c7ec9e1ad",
+            child_id: "53166f5c5f3b284a609e1c72",
+            children: [
+              {
+                parent_id: "53166c75284a609e1c6b",
+                child_buzz: 12500,
+                child_id: "58781b703804ab195625df2c",
+                child_name: "@budlight",
+              },
+              {
+                parent_id: "53166c75284a609e1c6b",
+                child_buzz: 1500,
+                child_id: "58781b703805ac195625df2c",
+                child_name: "#budlight",
+              },
+              {
+                parent_id: "53166c75284a609e1c6b",
+                child_buzz: 750,
+                child_id: "58781b703605ab195625df2c",
+                child_name: "Bud Light",
+              }]
+
+          },
+          {
+            child_name: "Bud Ice",
+            child_type: "product",
+            parent_id: "565ec0939b72473c7ec9e1ad",
+            child_id: "53166f5c5f3b284a609e1d72",
+            children: [
+              {
+                parent_id: "53166f5c5f3b284a609e1d72",
+                child_buzz: 10004,
+                child_id: "58781b703804ab195625ee2c",
+                child_name: "@budice",
+              },
+              {
+                parent_id: "53166f5c5f3b284a609e1d72",
+                child_buzz: 1050,
+                child_id: "58781b703805ac195624ef2c",
+                child_name: "#budice",
+              },
+              {
+                parent_id: "53166f5c5f3b284a609e1d72",
+                child_buzz: 700,
+                child_id: "58781b703605ab19562g5f2c",
+                child_name: "Bud Ice",
+              }]
+
+          }
+        ]
+    }
+  }
+
+  //render the chart
+  tgw.d3TreeMap(treeMapSampleData, "_chart", {
+    parentID: "parent_id", childID: "child_id",
+    childName: "child_name", value: "child_buzz"
+  });
+</script>
+
+</body>
+</html>
